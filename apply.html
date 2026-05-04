@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Driver Application — Form #001 — Ozee Rentals</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Barlow",sans-serif;background:#f5f5f5;color:#212529;line-height:1.6;padding-bottom:4rem;}
+.top-bar{background:#04090F;padding:1.2rem 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(245,166,35,.2);}
+.top-bar img{height:44px;filter:brightness(0) invert(1);}
+.form-id{background:#F5A623;color:#000;padding:.4rem 1rem;font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.hero-bar{background:linear-gradient(135deg,#04090F,#0d1f3c);color:#fff;padding:3rem 5%;text-align:center;border-bottom:3px solid #F5A623;}
+.hero-bar h1{font-family:"Barlow Condensed",sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;text-transform:uppercase;letter-spacing:-1px;margin-bottom:.5rem;}
+.hero-bar h1 span{color:#F5A623;}
+.hero-bar p{color:rgba(255,255,255,.6);font-size:.95rem;}
+.container{max-width:860px;margin:2.5rem auto;padding:0 1.5rem;}
+.form-section{background:#fff;border-radius:4px;padding:2.5rem;margin-bottom:1.5rem;box-shadow:0 1px 4px rgba(0,0,0,.08);border-left:4px solid #F5A623;}
+.sec-header{display:flex;align-items:center;gap:.75rem;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid #eee;}
+.sec-icon{font-size:1.5rem;}
+.sec-title{font-family:"Barlow Condensed",sans-serif;font-size:1.5rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#212529;}
+.sec-num{font-family:"Barlow Condensed",sans-serif;font-size:1rem;font-weight:900;color:#F5A623;letter-spacing:2px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+.form-group{margin-bottom:1.25rem;}
+label{display:block;color:#495057;margin-bottom:.5rem;font-weight:600;font-size:.88rem;letter-spacing:.3px;}
+.req{color:#dc3545;}
+.opt{color:#adb5bd;font-weight:400;font-size:.8rem;}
+input,select,textarea{width:100%;padding:.75rem;border:1.5px solid #dee2e6;border-radius:3px;color:#212529;font-size:.95rem;font-family:"Barlow",sans-serif;transition:border-color .2s;background:#fff;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#F5A623;box-shadow:0 0 0 3px rgba(245,166,35,.1);}
+textarea{resize:vertical;min-height:80px;}
+.age-badge{display:inline-block;margin-left:.75rem;padding:.3rem .9rem;background:#fff8e6;border:1px solid #F5A623;color:#D4880A;font-weight:700;font-size:.82rem;border-radius:2px;}
+.file-zone{border:2px dashed #dee2e6;background:#fafafa;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;border-radius:3px;}
+.file-zone:hover{border-color:#F5A623;background:#fff8e6;}
+.file-zone .fz-icon{font-size:2rem;margin-bottom:.5rem;}
+.file-zone p{color:#adb5bd;font-size:.88rem;}
+.file-zone input{display:none;}
+.file-preview{margin-top:.5rem;padding:.5rem .9rem;background:#d4edda;border:1px solid #c3e6cb;color:#155724;font-size:.82rem;border-radius:2px;display:none;}
+.radio-row{display:flex;gap:2rem;margin-top:.5rem;flex-wrap:wrap;}
+.radio-item{display:flex;align-items:center;gap:.5rem;cursor:pointer;}
+.radio-item input{width:18px;height:18px;cursor:pointer;accent-color:#F5A623;}
+.radio-item label{margin:0;font-weight:500;cursor:pointer;}
+.conditional{margin-top:1rem;padding:1.25rem;background:#fff8e6;border-left:3px solid #F5A623;border-radius:2px;display:none;}
+.conditional.show{display:block;}
+.agree-check{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:1.2rem;}
+.agree-check input{width:20px;height:20px;margin-top:.15rem;flex-shrink:0;accent-color:#F5A623;}
+.agree-check label{font-size:.9rem;font-weight:500;cursor:pointer;line-height:1.5;}
+.agreement-scroll{max-height:450px;overflow-y:auto;background:#f8f9fa;border:1px solid #dee2e6;border-radius:3px;padding:1.5rem;margin-bottom:1.5rem;font-size:.83rem;line-height:1.8;color:#495057;}
+.agreement-scroll h4{color:#212529;font-size:.95rem;font-weight:700;margin:1.2rem 0 .5rem;}
+.agreement-scroll h4:first-child{margin-top:0;}
+.agreement-scroll table{width:100%;border-collapse:collapse;margin:1rem 0;}
+.agreement-scroll table td{padding:.5rem;border:1px solid #dee2e6;font-size:.82rem;}
+.agreement-scroll table td:first-child{background:#f0f0f0;font-weight:600;width:38%;}
+.sig-canvas{width:100%;height:180px;border:2px solid #dee2e6;border-radius:3px;cursor:crosshair;background:#fff;touch-action:none;}
+.sig-clear{margin-top:.5rem;padding:.4rem 1rem;background:#fff;border:1px solid #dee2e6;border-radius:2px;cursor:pointer;font-size:.82rem;color:#dc3545;font-family:"Barlow",sans-serif;}
+.submit-btn{width:100%;padding:1.2rem;background:linear-gradient(135deg,#F5A623,#D4880A);border:none;color:#000;font-family:"Barlow Condensed",sans-serif;font-size:1.3rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);transition:all .3s;box-shadow:0 8px 30px rgba(245,166,35,.4);}
+.submit-btn:hover{box-shadow:0 12px 40px rgba(245,166,35,.6);transform:translateY(-2px);}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.success-msg{display:none;background:#d4edda;border:1px solid #c3e6cb;color:#155724;padding:2rem;text-align:center;border-radius:3px;margin-top:1rem;}
+.success-msg h3{font-family:"Barlow Condensed",sans-serif;font-size:2rem;font-weight:900;text-transform:uppercase;margin-bottom:.5rem;}
+.error-msg{display:none;background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;padding:1.5rem;border-radius:3px;margin-top:1rem;}
+.admin-note{background:#fff3cd;border:1px solid #ffc107;padding:1rem 1.5rem;border-radius:3px;margin-bottom:1.5rem;font-size:.88rem;color:#856404;}
+.admin-note strong{display:block;margin-bottom:.25rem;}
+@media(max-width:768px){.form-row,.form-row-3{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <a href="home.html"><img src="assets/logo.jpeg" alt="Ozee Rentals"></a>
+  <div class="form-id">Form #001 — Driver Application</div>
+</div>
+<div class="hero-bar">
+  <h1>Driver <span>Application</span></h1>
+  <p>Join our fleet and start earning | 17A Drift St, West Wallsend NSW 2286 | 0450 786 145 | omer@ozeerentals.com.au | ABN: 71 694 905 667</p>
+</div>
+<div class="container">
+  <form id="driverForm">
+
+    <!-- SECTION 1: PERSONAL INFO -->
+    <div class="form-section">
+      <div class="sec-header"><span class="sec-icon">👤</span><div><div class="sec-num">SECTION 01</div><div class="sec-title">Personal Information</div></div></div>
+      <div class="form-row">
+        <div class="form-group"><label>First Name <span class="req">*</span></label><input type="text" id="firstName" required placeholder="First name"></div>
+        <div class="form-group"><label>Middle Name <span class="opt">(optional)</span></label><input type="text" id="middleName" placeholder="Middle name (if any)"></div>
+      </div>
+      <div class="form-group"><label>Last Name <span class="req">*</span></label><input type="text" id="lastName" required placeholder="Last name"></div>
+      <div class="form-group">
+        <label>Date of Birth <span class="req">*</span></label>
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;">
+          <input type="date" id="dob" required style="flex:1;min-width:180px;" onchange="calcAge()">
+          <span class="age-badge" id="ageDisplay" style="display:none;"></span>
+        </div>
+      </div>
+      <div class="form-group"><label>Full Residential Address <span class="req">*</span></label><textarea id="address" required placeholder="Street address, suburb, state, postcode"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Mobile Number <span class="req">*</span></label><input type="tel" id="mobile" required placeholder="0412 345 678"></div>
+        <div class="form-group"><label>Email Address <span class="req">*</span></label><input type="email" id="email" required placeholder="your@email.com"></div>
+      </div>
+      <div class="form-group">
+        <label>Visa Status <span class="req">*</span></label>
+        <select id="visaStatus" required>
+          <option value="">Select visa status</option>
+          <option>Australian Citizen</option>
+          <option>Permanent Resident (PR)</option>
+          <option>Temporary Visa</option>
+          <option>Student Visa</option>
+          <option>Work Visa</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- DRIVER LICENSE -->
+    <div class="form-section">
+      <div class="sec-header"><span class="sec-icon">🪪</span><div><div class="sec-num">SECTION 02</div><div class="sec-title">Driver's Licence</div></div></div>
+      <div class="form-group"><label>Licence Number <span class="req">*</span></label><input type="text" id="licenseNum" required placeholder="Enter licence number"></div>
+      <div class="form-row-3">
+        <div class="form-group">
+          <label>State <span class="req">*</span></label>
+          <select id="licenseState" required>
+            <option value="">Select</option>
+            <option>NSW</option><option>VIC</option><option>QLD</option>
+            <option>SA</option><option>WA</option><option>TAS</option>
+            <option>NT</option><option>ACT</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Expiry Date <span class="req">*</span></label><input type="date" id="licenseExpiry" required></div>
+        <div class="form-group">
+          <label>Year Obtained <span class="req">*</span></label>
+          <div style="display:flex;align-items:center;gap:.5rem;">
+            <input type="number" id="licenseYear" required placeholder="e.g. 2015" min="1950" max="2026" style="flex:1;" onchange="calcLicenseAge()">
+            <span class="age-badge" id="licenseAgeDisplay" style="display:none;"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMERGENCY CONTACT -->
+    <div class="form-section">
+      <div class="sec-header"><span class="sec-icon">🚨</span><div><div class="sec-num">SECTION 03</div><div class="sec-title">Emergency Contact</div></div></div>
+      <div class="form-row">
+        <div class="form-group"><label>Full Name <span class="req">*</span></label><input type="text" id="emergencyName" required placeholder="Emergency contact name"></div>
+        <div class="form-group"><label>Phone Number <span class="req">*</span></label><input type="tel" id="emergencyPhone" required placeholder="0412 345 678"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Relationship <span class="req">*</span></label><input type="text" id="emergencyRelation" required placeholder="e.g. Spouse, Parent, Friend"></div>
+        <div class="form-group"><label>Address <span class="opt">(optional)</span></label><input type="text" id="emergencyAddress" placeholder="Contact address"></div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="form-section">
+      <div class="sec-header"><span class="sec-icon">📄</span><div><div class="sec-num">SECTION 04</div><div class="sec-title">Required Documents</div></div></div>
+      <div class="form-group"><label>Driver's Licence — Front <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><p style="font-size:.75rem;margin-top:.25rem;">PDF, JPG or PNG — max 10MB</p><input type="file" id="licFront" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_licFront"></div></div>
+      <div class="form-group"><label>Driver's Licence — Back <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="licBack" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_licBack"></div></div>
+      <div class="form-group"><label>Passport <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="passport" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_passport"></div></div>
+      <div class="form-group"><label>Visa / VEVO <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="visaDoc" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_visaDoc"></div></div>
+      <div class="form-group"><label>Medicare Card or Photo ID <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="medicareId" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_medicareId"></div></div>
+    </div>
+
+    <!-- INSURANCE DECLARATION -->
+    <div class="form-section">
+      <div class="sec-header"><span class="sec-icon">🛡️</span><div><div class="sec-num">SECTION 05</div><div class="sec-title">Insurance Declaration</div></div></div>
+      <div class="form-group">
+        <label>1. In the past 5 years, have you been involved in any accident (at fault or not at fault)? <span class="req">*</span></label>
+        <div class="radio-row">
+          <div class="radio-item"><input type="radio" name="accident" value="no" id="accNo" required checked><label for="accNo">No</label></div>
+          <div class="radio-item"><input type="radio" name="accident" value="yes" id="accYes"><label for="accYes">Yes</label></div>
+        </div>
+        <div class="conditional" id="accDetails">
+          <div class="form-group"><label>When did it occur? (Month/Year approximate)</label><input type="text" id="accDate" placeholder="e.g. March 2022"></div>
+          <div class="form-group"><label>Were you at fault?</label><div class="radio-row"><div class="radio-item"><input type="radio" name="fault" value="at_fault"><label>At Fault</label></div><div class="radio-item"><input type="radio" name="fault" value="not_fault"><label>Not At Fault</label></div></div></div>
+          <div class="form-group"><label>Was excess paid?</label><div class="radio-row"><div class="radio-item"><input type="radio" name="excess" value="yes"><label>Yes</label></div><div class="radio-item"><input type="radio" name="excess" value="no"><label>No</label></div></div></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>2. In the past 5 years have you had any insurance policy declined, cancelled, renewal declined, special conditions imposed or claim refused? <span class="req">*</span></label>
+        <div class="radio-row">
+          <div class="radio-item"><input type="radio" name="insDec" value="no" required checked><label>No</label></div>
+          <div class="radio-item"><input type="radio" name="insDec" value="yes"><label>Yes</label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>3. In the past 5 years have you committed any criminal act in relation to fraud, theft, burglary, drugs, arson, criminal, malicious or wilful damage? <span class="req">*</span></label>
+        <div class="radio-row">
+          <div class="radio-item"><input type="radio" name="criminal" value="no" required checked><label>No</label></div>
+          <div class="radio-item"><input type="radio" name="criminal" value="yes"><label>Yes</label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>4. In the past 5 years have you been declared bankrupt or defaulted on a loan or credit card? <span class="req">*</span></label>
+        <div class="radio-row">
+          <div class="radio-item"><input type="radio" name="bankrupt" value="no" required checked><label>No</label></div>
+          <div class="radio-item"><input type="radio" name="bankrupt" value="yes"><label>Yes</label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RENTAL AGREEMENT -->
+    <div class="form-section">
+      <div class="sec-header"><span class="sec-icon">📋</span><div><div class="sec-num">SECTION 06</div><div class="sec-title">Rental Agreement</div></div></div>
+      <div class="agreement-scroll">
+        <h4>RENTAL AGREEMENT — RENTER INFORMATION</h4>
+        <table>
+          <tr><td>Name</td><td id="ag_name">—</td></tr>
+          <tr><td>Date of Birth</td><td id="ag_dob">—</td></tr>
+          <tr><td>Address</td><td id="ag_address">—</td></tr>
+          <tr><td>Driver's Licence</td><td id="ag_licence">—</td></tr>
+          <tr><td>Contact No</td><td id="ag_mobile">—</td></tr>
+          <tr><td>Email</td><td id="ag_email">—</td></tr>
+          <tr><td>Contract Period</td><td>3 / 6 Months (to be confirmed)</td></tr>
+          <tr><td>Bond</td><td>4 weeks rent in advance</td></tr>
+          <tr><td>Emergency Contact</td><td id="ag_emergency">—</td></tr>
+        </table>
+        <h4>VEHICLE DETAILS (Completed by Admin)</h4>
+        <table>
+          <tr><td>Registration No</td><td><em>To be assigned by Ozee Rentals</em></td></tr>
+          <tr><td>Car Make &amp; Model</td><td><em>To be assigned by Ozee Rentals</em></td></tr>
+          <tr><td>Bond Received</td><td><em>4 weeks rent in advance</em></td></tr>
+          <tr><td>Vehicle Insurance Excess</td><td>$1,195 + ($550 Age Excess if applicable)</td></tr>
+        </table>
+        <h4>RENTAL VEHICLE AGREEMENT TERMS AND CONDITIONS</h4>
+        <p>This is an agreement between the prospective hirer identified above (you) and the car owner(s) to rent the motor vehicle described above including all accessories, tools, tyres, and equipment and any replacement vehicle (the vehicle).</p>
+        <h4>1. VEHICLE CONDITION AND RETURN</h4>
+        <p>The vehicle is delivered to you in good operating condition and reasonable order and with the seal on the odometer unbroken. You agree to return the vehicle in the same condition (except for ordinary wear and tear NOT INCLUDING WINDSCREEN AND TYRE DAMAGE) together with all tools, accessories, tyres, and equipment to the location specified and on the date specified (or sooner if demanded) to get a full refund of your bond money.</p>
+        <h4>2. UNAUTHORISED AND PROHIBITED USE</h4>
+        <p>Persons who must NOT drive the vehicle: (a) A person not identified in this agreement. (b) A person not licensed for that class of vehicle. (c) A person whose blood alcohol concentration exceeds the legal limit. (d) A person who provided false name, age, address or driver's license. (e) A person whose license has been cancelled or suspended within the last 3 years. (f) A person who has held an unconditional driver licence for less than 1 year. (g) A person under the age of 21. (h) Outside the area of use limitation. (i) On unsealed or off-road conditions unless authorised in writing.</p>
+        <h4>GENERAL PROVISIONS</h4>
+        <p>(a) You will promptly report any loss or damage to the vehicle. (b) All loss and damage per incident is subject to the damage liability charge. (c) We are not responsible if goods are left inside the car. (d) A late payment fee of 10% applies if invoice remains unpaid more than 2 days. (e) Bonds held for maximum 7 business days. (f) No bond refunded if you cannot abide by the agreement period.</p>
+        <h4>3. FUEL, CLEANLINESS AND EXTERIORS</h4>
+        <p>The vehicle must be returned with the same amount of fuel as at the time of rental. Same applies to the cleanliness and exteriors of the vehicle.</p>
+        <h4>4. LIABILITY FOR PENALTIES AND ADDRESS UPDATES</h4>
+        <p>During the hire period, the hirer is solely responsible for any penalties, fines, or misuse of the vehicle. The hirer must promptly notify Ozee Rentals of any changes to their address.</p>
+        <h4>5. VEHICLE TRACKING</h4>
+        <p>Most vehicles are equipped with GPS trackers. These allow monitoring of vehicle location and usage during the hire period.</p>
+        <h4>6. VEHICLE INSURANCE COVERAGE</h4>
+        <p>The Renter is liable for the applicable insurance excess in the event of any damage, loss, or incident. The authorized driver is solely responsible for their driving behavior and must ensure the vehicle is roadworthy before use.</p>
+      </div>
+
+      <div class="agree-check"><input type="checkbox" id="termsAccepted" required><label for="termsAccepted">I have read, understood and accept these Terms and Conditions and any other special conditions of this agreement <span class="req">*</span></label></div>
+      <div class="agree-check"><input type="checkbox" id="insuranceDecl" required><label for="insuranceDecl">I declare that all information provided in the Insurance Declaration is true and accurate to the best of my knowledge <span class="req">*</span></label></div>
+      <div class="agree-check"><input type="checkbox" id="rentalAgreement" required><label for="rentalAgreement">I agree to abide by all terms outlined in the Rental Agreement above <span class="req">*</span></label></div>
+    </div>
+
+    <!-- SIGNATURE -->
+    <div class="form-section">
+      <div class="sec-header"><span class="sec-icon">✍️</span><div><div class="sec-num">SECTION 07</div><div class="sec-title">Digital Signature</div></div></div>
+      <div class="form-group">
+        <label>Hirer Signature <span class="req">*</span></label>
+        <canvas class="sig-canvas" id="sigCanvas"></canvas>
+        <button type="button" class="sig-clear" onclick="clearSig()">✕ Clear Signature</button>
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="signDate" value="" readonly style="background:#f8f9fa;cursor:not-allowed;">
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
+    <div class="success-msg" id="successMsg">
+      <h3>✅ Application Submitted!</h3>
+      <p>Thank you for applying to drive with Ozee Rentals. We will review your application and contact you within 24–48 hours.</p>
+      <p style="margin-top:.75rem;"><strong>Phone:</strong> 0450 786 145 | <strong>Email:</strong> omer@ozeerentals.com.au</p>
+    </div>
+    <div class="error-msg" id="errorMsg"></div>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://tbhqamcuewycaqertpba.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
+<script>
+// Set today's date
+document.getElementById('signDate').value = new Date().toISOString().split('T')[0];
+
+// Age calculator
+function calcAge(){
+  const dob = document.getElementById('dob').value;
+  if(!dob) return;
+  const age = Math.floor((new Date() - new Date(dob)) / (365.25*24*60*60*1000));
+  const el = document.getElementById('ageDisplay');
+  el.textContent = `Age: ${age} yrs`;
+  el.style.display = 'inline-block';
+  updateAgreement();
+}
+
+// License age calculator
+function calcLicenseAge(){
+  const yr = parseInt(document.getElementById('licenseYear').value);
+  if(!yr) return;
+  const age = new Date().getFullYear() - yr;
+  const el = document.getElementById('licenseAgeDisplay');
+  el.textContent = `${age} yrs experience`;
+  el.style.display = 'inline-block';
+}
+
+// Show file preview
+function showPreview(input){
+  const id = 'prev_' + input.id;
+  const el = document.getElementById(id);
+  if(input.files[0]){
+    el.textContent = '✓ ' + input.files[0].name;
+    el.style.display = 'block';
+  }
+}
+
+// Update agreement with form values
+function updateAgreement(){
+  const fn = document.getElementById('firstName').value;
+  const mn = document.getElementById('middleName').value;
+  const ln = document.getElementById('lastName').value;
+  const fullName = [fn, mn, ln].filter(Boolean).join(' ');
+  if(document.getElementById('ag_name')) document.getElementById('ag_name').textContent = fullName || '—';
+  const dob = document.getElementById('dob').value;
+  if(document.getElementById('ag_dob')) document.getElementById('ag_dob').textContent = dob ? new Date(dob).toLocaleDateString('en-AU') : '—';
+  const addr = document.getElementById('address').value;
+  if(document.getElementById('ag_address')) document.getElementById('ag_address').textContent = addr || '—';
+  const licNum = document.getElementById('licenseNum').value;
+  const licState = document.getElementById('licenseState').value;
+  if(document.getElementById('ag_licence')) document.getElementById('ag_licence').textContent = licNum ? `${licNum} (${licState})` : '—';
+  if(document.getElementById('ag_mobile')) document.getElementById('ag_mobile').textContent = document.getElementById('mobile').value || '—';
+  if(document.getElementById('ag_email')) document.getElementById('ag_email').textContent = document.getElementById('email').value || '—';
+  const en = document.getElementById('emergencyName').value;
+  const ep = document.getElementById('emergencyPhone').value;
+  const er = document.getElementById('emergencyRelation').value;
+  if(document.getElementById('ag_emergency')) document.getElementById('ag_emergency').textContent = en ? `${en} (${er}) — ${ep}` : '—';
+}
+
+// Live update agreement
+['firstName','middleName','lastName','dob','address','mobile','email','licenseNum','licenseState','emergencyName','emergencyPhone','emergencyRelation'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('input', updateAgreement);
+  if(el) el.addEventListener('change', updateAgreement);
+});
+
+// Accident conditional
+document.querySelectorAll('input[name="accident"]').forEach(r=>{
+  r.addEventListener('change',()=>{
+    document.getElementById('accDetails').classList.toggle('show', r.value==='yes' && r.checked);
+  });
+});
+
+// Signature pad
+const canvas = document.getElementById('sigCanvas');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+function getPos(e){
+  const rect = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return [src.clientX - rect.left, src.clientY - rect.top];
+}
+canvas.addEventListener('mousedown', e=>{ drawing=true; ctx.beginPath(); const [x,y]=getPos(e); ctx.moveTo(x,y); });
+canvas.addEventListener('mousemove', e=>{ if(!drawing) return; const [x,y]=getPos(e); ctx.lineTo(x,y); ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.lineCap='round'; ctx.stroke(); });
+canvas.addEventListener('mouseup', ()=>drawing=false);
+canvas.addEventListener('touchstart', e=>{ e.preventDefault(); drawing=true; ctx.beginPath(); const [x,y]=getPos(e); ctx.moveTo(x,y); });
+canvas.addEventListener('touchmove', e=>{ e.preventDefault(); if(!drawing) return; const [x,y]=getPos(e); ctx.lineTo(x,y); ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.lineCap='round'; ctx.stroke(); });
+canvas.addEventListener('touchend', ()=>drawing=false);
+function clearSig(){ ctx.clearRect(0,0,canvas.width,canvas.height); }
+
+// SUBMIT
+document.getElementById('driverForm').addEventListener('submit', async(e)=>{
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  // Check signature
+  const sigData = canvas.toDataURL();
+  const isBlank = !ctx.getImageData(0,0,canvas.width,canvas.height).data.some(v=>v!==0);
+  if(isBlank){ alert('Please sign the form before submitting.'); btn.disabled=false; btn.textContent='Submit Application'; return; }
+
+  try{
+    // Prepare driver data
+    const driverData = {
+      first_name: document.getElementById('firstName').value,
+      middle_name: document.getElementById('middleName').value || null,
+      last_name: document.getElementById('lastName').value,
+      dob: document.getElementById('dob').value,
+      address: document.getElementById('address').value,
+      mobile: document.getElementById('mobile').value,
+      email: document.getElementById('email').value,
+      visa_status: document.getElementById('visaStatus').value,
+      license_number: document.getElementById('licenseNum').value,
+      license_state: document.getElementById('licenseState').value,
+      license_expiry: document.getElementById('licenseExpiry').value,
+      license_year: parseInt(document.getElementById('licenseYear').value),
+      emergency_name: document.getElementById('emergencyName').value,
+      emergency_phone: document.getElementById('emergencyPhone').value,
+      emergency_relation: document.getElementById('emergencyRelation').value,
+      emergency_address: document.getElementById('emergencyAddress').value || null,
+      had_accident: document.querySelector('input[name="accident"]:checked')?.value === 'yes',
+      accident_details: document.getElementById('accDate')?.value || null,
+      insurance_declined: document.querySelector('input[name="insDec"]:checked')?.value === 'yes',
+      criminal_history: document.querySelector('input[name="criminal"]:checked')?.value === 'yes',
+      bankruptcy: document.querySelector('input[name="bankrupt"]:checked')?.value === 'yes',
+      terms_accepted: document.getElementById('termsAccepted').checked,
+      insurance_declared: document.getElementById('insuranceDecl').checked,
+      agreement_signed: document.getElementById('rentalAgreement').checked,
+      signed_date: document.getElementById('signDate').value,
+      status: 'Pending'
+    };
+
+    // Insert driver record
+    const {data: driver, error: driverErr} = await supabase
+      .from('drivers').insert([driverData]).select().single();
+    if(driverErr) throw driverErr;
+
+    // Upload documents
+    const files = [
+      {id:'licFront', type:'license_front'},
+      {id:'licBack', type:'license_back'},
+      {id:'passport', type:'passport'},
+      {id:'visaDoc', type:'visa_vevo'},
+      {id:'medicareId', type:'medicare_id'},
+    ];
+
+    for(const f of files){
+      const input = document.getElementById(f.id);
+      if(input.files[0]){
+        const file = input.files[0];
+        const path = `driver_${driver.id}/${f.type}_${Date.now()}.${file.name.split('.').pop()}`;
+        const {error: upErr} = await supabase.storage.from('driver-documents').upload(path, file);
+        if(!upErr){
+          const {data:{publicUrl}} = supabase.storage.from('driver-documents').getPublicUrl(path);
+          await supabase.from('documents').insert([{
+            entity_type:'driver', entity_id:driver.id,
+            document_type:f.type, file_name:file.name,
+            file_url:publicUrl, file_size:file.size, mime_type:file.type
+          }]);
+        }
+      }
+    }
+
+    // Upload signature
+    const sigBlob = await(await fetch(sigData)).blob();
+    const sigPath = `driver_${driver.id}/signature.png`;
+    await supabase.storage.from('driver-documents').upload(sigPath, sigBlob);
+
+    document.getElementById('successMsg').style.display='block';
+    document.getElementById('driverForm').style.display='none';
+
+  } catch(err){
+    console.error(err);
+    const errEl = document.getElementById('errorMsg');
+    errEl.textContent = 'Submission failed: ' + (err.message || 'Please try again or contact us directly.');
+    errEl.style.display='block';
+    btn.disabled=false;
+    btn.textContent='Submit Application';
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ozee Rentals — Coming Soon</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Barlow",sans-serif;background:#04090F;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
+.bg{position:fixed;inset:0;background-image:url("assets/hero.png");background-size:cover;background-position:center;z-index:0;}
+.overlay{position:fixed;inset:0;background:linear-gradient(to bottom,rgba(4,9,15,.7) 0%,rgba(4,9,15,.85) 60%,rgba(4,9,15,.97) 100%);z-index:1;}
+.content{position:relative;z-index:2;text-align:center;padding:2rem;max-width:700px;}
+.logo{height:90px;width:auto;object-fit:contain;filter:brightness(0) invert(1);margin-bottom:2rem;}
+.pill{display:inline-flex;align-items:center;gap:.6rem;padding:.45rem 1.4rem;border:1px solid rgba(245,166,35,.4);background:rgba(245,166,35,.08);border-radius:2px;font-size:.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#F5A623;margin-bottom:2rem;}
+.dot{width:8px;height:8px;background:#F5A623;border-radius:50%;animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+h1{font-family:"Barlow Condensed",sans-serif;font-size:clamp(3rem,10vw,7rem);font-weight:900;text-transform:uppercase;letter-spacing:-1px;line-height:.9;margin-bottom:1.5rem;text-shadow:0 4px 30px rgba(0,0,0,.8);}
+h1 span{color:#F5A623;display:block;}
+p{font-size:1.1rem;color:rgba(255,255,255,.6);line-height:1.7;max-width:480px;margin:0 auto 2.5rem;}
+.contact-box{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin-top:2rem;}
+.contact-item{padding:.9rem 2rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font-size:.9rem;color:rgba(255,255,255,.7);text-decoration:none;transition:all .3s;}
+.contact-item:hover{border-color:#F5A623;color:#F5A623;}
+.contact-item strong{display:block;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#F5A623;margin-bottom:.3rem;}
+
+@media(max-width:600px){
+  .hero-bar h1{font-size:2.5rem;}
+  .contact-box{flex-direction:column;}
+  .contact-item{width:100%;}
+}
+.admin-link{margin-top:3rem;font-size:.75rem;color:rgba(255,255,255,.2);text-decoration:none;letter-spacing:2px;text-transform:uppercase;transition:color .3s;}
+.admin-link:hover{color:rgba(255,255,255,.5);}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="overlay"></div>
+<div class="content">
+  <img src="assets/logo.jpeg" class="logo" alt="Ozee Rentals">
+  <div class="pill"><span class="dot"></span> Website Under Construction</div>
+  <h1>DRIVE MORE.<br><span>EARN MORE.</span></h1>
+  <p>We are putting the finishing touches on our new website. In the meantime, contact us directly to enquire about our vehicles.</p>
+  <div class="contact-box">
+    <a href="tel:0450786145" class="contact-item"><strong>Phone</strong>0450 786 145</a>
+    <a href="mailto:omer@ozeerentals.com.au" class="contact-item"><strong>Email</strong>omer@ozeerentals.com.au</a>
+    <a href="#" class="contact-item"><strong>Location</strong>17A Drift St, West Wallsend NSW 2286</a>
+  </div>
+  <div style="margin-top:1.5rem;font-size:.7rem;color:rgba(255,255,255,.15);letter-spacing:1px;">ABN: 71 694 905 667</div>
+  <a href="admin/" class="admin-link">Admin Access</a>
+</div>
+</body>
+</html>
