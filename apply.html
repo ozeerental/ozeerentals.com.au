@@ -269,10 +269,9 @@ textarea{resize:vertical;min-height:80px;}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = 'https://tbhqamcuewycaqertpba.supabase.co';
+const SUPABASE_URL = 'https://tbhqamcuewycaqertpba.window._sb.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U';
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const supabase = supabaseClient;
+window._sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 </script>
 <script>
 // Set today's date
@@ -406,7 +405,7 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
     };
 
     // Insert driver record
-    const {data: driver, error: driverErr} = await supabase
+    const {data: driver, error: driverErr} = await window._sb
       .from('drivers').insert([driverData]).select().single();
     if(driverErr) throw driverErr;
 
@@ -424,10 +423,10 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
       if(input.files[0]){
         const file = input.files[0];
         const path = `driver_${driver.id}/${f.type}_${Date.now()}.${file.name.split('.').pop()}`;
-        const {error: upErr} = await supabase.storage.from('driver-documents').upload(path, file);
+        const {error: upErr} = await window._sb.storage.from('driver-documents').upload(path, file);
         if(!upErr){
-          const {data:{publicUrl}} = supabase.storage.from('driver-documents').getPublicUrl(path);
-          await supabase.from('documents').insert([{
+          const {data:{publicUrl}} = window._sb.storage.from('driver-documents').getPublicUrl(path);
+          await window._sb.from('documents').insert([{
             entity_type:'driver', entity_id:driver.id,
             document_type:f.type, file_name:file.name,
             file_url:publicUrl, file_size:file.size, mime_type:file.type
@@ -439,7 +438,7 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
     // Upload signature
     const sigBlob = await(await fetch(sigData)).blob();
     const sigPath = `driver_${driver.id}/signature.png`;
-    await supabase.storage.from('driver-documents').upload(sigPath, sigBlob);
+    await window._sb.storage.from('driver-documents').upload(sigPath, sigBlob);
 
     document.getElementById('successMsg').style.display='block';
     document.getElementById('driverForm').style.display='none';
