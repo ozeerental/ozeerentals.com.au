@@ -271,7 +271,8 @@ textarea{resize:vertical;min-height:80px;}
 <script>
 const SUPABASE_URL = 'https://tbhqamcuewycaqertpba.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = supabaseClient;
 </script>
 <script>
 // Set today's date
