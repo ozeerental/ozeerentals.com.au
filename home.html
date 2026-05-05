@@ -3,23 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Ozee Rentals — Drive More. Earn More. Premium car rentals for Uber Eats, DoorDash, Rideshare & Amazon Flex drivers in NSW. From $150/week.">
-<title>Ozee Rentals | Drive More. Earn More. | NSW Car Rentals from $150/week</title>
+<meta name="description" content="Ozee Rentals — Drive More. Earn More. Premium car rentals for Uber Eats, DoorDash, Rideshare and Amazon Flex drivers in NSW. From 50/week.">
+<title>Ozee Rentals | Drive More. Earn More. | NSW Car Rentals from 50/week</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-
-:root{--gold:#F5A623;--gold2:#D4880A;--dark:#04090F;--navy:#060e1c;--card:rgba(255,255,255,.04);--border:rgba(245,166,35,.18);--text:#E8EDF5;--muted:rgba(255,255,255,.45);}
+:root{--gold:#F5A623;--gold2:#D4880A;--dark:#04090F;--navy:#060e1c;--border:rgba(245,166,35,.18);--muted:rgba(255,255,255,.45);}
 *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
 body{font-family:"Barlow",sans-serif;background:var(--dark);color:#fff;overflow-x:hidden;}
-
-/* NAV */
 .nav{position:fixed;top:0;width:100%;z-index:500;padding:1.2rem 5%;display:flex;justify-content:space-between;align-items:center;background:rgba(4,9,15,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
 .nav-logo img{height:48px;width:auto;object-fit:contain;filter:brightness(0) invert(1);}
 .nav-links{display:flex;gap:2rem;align-items:center;}
 .nav-links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:.9rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;transition:color .2s;}
 .nav-links a:hover{color:var(--gold);}
 .nav-cta{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000!important;padding:.7rem 1.8rem;font-weight:700!important;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
-/* HERO */
 .hero{position:relative;height:100vh;min-height:700px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;}
 .hero-bg{position:absolute;inset:0;background-image:url("hero.png");background-size:cover;background-position:center 60%;z-index:0;}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(4,9,15,.55) 0%,rgba(4,9,15,.4) 35%,rgba(4,9,15,.65) 70%,rgba(4,9,15,1) 100%);}
@@ -27,7 +24,7 @@ body{font-family:"Barlow",sans-serif;background:var(--dark);color:#fff;overflow-
 .hero-pill{display:inline-flex;align-items:center;gap:.6rem;padding:.45rem 1.4rem;border:1px solid rgba(245,166,35,.4);background:rgba(245,166,35,.08);font-size:.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;}
 .dot{width:7px;height:7px;background:var(--gold);border-radius:50%;animation:blink 1.5s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.hero h1{font-family:"Barlow Condensed",sans-serif;font-size:clamp(4rem,12vw,9rem);font-weight:900;text-transform:uppercase;letter-spacing:-2px;line-height:.88;margin-bottom:1.5rem;text-shadow:0 4px 30px rgba(0,0,0,.8);}
+.hero h1{font-family:"Barlow Condensed",sans-serif;font-size:clamp(4rem,12vw,9rem);font-weight:900;text-transform:uppercase;letter-spacing:-2px;line-height:.88;margin-bottom:1.5rem;}
 .hero h1 .gold{color:var(--gold);}
 .hero-sub{font-size:clamp(1rem,2vw,1.25rem);color:rgba(255,255,255,.65);max-width:580px;margin:0 auto 1.5rem;line-height:1.7;}
 .hero-price{display:inline-flex;align-items:baseline;gap:.75rem;background:rgba(0,0,0,.4);border:1px solid var(--border);padding:.8rem 2rem;margin-bottom:2.5rem;}
@@ -39,119 +36,74 @@ body{font-family:"Barlow",sans-serif;background:var(--dark);color:#fff;overflow-
 .btn-gold:hover{box-shadow:0 15px 60px rgba(245,166,35,.7);transform:translateY(-3px);}
 .btn-outline{border:1.5px solid rgba(255,255,255,.3);color:#fff;padding:1.1rem 2.8rem;font-family:"Barlow Condensed",sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:all .3s;}
 .btn-outline:hover{border-color:var(--gold);color:var(--gold);}
-/* MARQUEE */
-.marquee{background:var(--gold);overflow:hidden;padding:.85rem 0;border-top:2px solid var(--gold2);border-bottom:2px solid var(--gold2);}
+.marquee{background:var(--gold);overflow:hidden;padding:.85rem 0;}
 .marquee-track{display:flex;gap:2.5rem;animation:marquee 30s linear infinite;width:max-content;}
 .m-item{font-family:"Barlow Condensed",sans-serif;font-size:1rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#000;white-space:nowrap;display:flex;align-items:center;gap:1rem;}
-.m-sep{opacity:.3;}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-/* SECTIONS */
-.section{padding:6rem 5%;position:relative;}
+.section{padding:6rem 5%;}
 .section-inner{max-width:1300px;margin:0 auto;}
 .s-label{font-size:.75rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:block;}
 .s-title{font-family:"Barlow Condensed",sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:900;text-transform:uppercase;letter-spacing:-1px;line-height:.95;margin-bottom:1.5rem;}
 .s-title span{color:var(--gold);}
-/* SEGMENTS */
-.seg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5px;background:rgba(255,255,255,.06);}
-.seg{background:var(--dark);padding:3.5rem 2.5rem;position:relative;overflow:hidden;transition:background .3s;cursor:default;}
-.seg:hover{background:#080f1a;}
-.seg-bg-num{position:absolute;top:-20px;right:-10px;font-family:"Barlow Condensed",sans-serif;font-size:10rem;font-weight:900;color:rgba(255,255,255,.025);line-height:1;pointer-events:none;}
-.seg-icon{font-size:3rem;margin-bottom:2rem;}
-.seg-title{font-family:"Barlow Condensed",sans-serif;font-size:2rem;font-weight:900;text-transform:uppercase;margin-bottom:1rem;}
-.seg-desc{color:var(--muted);line-height:1.75;margin-bottom:1.5rem;font-size:.95rem;}
-.seg-chips{display:flex;flex-wrap:wrap;gap:.5rem;}
-.chip{border:1px solid rgba(245,166,35,.25);color:rgba(245,166,35,.8);font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:.3rem .8rem;}
-/* WHY US */
-.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;}
-.why-list{display:flex;flex-direction:column;}
-.why-item{padding:2rem 0;border-bottom:1px solid rgba(255,255,255,.07);display:grid;grid-template-columns:50px 1fr;gap:1.5rem;align-items:start;transition:padding-left .3s;}
-.why-item:hover{padding-left:1rem;background:rgba(255,255,255,.02);}
-.why-item:first-child{border-top:1px solid rgba(255,255,255,.07);}
-.why-num{font-family:"Barlow Condensed",sans-serif;font-size:2.2rem;font-weight:900;color:var(--gold);line-height:1;}
-.why-title{font-family:"Barlow Condensed",sans-serif;font-size:1.25rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:.4rem;}
-.why-desc{color:var(--muted);font-size:.9rem;line-height:1.6;}
-.earn-box{margin-top:3rem;border:1px solid var(--border);padding:2.5rem;background:rgba(245,166,35,.04);position:relative;}
-.earn-box::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2));}
 /* FLEET */
-.fleet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:1.5px;background:rgba(255,255,255,.05);}
-.car-card{background:var(--dark);position:relative;overflow:hidden;transition:background .3s;cursor:pointer;}
+.fleet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5px;background:rgba(255,255,255,.05);}
+.car-card{background:var(--dark);position:relative;overflow:hidden;transition:background .3s;}
 .car-card:hover{background:#07101e;}
-.car-stage{height:240px;background:radial-gradient(ellipse at 50% 80%,rgba(245,120,20,.15),transparent 65%),linear-gradient(to bottom,#07111f,var(--dark));display:flex;align-items:center;justify-content:center;position:relative;}
-.car-emoji{font-size:7rem;filter:drop-shadow(0 15px 35px rgba(0,0,0,.8)) drop-shadow(0 -5px 20px rgba(245,120,20,.2));transition:transform .4s;}
-.car-card:hover .car-emoji{transform:translateY(-10px) scale(1.05);}
+.car-stage{height:220px;background:radial-gradient(ellipse at 50% 80%,rgba(245,120,20,.15),transparent 65%),linear-gradient(to bottom,#07111f,var(--dark));display:flex;align-items:center;justify-content:center;position:relative;}
+.car-emoji{font-size:6rem;filter:drop-shadow(0 10px 30px rgba(0,0,0,.8));transition:transform .4s;}
+.car-card:hover .car-emoji{transform:translateY(-8px) scale(1.05);}
 .car-photo{width:100%;height:100%;object-fit:cover;}
-.car-status-badge{position:absolute;top:1rem;right:1rem;font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:.35rem .9rem;}
-.avail{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3);}
-.rented{background:rgba(245,166,35,.15);color:var(--gold);border:1px solid var(--border);}
-.maintenance{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);}
-.car-body{padding:2rem;}
+.car-badge{position:absolute;top:1rem;right:1rem;font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:.3rem .8rem;background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3);}
+.car-body{padding:1.75rem;}
 .car-make{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:rgba(245,166,35,.7);margin-bottom:.3rem;}
-.car-name{font-family:"Barlow Condensed",sans-serif;font-size:1.8rem;font-weight:900;text-transform:uppercase;margin-bottom:1rem;}
-.car-specs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;}
-.spec{font-size:.75rem;color:var(--muted);display:flex;align-items:center;gap:.3rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:.3rem .7rem;}
-.car-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.5rem;}
+.car-name{font-family:"Barlow Condensed",sans-serif;font-size:1.75rem;font-weight:900;text-transform:uppercase;margin-bottom:.75rem;}
+.car-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.25rem;}
 .tag{font-size:.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(245,166,35,.3);padding:.28rem .7rem;}
-.car-footer{display:flex;justify-content:space-between;align-items:center;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.07);}
-.car-price{font-family:"Barlow Condensed",sans-serif;font-size:2.2rem;font-weight:900;color:var(--gold);letter-spacing:-1px;}
+.car-footer{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;border-top:1px solid rgba(255,255,255,.07);}
+.car-price{font-family:"Barlow Condensed",sans-serif;font-size:2rem;font-weight:900;color:var(--gold);}
 .car-price small{font-size:.75rem;color:var(--muted);font-family:"Barlow",sans-serif;}
-.enquire-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;padding:.7rem 1.5rem;font-family:"Barlow Condensed",sans-serif;font-size:.9rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);transition:all .3s;}
-.enquire-btn:hover{box-shadow:0 8px 30px rgba(245,166,35,.5);transform:translateY(-2px);}
-/* EMPTY STATE */
-.empty-fleet{text-align:center;padding:6rem 2rem;border:1px solid var(--border);background:rgba(245,166,35,.03);}
-.empty-fleet .e-icon{font-size:4rem;margin-bottom:1.5rem;opacity:.4;}
+.enquire-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;padding:.65rem 1.4rem;font-family:"Barlow Condensed",sans-serif;font-size:.9rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+.empty-fleet{text-align:center;padding:5rem 2rem;border:1px solid var(--border);background:rgba(245,166,35,.03);}
 .empty-fleet h3{font-family:"Barlow Condensed",sans-serif;font-size:2rem;font-weight:900;text-transform:uppercase;margin-bottom:1rem;}
 .empty-fleet p{color:var(--muted);max-width:400px;margin:0 auto 2rem;}
+.loading-fleet{text-align:center;padding:3rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-size:.9rem;}
+/* WHY */
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;}
+.why-item{padding:2rem 0;border-bottom:1px solid rgba(255,255,255,.07);display:grid;grid-template-columns:50px 1fr;gap:1.5rem;}
+.why-num{font-family:"Barlow Condensed",sans-serif;font-size:2.2rem;font-weight:900;color:var(--gold);}
+.why-title{font-family:"Barlow Condensed",sans-serif;font-size:1.2rem;font-weight:900;text-transform:uppercase;margin-bottom:.4rem;}
+.why-desc{color:var(--muted);font-size:.9rem;line-height:1.6;}
 /* STEPS */
 .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5px;background:rgba(255,255,255,.05);}
-.step{background:var(--dark);padding:4rem 3rem;position:relative;}
-.step-ghost{position:absolute;top:1rem;right:1.5rem;font-family:"Barlow Condensed",sans-serif;font-size:9rem;font-weight:900;color:rgba(255,255,255,.025);line-height:1;}
-.step-badge{width:50px;height:50px;border:1.5px solid rgba(245,166,35,.3);display:flex;align-items:center;justify-content:center;margin-bottom:2rem;font-family:"Barlow Condensed",sans-serif;font-size:1.5rem;font-weight:900;color:var(--gold);}
-.step-title{font-family:"Barlow Condensed",sans-serif;font-size:1.8rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:.75rem;}
+.step{background:var(--dark);padding:3.5rem 2.5rem;}
+.step-badge{width:50px;height:50px;border:1.5px solid rgba(245,166,35,.3);display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;font-family:"Barlow Condensed",sans-serif;font-size:1.5rem;font-weight:900;color:var(--gold);}
+.step-title{font-family:"Barlow Condensed",sans-serif;font-size:1.75rem;font-weight:900;text-transform:uppercase;margin-bottom:.75rem;}
 .step-desc{color:var(--muted);line-height:1.7;font-size:.9rem;}
-/* CTA */
-.cta{padding:6rem 5%;text-align:center;background:linear-gradient(135deg,#0d1f3c,var(--navy));position:relative;overflow:hidden;}
-.cta::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,120,20,.15),transparent 60%);pointer-events:none;}
-.cta::after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
 /* CONTACT */
 .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5px;background:rgba(255,255,255,.06);max-width:1000px;margin:0 auto;}
-.contact-card{background:var(--dark);padding:2.5rem;text-align:center;transition:background .3s;}
-.contact-card:hover{background:#080f1a;}
+.contact-card{background:var(--dark);padding:2.5rem;text-align:center;}
 .c-label{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;font-weight:700;}
-.c-val{font-size:1rem;font-weight:600;}
-.c-val a{color:#fff;text-decoration:none;transition:color .3s;}
+.c-val a{color:#fff;text-decoration:none;}
 .c-val a:hover{color:var(--gold);}
+/* CTA */
+.cta-bar{padding:6rem 5%;text-align:center;background:linear-gradient(135deg,#0d1f3c,var(--navy));}
 /* FOOTER */
 footer{background:rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.06);padding:3rem 5% 2rem;}
 .footer-grid{max-width:1300px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2rem;}
-.footer-logo img{height:60px;filter:brightness(0) invert(1);margin-bottom:1rem;}
+.footer-logo img{height:55px;filter:brightness(0) invert(1);margin-bottom:1rem;}
 .footer-brand p{color:var(--muted);font-size:.9rem;line-height:1.7;max-width:260px;}
 .footer-col h4{font-family:"Barlow Condensed",sans-serif;font-size:1rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
-.footer-col a{display:block;color:var(--muted);text-decoration:none;font-size:.88rem;margin-bottom:.6rem;transition:color .2s;}
+.footer-col a{display:block;color:var(--muted);text-decoration:none;font-size:.88rem;margin-bottom:.6rem;}
 .footer-col a:hover{color:#fff;}
 .footer-bottom{max-width:1300px;margin:0 auto;padding-top:2rem;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;color:var(--muted);font-size:.8rem;}
-.footer-tagline{font-family:"Barlow Condensed",sans-serif;font-size:1rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
-.abn-badge{padding:.35rem .9rem;border:1px solid var(--border);font-size:.75rem;color:var(--muted);}
-/* REVEAL */
-.r{opacity:0;transform:translateY(30px);transition:opacity .9s,transform .9s;}
-.r.on{opacity:1;transform:none;}
-.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
-/* LOADING */
-.loading{text-align:center;padding:3rem;color:var(--muted);font-size:.9rem;letter-spacing:2px;text-transform:uppercase;}
-/* RESPONSIVE */
-@media(max-width:900px){
-  .nav-links a:not(.nav-cta){display:none;}
-  .why-grid{grid-template-columns:1fr;gap:3rem;}
-  .footer-grid{grid-template-columns:1fr;gap:2rem;}
-  .footer-bottom{flex-direction:column;text-align:center;}
-}
+.abn{padding:.35rem .9rem;border:1px solid var(--border);font-size:.75rem;color:var(--muted);}
+@media(max-width:900px){.nav-links a:not(.nav-cta){display:none;}.why-grid{grid-template-columns:1fr;gap:3rem;}.footer-grid{grid-template-columns:1fr;gap:2rem;}}
 </style>
 </head>
 <body>
-<!-- NAV -->
 <nav class="nav">
   <div class="nav-logo"><a href="#"><img src="logo.jpeg" alt="Ozee Rentals"></a></div>
   <div class="nav-links">
-    <a href="#services">Services</a>
     <a href="#fleet">Fleet</a>
     <a href="#apply">Apply</a>
     <a href="#contact">Contact</a>
@@ -159,7 +111,6 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.06);padd
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero" id="home">
   <div class="hero-bg"></div>
   <div class="hero-content">
@@ -168,7 +119,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.06);padd
     <p class="hero-sub">Premium car rentals for Uber Eats, DoorDash, Rideshare &amp; Amazon Flex drivers across NSW. Insurance, roadside &amp; servicing all included.</p>
     <div class="hero-price">
       <span class="price-from">Weekly from</span>
-      <span class="price-num">$150</span>
+      <span class="price-num">50</span>
       <span class="price-pw">AUD / week</span>
     </div>
     <div class="hero-btns">
@@ -178,214 +129,158 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.06);padd
   </div>
 </section>
 
-<!-- MARQUEE -->
-<div class="marquee">
-  <div class="marquee-track">
-    <div class="m-item">Uber Eats<span class="m-sep">◆</span></div><div class="m-item">DoorDash<span class="m-sep">◆</span></div><div class="m-item">Menulog<span class="m-sep">◆</span></div><div class="m-item">Uber<span class="m-sep">◆</span></div><div class="m-item">DiDi<span class="m-sep">◆</span></div><div class="m-item">Ola<span class="m-sep">◆</span></div><div class="m-item">Bolt<span class="m-sep">◆</span></div><div class="m-item">Amazon Flex<span class="m-sep">◆</span></div><div class="m-item">Private Rental<span class="m-sep">◆</span></div><div class="m-item">Comprehensive Insurance<span class="m-sep">◆</span></div><div class="m-item">24/7 Roadside Assist<span class="m-sep">◆</span></div><div class="m-item">Free Servicing<span class="m-sep">◆</span></div>
-    <div class="m-item">Uber Eats<span class="m-sep">◆</span></div><div class="m-item">DoorDash<span class="m-sep">◆</span></div><div class="m-item">Menulog<span class="m-sep">◆</span></div><div class="m-item">Uber<span class="m-sep">◆</span></div><div class="m-item">DiDi<span class="m-sep">◆</span></div><div class="m-item">Ola<span class="m-sep">◆</span></div><div class="m-item">Bolt<span class="m-sep">◆</span></div><div class="m-item">Amazon Flex<span class="m-sep">◆</span></div><div class="m-item">Private Rental<span class="m-sep">◆</span></div><div class="m-item">Comprehensive Insurance<span class="m-sep">◆</span></div><div class="m-item">24/7 Roadside Assist<span class="m-sep">◆</span></div><div class="m-item">Free Servicing<span class="m-sep">◆</span></div>
-  </div>
-</div>
-
-<!-- WHO WE SERVE -->
-<section class="section" id="services" style="background:var(--dark);">
-  <div class="section-inner">
-    <div class="r" style="margin-bottom:3rem;">
-      <span class="s-label">Who We Serve</span>
-      <h2 class="s-title">Built For Drivers<br><span>Who Mean Business</span></h2>
-    </div>
-    <div class="seg-grid">
-      <div class="seg r"><div class="seg-bg-num">01</div><div class="seg-icon">🍔</div><h3 class="seg-title">Food Delivery</h3><p class="seg-desc">Fuel-efficient, reliable vehicles for non-stop delivery shifts. Maximise every kilometre and every dollar you earn.</p><div class="seg-chips"><span class="chip">Uber Eats</span><span class="chip">DoorDash</span><span class="chip">Menulog</span></div></div>
-      <div class="seg r d1"><div class="seg-bg-num">02</div><div class="seg-icon">🚖</div><h3 class="seg-title">Rideshare</h3><p class="seg-desc">Comfortable, clean, and passenger-approved. Ready to earn from day one with no hidden costs.</p><div class="seg-chips"><span class="chip">Uber</span><span class="chip">DiDi</span><span class="chip">Ola</span><span class="chip">Bolt</span></div></div>
-      <div class="seg r d2"><div class="seg-bg-num">03</div><div class="seg-icon">📦</div><h3 class="seg-title">Amazon Flex & Private</h3><p class="seg-desc">Spacious vehicles for parcel deliveries or personal use. Flexible weekly terms designed around your lifestyle.</p><div class="seg-chips"><span class="chip">Amazon Flex</span><span class="chip">Private Use</span></div></div>
-    </div>
-  </div>
-</section>
+<div class="marquee"><div class="marquee-track">
+  <div class="m-item">Uber Eats ◆</div><div class="m-item">DoorDash ◆</div><div class="m-item">Menulog ◆</div><div class="m-item">Uber ◆</div><div class="m-item">DiDi ◆</div><div class="m-item">Ola ◆</div><div class="m-item">Bolt ◆</div><div class="m-item">Amazon Flex ◆</div><div class="m-item">Private Rental ◆</div><div class="m-item">Comprehensive Insurance ◆</div><div class="m-item">24/7 Roadside ◆</div><div class="m-item">Free Servicing ◆</div>
+  <div class="m-item">Uber Eats ◆</div><div class="m-item">DoorDash ◆</div><div class="m-item">Menulog ◆</div><div class="m-item">Uber ◆</div><div class="m-item">DiDi ◆</div><div class="m-item">Ola ◆</div><div class="m-item">Bolt ◆</div><div class="m-item">Amazon Flex ◆</div><div class="m-item">Private Rental ◆</div><div class="m-item">Comprehensive Insurance ◆</div><div class="m-item">24/7 Roadside ◆</div><div class="m-item">Free Servicing ◆</div>
+</div></div>
 
 <!-- WHY US -->
 <section class="section" style="background:#060C16;">
   <div class="section-inner">
     <div class="why-grid">
-      <div class="r">
+      <div>
         <span class="s-label">Why Ozee Rentals</span>
-        <h2 class="s-title">Everything<br>Included.<br><span>No Surprises.</span></h2>
-        <p style="color:var(--muted);line-height:1.7;max-width:300px;margin-bottom:0;">One flat weekly rate. Every car comes fully covered.</p>
-        <div class="earn-box">
+        <h2 class="s-title">Everything Included.<br><span>No Surprises.</span></h2>
+        <p style="color:var(--muted);line-height:1.7;max-width:300px;">One flat weekly rate. Every car comes fully covered.</p>
+        <div style="margin-top:2rem;border:1px solid var(--border);padding:2rem;background:rgba(245,166,35,.04);">
           <div style="font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;">Avg. driver earnings per week</div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:3rem;font-weight:900;color:var(--gold);letter-spacing:-2px;">$600–$800</div>
-          <div style="color:var(--muted);font-size:.9rem;margin-top:.5rem;">Minus your rental = <strong style="color:var(--gold);">real profit</strong></div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:3rem;font-weight:900;color:var(--gold);">00–00</div>
         </div>
       </div>
-      <div class="why-list">
-        <div class="why-item r d1"><div class="why-num">01</div><div><div class="why-title">Comprehensive Insurance</div><div class="why-desc">Full coverage on every vehicle, every trip. Completely included.</div></div></div>
-        <div class="why-item r d2"><div class="why-num">02</div><div><div class="why-title">24/7 Roadside Assistance</div><div class="why-desc">Break down at 3am? We've got you covered across NSW.</div></div></div>
-        <div class="why-item r d3"><div class="why-num">03</div><div><div class="why-title">Free Periodic Servicing</div><div class="why-desc">All scheduled maintenance handled by us. Always road-ready.</div></div></div>
-        <div class="why-item r"><div class="why-num">04</div><div><div class="why-title">Bond: 4 Weeks Rent</div><div class="why-desc">Simple bond structure — 4 weeks rent in advance, fully refundable.</div></div></div>
-        <div class="why-item r d1"><div class="why-num">05</div><div><div class="why-title">Fast Approval</div><div class="why-desc">Apply online, approved within 24-48 hours, start earning fast.</div></div></div>
+      <div>
+        <div class="why-item"><div class="why-num">01</div><div><div class="why-title">Comprehensive Insurance</div><div class="why-desc">Full coverage on every vehicle, every trip. Completely included.</div></div></div>
+        <div class="why-item"><div class="why-num">02</div><div><div class="why-title">24/7 Roadside Assistance</div><div class="why-desc">Break down at 3am? We have you covered across NSW.</div></div></div>
+        <div class="why-item"><div class="why-num">03</div><div><div class="why-title">Free Periodic Servicing</div><div class="why-desc">All scheduled maintenance handled by us. Always road-ready.</div></div></div>
+        <div class="why-item"><div class="why-num">04</div><div><div class="why-title">Bond: 4 Weeks Rent</div><div class="why-desc">Simple — 4 weeks rent in advance, fully refundable.</div></div></div>
+        <div class="why-item"><div class="why-num">05</div><div><div class="why-title">Fast Approval</div><div class="why-desc">Apply online, approved within 24–48 hours, start earning fast.</div></div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FLEET — loaded from Supabase -->
+<!-- FLEET -->
 <section class="section" id="fleet" style="background:var(--dark);">
   <div class="section-inner">
-    <div class="r" style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;flex-wrap:wrap;gap:1rem;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;flex-wrap:wrap;gap:1rem;">
       <div><span class="s-label">Our Fleet</span><h2 class="s-title">Available<br><span>Vehicles</span></h2></div>
       <div style="font-style:italic;color:var(--muted);font-size:.85rem;">All vehicles inspected &amp; road-ready</div>
     </div>
-    <div id="fleetContainer"><div class="loading">Loading vehicles...</div></div>
+    <div id="fleetContainer"><div class="loading-fleet">Loading vehicles...</div></div>
   </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="section" id="apply" style="background:#060C16;border-top:1px solid rgba(255,255,255,.06);">
+<section class="section" id="apply" style="background:#060C16;">
   <div class="section-inner">
-    <div class="r" style="margin-bottom:3rem;"><span class="s-label">How It Works</span><h2 class="s-title">On The Road<br><span>In 3 Steps</span></h2></div>
+    <div style="margin-bottom:3rem;"><span class="s-label">How It Works</span><h2 class="s-title">On The Road<br><span>In 3 Steps</span></h2></div>
     <div class="steps-grid">
-      <div class="step r"><div class="step-ghost">01</div><div class="step-badge">01</div><h3 class="step-title">Apply Online</h3><p class="step-desc">Fill out our simple driver application and upload your documents. Takes less than 10 minutes on any device.</p></div>
-      <div class="step r d1"><div class="step-ghost">02</div><div class="step-badge">02</div><h3 class="step-title">Quick Approval</h3><p class="step-desc">Our team reviews your application within 24-48 hours and contacts you to confirm your rental.</p></div>
-      <div class="step r d2"><div class="step-ghost">03</div><div class="step-badge">03</div><h3 class="step-title">Start Earning</h3><p class="step-desc">Pick up your car and start earning immediately. Insurance, servicing and roadside — all included.</p></div>
+      <div class="step"><div class="step-badge">01</div><h3 class="step-title">Apply Online</h3><p class="step-desc">Fill out our simple driver application and upload your documents. Takes less than 10 minutes.</p></div>
+      <div class="step"><div class="step-badge">02</div><h3 class="step-title">Quick Approval</h3><p class="step-desc">Our team reviews within 24–48 hours and contacts you to confirm your rental.</p></div>
+      <div class="step"><div class="step-badge">03</div><h3 class="step-title">Start Earning</h3><p class="step-desc">Pick up your car and start earning immediately. Insurance, servicing and roadside all included.</p></div>
     </div>
   </div>
 </section>
 
 <!-- CTA -->
-<div class="cta">
-  <div style="position:relative;z-index:1;max-width:700px;margin:0 auto;">
-    <h2 class="s-title r" style="font-size:clamp(2.5rem,6vw,5rem);">Ready To Start<br><span>Earning More?</span></h2>
-    <p class="r" style="color:var(--muted);font-size:1.1rem;margin:1rem auto 2.5rem;max-width:480px;line-height:1.6;">Join our growing fleet of drivers. Apply today and be on the road within days.</p>
-    <div class="r hero-btns" style="justify-content:center;">
-      <a href="apply.html" class="btn-gold">Apply Now — It's Free</a>
-      <a href="mailto:omer@ozeerentals.com.au" class="btn-outline">Email Us</a>
-    </div>
+<div class="cta-bar">
+  <h2 class="s-title" style="font-size:clamp(2.5rem,6vw,5rem);">Ready To Start<br><span>Earning More?</span></h2>
+  <p style="color:var(--muted);font-size:1.1rem;margin:1rem auto 2.5rem;max-width:480px;line-height:1.6;">Join our growing fleet. Apply today and be on the road within days.</p>
+  <div class="hero-btns">
+    <a href="apply.html" class="btn-gold">Apply Now — It&#39;s Free</a>
+    <a href="mailto:omer@ozeerentals.com.au" class="btn-outline">Email Us</a>
   </div>
 </div>
 
 <!-- CONTACT -->
 <section class="section" id="contact" style="background:var(--dark);">
   <div class="section-inner">
-    <div class="r" style="text-align:center;margin-bottom:3rem;"><span class="s-label">Get In Touch</span><h2 class="s-title">We're Here<br><span>To Help</span></h2></div>
+    <div style="text-align:center;margin-bottom:3rem;"><span class="s-label">Get In Touch</span><h2 class="s-title">We&#39;re Here<br><span>To Help</span></h2></div>
     <div class="contact-grid">
-      <div class="contact-card r"><div class="c-label">Phone</div><div class="c-val"><a href="tel:0450786145">0450 786 145</a></div></div>
-      <div class="contact-card r d1"><div class="c-label">Email</div><div class="c-val"><a href="mailto:omer@ozeerentals.com.au">omer@ozeerentals.com.au</a></div></div>
-      <div class="contact-card r d2"><div class="c-label">Address</div><div class="c-val">17A Drift St, West Wallsend NSW 2286</div></div>
-      <div class="contact-card r d3"><div class="c-label">Hours</div><div class="c-val">Mon–Sun, 8am – 6pm</div></div>
+      <div class="contact-card"><div class="c-label">Phone</div><div class="c-val"><a href="tel:0450786145">0450 786 145</a></div></div>
+      <div class="contact-card"><div class="c-label">Email</div><div class="c-val"><a href="mailto:omer@ozeerentals.com.au">omer@ozeerentals.com.au</a></div></div>
+      <div class="contact-card"><div class="c-label">Address</div><div class="c-val">17A Drift St, West Wallsend NSW 2286</div></div>
+      <div class="contact-card"><div class="c-label">Hours</div><div class="c-val">Mon–Sun, 8am – 6pm</div></div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
       <div class="footer-logo"><img src="logo.jpeg" alt="Ozee Rentals"></div>
-      <p>Premium car rentals for delivery and rideshare drivers across NSW, Australia. Drive More. Earn More.</p>
-      <div style="margin-top:1.5rem;"><span class="abn-badge">ABN: 71 694 905 667</span></div>
+      <p>Premium car rentals for delivery and rideshare drivers across NSW. Drive More. Earn More.</p>
+      <div style="margin-top:1.5rem;"><span class="abn">ABN: 71 694 905 667</span></div>
     </div>
     <div class="footer-col">
       <h4>Navigate</h4>
-      <a href="#services">Services</a><a href="#fleet">Fleet</a><a href="#apply">How It Works</a><a href="#contact">Contact</a>
+      <a href="#fleet">Fleet</a><a href="#apply">How It Works</a><a href="#contact">Contact</a>
     </div>
     <div class="footer-col">
       <h4>We Serve</h4>
-      <a href="#">Uber Eats</a><a href="#">DoorDash</a><a href="#">Rideshare</a><a href="#">Amazon Flex</a><a href="#">Private Use</a>
+      <a href="#">Uber Eats</a><a href="#">DoorDash</a><a href="#">Rideshare</a><a href="#">Amazon Flex</a>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 Ozee Rentals Pty Ltd. All rights reserved.</span>
-    <span class="footer-tagline">Drive More. Earn More.</span>
+    <span>&copy; 2026 Ozee Rentals Pty Ltd. All rights reserved.</span>
     <span>17A Drift St, West Wallsend NSW 2286</span>
   </div>
 </footer>
 
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-window._sb = window.supabase.createClient('https://tbhqamcuewycaqertpba.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U');
-</script>
+// ================================================================
+// OZEE RENTALS — HOME PAGE
+// Supabase Database Connection
+// ================================================================
+var PROJ = 'tbhqamcuewycaqertpba';
+var OZEEDB = window.supabase.createClient(
+  'https://' + PROJ + '.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U'
+);
 
-<script>
-// Scroll reveal
-const obs = new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');obs.unobserve(x.target);}})},{threshold:.08,rootMargin:'0px 0px -60px 0px'});
-document.querySelectorAll('.r').forEach(el=>obs.observe(el));
+// ── LOAD FLEET ──
+async function loadFleet() {
+  var container = document.getElementById('fleetContainer');
+  try {
+    var result = await OZEEDB.from('cars').select('*').eq('status', 'Available').order('weekly_rate', {ascending: true});
+    var cars = result.data;
+    var err = result.error;
 
-// Smooth scroll
-document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}})});
+    if (err) throw err;
 
-// Load fleet from Supabase
-async function loadFleet(){
-  const container = document.getElementById('fleetContainer');
-  try{
-    const {data:cars,error} = await window._sb
-      .from('cars')
-      .select('*')
-      .eq('status','Available')
-      .order('weekly_rate',{ascending:true});
-
-    if(error) throw error;
-
-    if(!cars || cars.length===0){
-      container.innerHTML = `
-        <div class="empty-fleet">
-          <div class="e-icon">🚗</div>
-          <h3>Fleet Coming Soon</h3>
-          <p>Our vehicles are being prepared. Contact us directly to enquire about available cars.</p>
-          <a href="tel:0450786145" class="btn-gold" style="display:inline-block;padding:.9rem 2.5rem;">Call 0450 786 145</a>
-        </div>`;
+    if (!cars || cars.length === 0) {
+      container.innerHTML = '<div class="empty-fleet"><div style="font-size:3rem;margin-bottom:1rem;">&#128663;</div><h3>Fleet Coming Soon</h3><p>Our vehicles are being prepared. Contact us directly to enquire.</p><a href="tel:0450786145" class="btn-gold" style="display:inline-block;padding:.9rem 2.5rem;margin-top:1rem;">Call 0450 786 145</a></div>';
       return;
     }
 
-    const grid = document.createElement('div');
-    grid.className = 'fleet-grid';
-
-    cars.forEach(car=>{
-      const tags = (car.suitable_for||[]).map(t=>`<span class="tag">${t}</span>`).join('');
-      const specs = [
-        car.transmission ? `<span class="spec">⚙️ ${car.transmission}</span>` : '',
-        car.seats ? `<span class="spec">👥 ${car.seats} Seats</span>` : '',
-        car.fuel_type ? `<span class="spec">⛽ ${car.fuel_type}</span>` : '',
-        car.category ? `<span class="spec">🏷️ ${car.category}</span>` : '',
-      ].join('');
-
-      const visual = car.photo_url
-        ? `<img src="${car.photo_url}" class="car-photo" alt="${car.make_model}">`
-        : `<div class="car-emoji">🚗</div>`;
-
-      grid.innerHTML += `
-        <div class="car-card r">
-          <div class="car-stage">
-            <span class="car-status-badge avail">Available</span>
-            ${visual}
-          </div>
-          <div class="car-body">
-            <div class="car-make">${car.make_model.split(' ')[0]}</div>
-            <h3 class="car-name">${car.make_model} ${car.year}</h3>
-            <div class="car-specs">${specs}</div>
-            <div class="car-tags">${tags}</div>
-            <div class="car-footer">
-              <div class="car-price">$${car.weekly_rate}<small>/week</small></div>
-              <a href="mailto:omer@ozeerentals.com.au?subject=Enquiry: ${car.make_model} ${car.year} (Rego: ${car.rego})" class="enquire-btn">Enquire</a>
-            </div>
-          </div>
-        </div>`;
+    var grid = '<div class="fleet-grid">';
+    cars.forEach(function(car) {
+      var tags = (car.suitable_for || []).map(function(t) { return '<span class="tag">' + t + '</span>'; }).join('');
+      var visual = car.photo_url
+        ? '<img src="' + car.photo_url + '" class="car-photo" alt="' + car.make_model + '">' 
+        : '<div class="car-emoji">&#128663;</div>';
+      grid += '<div class="car-card">' +
+        '<div class="car-stage"><span class="car-badge">Available</span>' + visual + '</div>' +
+        '<div class="car-body">' +
+          '<div class="car-make">' + car.make_model.split(' ')[0] + '</div>' +
+          '<h3 class="car-name">' + car.make_model + ' ' + car.year + '</h3>' +
+          '<div class="car-tags">' + tags + '</div>' +
+          '<div class="car-footer">' +
+            '<div class="car-price">$' + car.weekly_rate + '<small>/week</small></div>' +
+            '<a href="mailto:omer@ozeerentals.com.au?subject=Enquiry: ' + car.make_model + ' ' + car.year + '" class="enquire-btn">Enquire</a>' +
+          '</div>' +
+        '</div></div>';
     });
-
-    container.innerHTML = '';
-    container.appendChild(grid);
-    grid.querySelectorAll('.r').forEach(el=>obs.observe(el));
+    grid += '</div>';
+    container.innerHTML = grid;
 
   } catch(e) {
-    console.error(e);
-    container.innerHTML = `
-      <div class="empty-fleet">
-        <div class="e-icon">🚗</div>
-        <h3>Fleet Coming Soon</h3>
-        <p>Contact us directly to enquire about available vehicles.</p>
-        <a href="tel:0450786145" class="btn-gold" style="display:inline-block;padding:.9rem 2.5rem;">Call 0450 786 145</a>
-      </div>`;
+    console.error('Fleet load error:', e);
+    container.innerHTML = '<div class="empty-fleet"><div style="font-size:3rem;margin-bottom:1rem;">&#128663;</div><h3>Fleet Coming Soon</h3><p>Contact us directly: 0450 786 145</p><a href="tel:0450786145" class="btn-gold" style="display:inline-block;padding:.9rem 2.5rem;margin-top:1rem;">Call Now</a></div>';
   }
 }
-loadFleet();
+
+// Run on page load
+window.addEventListener('load', loadFleet);
 </script>
 </body>
 </html>
