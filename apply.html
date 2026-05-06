@@ -269,7 +269,7 @@ textarea{resize:vertical;min-height:80px;}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-window._sb = window.supabase.createClient('https://tbhqamcuewycaqertpba.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U');
+var PROJ='tbhqamcuewycaqertpba'; window._sb=window.supabase.createClient('https://'+PROJ+'.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U');
 </script>
 <script>
 // Set today's date
@@ -403,9 +403,11 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
     };
 
     // Insert driver record
-    const {data: driver, error: driverErr} = await window._sb
-      .from('drivers').insert([driverData]).select().single();
+    // Use secure function to bypass RLS permission issues
+    const {data: driverId, error: driverErr} = await window._sb
+      .rpc('submit_driver_application', { driver_data: driverData });
     if(driverErr) throw driverErr;
+    const driver = { id: driverId };
 
     // Upload documents
     const files = [
