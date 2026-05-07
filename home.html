@@ -74,8 +74,11 @@ body{font-family:'Inter',sans-serif;background:#0D0D0D;color:#fff;overflow-x:hid
 
 /* Services grid */
 .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;}
-.service-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:32px;transition:all .3s;}
-.service-card:hover{background:rgba(255,0,110,.05);border-color:rgba(255,0,110,.2);transform:translateY(-4px);}
+.service-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:20px;overflow:hidden;transition:all .3s;}
+.service-card:hover{border-color:rgba(255,0,110,.2);transform:translateY(-4px);}
+.service-img{width:100%;height:240px;object-fit:contain;display:block;background:#111;}
+.service-img-placeholder{width:100%;height:200px;background:linear-gradient(135deg,rgba(255,0,110,.1),rgba(251,86,7,.08));display:flex;align-items:center;justify-content:center;font-size:4rem;}
+.service-body{padding:28px;}
 .service-icon{font-size:2.5rem;margin-bottom:20px;}
 .service-name{font-family:'Unbounded',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px;}
 .service-desc{font-size:14px;color:rgba(255,255,255,.4);line-height:1.7;margin-bottom:16px;}
@@ -225,22 +228,31 @@ footer{background:rgba(0,0,0,.4);border-top:1px solid rgba(255,255,255,.05);padd
     <h2 class="s-title">Built For Drivers<br><span>Who Mean Business</span></h2>
     <div class="services-grid">
       <div class="service-card">
-        <div class="service-icon">🍔</div>
-        <div class="service-name">Food Delivery</div>
-        <p class="service-desc">Fuel-efficient, reliable vehicles for non-stop delivery shifts. Maximise every kilometre.</p>
-        <div class="service-chips"><span class="service-chip">Uber Eats</span><span class="service-chip">DoorDash</span><span class="service-chip">Menulog</span></div>
+        <img src="service-food.jpg" class="service-img" alt="Food Delivery" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="service-img-placeholder" style="display:none">🍔</div>
+        <div class="service-body">
+          <div class="service-name">Food Delivery</div>
+          <p class="service-desc">Fuel-efficient, reliable vehicles for non-stop delivery shifts. Maximise every kilometre.</p>
+          <div class="service-chips"><span class="service-chip">Uber Eats</span><span class="service-chip">DoorDash</span><span class="service-chip">Menulog</span></div>
+        </div>
       </div>
       <div class="service-card">
-        <div class="service-icon">🚖</div>
-        <div class="service-name">Rideshare</div>
-        <p class="service-desc">Comfortable, clean, passenger-approved. Ready to earn from day one with no hidden costs.</p>
-        <div class="service-chips"><span class="service-chip">Uber</span><span class="service-chip">DiDi</span><span class="service-chip">Ola</span><span class="service-chip">Bolt</span></div>
+        <img src="service-rideshare.jpg" class="service-img" alt="Rideshare" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="service-img-placeholder" style="display:none">🚖</div>
+        <div class="service-body">
+          <div class="service-name">Rideshare</div>
+          <p class="service-desc">Comfortable, clean, passenger-approved. Ready to earn from day one with no hidden costs.</p>
+          <div class="service-chips"><span class="service-chip">Uber</span><span class="service-chip">DiDi</span><span class="service-chip">Ola</span><span class="service-chip">Bolt</span></div>
+        </div>
       </div>
       <div class="service-card">
-        <div class="service-icon">📦</div>
-        <div class="service-name">Amazon Flex & Private</div>
-        <p class="service-desc">Spacious vehicles for parcel deliveries or personal use. Flexible weekly terms.</p>
-        <div class="service-chips"><span class="service-chip">Amazon Flex</span><span class="service-chip">Private Use</span></div>
+        <img src="service-amazon.jpg" class="service-img" alt="Amazon Flex" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="service-img-placeholder" style="display:none">📦</div>
+        <div class="service-body">
+          <div class="service-name">Amazon Flex & Private</div>
+          <p class="service-desc">Spacious vehicles for parcel deliveries or personal use. Flexible weekly terms.</p>
+          <div class="service-chips"><span class="service-chip">Amazon Flex</span><span class="service-chip">Private Use</span></div>
+        </div>
       </div>
     </div>
   </div>
