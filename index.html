@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="Ozee Car Rent — Weekly car rentals in Newcastle NSW for Uber Eats, DoorDash, Rideshare, Amazon Flex and private use. Insurance, roadside and servicing all included from $150/week.">
-<title>Ozee Car Rent | Newcastle NSW | Weekly Rentals from $175/week</title>
+<title>Ozee Car Rent | Newcastle NSW | Weekly Rentals from $150/week</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -23,7 +23,7 @@ body{font-family:'DM Sans',sans-serif;background:#fff;color:#0a0a0a;overflow-x:h
 @media(max-width:768px){.nav-links a:not(.nav-cta){display:none;}}
 
 /* ── HERO ── */
-.hero{display:grid;grid-template-columns:1.2fr 1fr;min-height:100vh;padding-top:64px;}
+.hero{display:grid;grid-template-columns:1.2fr 1fr;min-height:100vh;padding-top:108px;}
 @media(max-width:900px){.hero{grid-template-columns:1fr;}}
 .hero-left{background:#0a0a0a;padding:5rem 5%;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
 .hero-left::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(0,229,255,.08),transparent);border-radius:50%;pointer-events:none;}
@@ -51,9 +51,11 @@ body{font-family:'DM Sans',sans-serif;background:#fff;color:#0a0a0a;overflow-x:h
 .sc-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
 
 /* ── TICKER ── */
-.ticker{background:#00E5FF;padding:.7rem 0;overflow:hidden;}
-.ticker-track{display:flex;animation:ticker 30s linear infinite;width:max-content;}
-.tick{padding:0 2rem;font-size:.68rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#0a0a0a;border-right:1px solid rgba(0,0,0,.12);white-space:nowrap;}
+.ticker{background:#00E5FF;padding:1.1rem 0;overflow:hidden;position:sticky;top:64px;z-index:498;width:100%;display:flex;align-items:center;}
+.ticker-track{display:flex;align-items:center;animation:ticker 35s linear infinite;width:max-content;}
+.tick{padding:0 2.5rem;font-size:.72rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#0a0a0a;white-space:nowrap;display:flex;align-items:center;gap:2.5rem;}
+.tick::after{content:'◆';font-size:.5rem;opacity:.4;}
+.tick:last-child::after{content:'';}
 @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* ── SECTIONS ── */
@@ -184,6 +186,14 @@ footer{background:#0a0a0a;padding:3rem 5% 2rem;}
   </div>
 </nav>
 
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="tick">Uber Eats</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">DoorDash</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Menulog</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Uber</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">DiDi</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Ola</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Bolt</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Amazon Flex</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Private Use</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Newcastle NSW</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Insurance Included</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">24/7 Roadside</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Free Servicing</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Drive Ozee</span>
+    <span class="tick">Uber Eats</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">DoorDash</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Menulog</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Uber</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">DiDi</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Ola</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Bolt</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Amazon Flex</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Private Use</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Newcastle NSW</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Insurance Included</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">24/7 Roadside</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Free Servicing</span><span style="margin:0 1.5rem;opacity:.35;font-size:.55rem;">◆</span><span class="tick">Drive Ozee</span>
+  </div>
+</div>
+
 <!-- HERO -->
 <div class="hero">
   <div class="hero-left">
@@ -231,13 +241,7 @@ footer{background:#0a0a0a;padding:3rem 5% 2rem;}
   </div>
 </div>
 
-<!-- TICKER -->
-<div class="ticker">
-  <div class="ticker-track">
-    <span class="tick">Uber Eats</span><span class="tick">DoorDash</span><span class="tick">Menulog</span><span class="tick">Uber</span><span class="tick">DiDi</span><span class="tick">Ola</span><span class="tick">Bolt</span><span class="tick">Amazon Flex</span><span class="tick">Private Use</span><span class="tick">Newcastle NSW</span><span class="tick">Insurance Included</span><span class="tick">24/7 Roadside</span><span class="tick">Free Servicing</span><span class="tick">Drive Ozee</span>
-    <span class="tick">Uber Eats</span><span class="tick">DoorDash</span><span class="tick">Menulog</span><span class="tick">Uber</span><span class="tick">DiDi</span><span class="tick">Ola</span><span class="tick">Bolt</span><span class="tick">Amazon Flex</span><span class="tick">Private Use</span><span class="tick">Newcastle NSW</span><span class="tick">Insurance Included</span><span class="tick">24/7 Roadside</span><span class="tick">Free Servicing</span><span class="tick">Drive Ozee</span>
-  </div>
-</div>
+
 
 <!-- SERVICES -->
 <section class="section" id="services" style="background:#fff;">
@@ -401,7 +405,7 @@ var OZEEDB=window.supabase.createClient('https://'+PROJ+'.supabase.co','eyJhbGci
 async function loadFleet(){
   var container=document.getElementById('fleetContainer');
   try{
-    var r=await OZEEDB.from('cars').select('*').eq('status','Available').order('weekly_rate',{ascending:true});
+    var r=await OZEEDB.from('cars').select('*').order('weekly_rate',{ascending:true});
     if(r.error) throw r.error;
     var cars=r.data;
     if(!cars||cars.length===0){
@@ -411,8 +415,10 @@ async function loadFleet(){
     var grid='<div class="fleet-grid">';
     cars.forEach(function(c){
       var tags=(c.suitable_for||[]).map(function(t){return'<span class="car-tag">'+t+'</span>';}).join('');
+      var statusColor=c.status==='Available'?'#00E5FF':c.status==='Rented'?'#FF6B35':'#FF3B3B';
+      var statusBg=c.status==='Available'?'rgba(0,229,255,.15)':c.status==='Rented'?'rgba(255,107,53,.15)':'rgba(255,59,59,.15)';
       var visual=c.photo_url?'<img src="'+c.photo_url+'" class="car-photo" alt="'+c.make_model+'">':'<div class="car-emoji">🚗</div>';
-      grid+='<div class="car-card"><div class="car-stage"><span class="car-status-badge">Available</span>'+visual+'</div><div class="car-body"><div class="car-make">'+c.make_model.split(' ')[0]+'</div><div class="car-name">'+c.make_model+' '+c.year+'</div><div class="car-tags">'+tags+'</div><div class="car-footer"><div class="car-price">$'+c.weekly_rate+'<small>/wk</small></div><a href="mailto:omer@ozeerentals.com.au?subject=Enquiry: '+c.make_model+'" class="car-enquire">Enquire →</a></div></div></div>';
+      grid+='<div class="car-card"><div class="car-stage"><span class="car-status-badge" style="color:'+statusColor+';background:'+statusBg+';border:1px solid '+statusColor+'40;">'+c.status+'</span>'+visual+'</div><div class="car-body"><div class="car-make">'+c.make_model.split(' ')[0]+'</div><div class="car-name">'+c.make_model+' '+c.year+'</div><div class="car-tags">'+tags+'</div><div class="car-footer"><div class="car-price">$'+c.weekly_rate+'<small>/wk</small></div><a href="mailto:omer@ozeerentals.com.au?subject=Enquiry: '+c.make_model+'" class="car-enquire">Enquire →</a></div></div></div>';
     });
     grid+='</div>';
     container.innerHTML=grid;
