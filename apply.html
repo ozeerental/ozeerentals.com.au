@@ -435,10 +435,22 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
       }
     }
 
-    // Upload signature
+    // Upload signature and save URL to documents table
     const sigBlob = await(await fetch(sigData)).blob();
     const sigPath = `driver_${driver.id}/signature.png`;
-    await window._sb.storage.from('driver-documents').upload(sigPath, sigBlob);
+    const { data: sigUp } = await window._sb.storage.from('driver-documents').upload(sigPath, sigBlob, {upsert:true});
+    if(sigUp){
+      const { data: { publicUrl: sigUrl } } = window._sb.storage.from('driver-documents').getPublicUrl(sigPath);
+      await window._sb.from('documents').insert([{
+        entity_type: 'driver',
+        entity_id: driver.id,
+        document_type: 'signature',
+        file_name: 'signature.png',
+        file_url: sigUrl,
+        file_size: sigBlob.size,
+        mime_type: 'image/png'
+      }]);
+    }
 
     document.getElementById('successMsg').style.display='block';
     document.getElementById('driverForm').style.display='none';
