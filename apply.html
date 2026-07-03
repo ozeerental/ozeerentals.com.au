@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Driver Application — Form #001 — Ozee Rentals</title>
+<title>Driver Application Form — Ozee Rentals</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -68,7 +68,7 @@ textarea{resize:vertical;min-height:80px;}
 <body>
 <div class="top-bar">
   <a href="https://ozeerentals.com.au"><img src="logo.jpeg" alt="Ozee Rentals"></a>
-  <div class="form-id">Form #001 — Driver Application</div>
+  <div class="form-id"> Driver Application</div>
 </div>
 <div class="hero-bar">
   <h1>Driver <span>Application</span></h1>
@@ -156,7 +156,7 @@ textarea{resize:vertical;min-height:80px;}
       <div class="form-group"><label>Driver's Licence — Back <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="licBack" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_licBack"></div></div>
       <div class="form-group"><label>Passport <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="passport" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_passport"></div></div>
       <div class="form-group"><label>Visa / VEVO <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="visaDoc" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_visaDoc"></div></div>
-      <div class="form-group"><label>Medicare Card or Photo ID <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="medicareId" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_medicareId"></div></div>
+      <div class="form-group"><label>Rent / Bond's Payment Receipt <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="medicareId" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_medicareId"></div></div>
     </div>
 
     <!-- INSURANCE DECLARATION -->
@@ -225,7 +225,7 @@ textarea{resize:vertical;min-height:80px;}
         <h4>1. VEHICLE CONDITION AND RETURN</h4>
         <p>The vehicle is delivered to you in good operating condition and reasonable order and with the seal on the odometer unbroken. You agree to return the vehicle in the same condition (except for ordinary wear and tear NOT INCLUDING WINDSCREEN AND TYRE DAMAGE) together with all tools, accessories, tyres, and equipment to the location specified and on the date specified (or sooner if demanded) to get a full refund of your bond money.</p>
         <h4>2. UNAUTHORISED AND PROHIBITED USE</h4>
-        <p>Persons who must NOT drive the vehicle: (a) A person not identified in this agreement. (b) A person not licensed for that class of vehicle. (c) A person whose blood alcohol concentration exceeds the legal limit. (d) A person who provided false name, age, address or driver's license. (e) A person whose license has been cancelled or suspended within the last 3 years. (f) A person who has held an unconditional driver licence for less than 1 year. (g) A person under the age of 21. (h) Outside the area of use limitation. (i) On unsealed or off-road conditions unless authorised in writing.</p>
+        <p>Persons who must NOT drive the vehicle: (a) A person not identified in this agreement. (b) A person not licensed for that class of vehicle. (c) A person whose blood alcohol concentration exceeds the legal limit. (d) A person who provided false name, age, address or driver\'s license. (e) A person whose license has been cancelled or suspended within the last 3 years. (f) A person who has held an unconditional driver licence for less than 1 year. (g) A person under the age of 21. (h) Outside the area of use limitation. (i) On unsealed or off-road conditions unless authorised in writing.</p>
         <h4>GENERAL PROVISIONS</h4>
         <p>(a) You will promptly report any loss or damage to the vehicle. (b) All loss and damage per incident is subject to the damage liability charge. (c) We are not responsible if goods are left inside the car. (d) A late payment fee of 10% applies if invoice remains unpaid more than 2 days. (e) Bonds held for maximum 7 business days. (f) No bond refunded if you cannot abide by the agreement period.</p>
         <h4>3. FUEL, CLEANLINESS AND EXTERIORS</h4>
@@ -268,6 +268,7 @@ textarea{resize:vertical;min-height:80px;}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 var PROJ='tbhqamcuewycaqertpba'; window._sb=window.supabase.createClient('https://'+PROJ+'.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U');
 </script>
@@ -411,17 +412,20 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
 
     // Upload documents
     const files = [
-      {id:'licFront', type:'license_front'},
-      {id:'licBack', type:'license_back'},
-      {id:'passport', type:'passport'},
-      {id:'visaDoc', type:'visa_vevo'},
-      {id:'medicareId', type:'medicare_id'},
+      {id:'licFront', type:'license_front', label:'Licence Front'},
+      {id:'licBack', type:'license_back', label:'Licence Back'},
+      {id:'passport', type:'passport', label:'Passport'},
+      {id:'visaDoc', type:'visa_vevo', label:'Visa / VEVO'},
+      {id:'medicareId', type:'medicare_id', label:'Medicare / ID'},
     ];
+
+    const uploadedDocs = [];  // track what was uploaded for the PDF
 
     for(const f of files){
       const input = document.getElementById(f.id);
       if(input.files[0]){
         const file = input.files[0];
+        uploadedDocs.push({ label: f.label, fileName: file.name });
         const path = `driver_${driver.id}/${f.type}_${Date.now()}.${file.name.split('.').pop()}`;
         const {error: upErr} = await window._sb.storage.from('driver-documents').upload(path, file);
         if(upErr) console.error('Doc storage error:', f.type, upErr.message);
@@ -448,7 +452,14 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
       file_url:sigPath, file_size:sigBlob.size, mime_type:'image/png'
     }]);
     if(sigInsErr) console.error('Signature record error:', sigInsErr.message);
-    
+
+    // Generate and download the complete application PDF
+    try {
+      generateApplicationPDF(driverData, sigData, uploadedDocs);
+    } catch(pdfErr) {
+      console.error('PDF generation error:', pdfErr);
+    }
+
     document.getElementById('successMsg').style.display='block';
     document.getElementById('driverForm').style.display='none';
 
@@ -462,6 +473,234 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
     btn.textContent='Submit Application';
   }
 });
+
+
+// ═══════════════════════════════════════════════════════
+// GENERATE COMPLETE APPLICATION PDF — full agreement, all data
+// ═══════════════════════════════════════════════════════
+function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit:'mm', format:'a4' });
+  const pageW = 210, pageH = 297, margin = 15;
+  let y = margin;
+  const GOLD = [248,180,0], DARK = [7,11,18], GREY = [120,120,120];
+
+  function checkPage(needed){ if(y + needed > pageH - margin){ doc.addPage(); y = margin; } }
+  function sectionHeader(title){
+    checkPage(14);
+    doc.setFillColor(...DARK); doc.rect(margin, y, pageW-margin*2, 9, 'F');
+    doc.setTextColor(...GOLD); doc.setFontSize(11); doc.setFont('helvetica','bold');
+    doc.text(title, margin+3, y+6.2);
+    y += 13; doc.setTextColor(40,40,40); doc.setFont('helvetica','normal');
+  }
+  function field(label, value){
+    value = (value===null||value===undefined||value==='') ? '—' : String(value);
+    checkPage(8);
+    doc.setFontSize(8); doc.setTextColor(...GREY); doc.setFont('helvetica','bold');
+    doc.text(label.toUpperCase(), margin+2, y);
+    doc.setFontSize(10); doc.setTextColor(30,30,30); doc.setFont('helvetica','normal');
+    const lines = doc.splitTextToSize(value, pageW-margin*2-52);
+    doc.text(lines, margin+52, y);
+    y += Math.max(6, lines.length*5);
+  }
+  function para(txt, size){
+    size = size || 8;
+    doc.setFontSize(size); doc.setTextColor(60,60,60); doc.setFont('helvetica','normal');
+    const lines = doc.splitTextToSize(txt, pageW-margin*2-4);
+    checkPage(lines.length*(size*0.5) + 2);
+    doc.text(lines, margin+2, y);
+    y += lines.length*(size*0.5) + 2.5;
+  }
+  function subHead(txt){
+    checkPage(9);
+    doc.setFontSize(9); doc.setTextColor(...DARK); doc.setFont('helvetica','bold');
+    doc.text(txt, margin+2, y); y += 5;
+    doc.setFont('helvetica','normal');
+  }
+  function qYesNo(num, question, bool){
+    checkPage(12);
+    doc.setFontSize(8.5); doc.setTextColor(40,40,40); doc.setFont('helvetica','normal');
+    const lines = doc.splitTextToSize(num + '. ' + question, pageW-margin*2-24);
+    doc.text(lines, margin+2, y);
+    const answer = bool ? 'YES' : 'NO';
+    doc.setFont('helvetica','bold');
+    doc.setTextColor(bool ? 200 : 0, bool ? 0 : 140, 0);
+    doc.text(answer, pageW-margin-16, y);
+    doc.setTextColor(40,40,40); doc.setFont('helvetica','normal');
+    y += Math.max(7, lines.length*4.5) + 1.5;
+  }
+
+  const fullName = [d.first_name, d.middle_name, d.last_name].filter(Boolean).join(' ');
+
+  // ── HEADER ──
+  doc.setFillColor(...DARK); doc.rect(0, 0, pageW, 32, 'F');
+  doc.setTextColor(...GOLD); doc.setFontSize(24); doc.setFont('helvetica','bold');
+  doc.text('OZEE RENTALS', margin, 15);
+  doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','normal');
+  doc.text('Driver Application & Rental Agreement', margin, 22);
+  doc.setFontSize(7); doc.setTextColor(180,180,180);
+  doc.text('ABN 71 694 905 667  |  0450 786 145  |  omer@ozeerentals.com.au', margin, 27.5);
+  doc.text('17A Drift St, West Wallsend, Newcastle NSW 2286', margin, 30.5);
+  y = 40;
+
+  // ── NAME BANNER ──
+  doc.setFillColor(...GOLD); doc.rect(margin, y, pageW-margin*2, 10, 'F');
+  doc.setTextColor(...DARK); doc.setFontSize(13); doc.setFont('helvetica','bold');
+  doc.text(fullName || 'Applicant', margin+3, y+6.8);
+  doc.setFontSize(8); doc.setFont('helvetica','normal');
+  doc.text('Status: PENDING', pageW-margin-32, y+6.8);
+  y += 15;
+
+  // ── PERSONAL DETAILS ──
+  sectionHeader('SECTION 01 — PERSONAL INFORMATION');
+  field('Full Name', fullName);
+  field('Date of Birth', d.dob);
+  field('Residential Address', d.address);
+  field('Mobile Number', d.mobile);
+  field('Email Address', d.email);
+  field('Visa Status', d.visa_status);
+
+  // ── LICENCE ──
+  sectionHeader('SECTION 02 — DRIVER LICENCE');
+  field('Licence Number', d.license_number);
+  field('Licence State', d.license_state);
+  field('Licence Expiry', d.license_expiry);
+  field('Years Licence Held', d.license_year);
+
+  // ── EMERGENCY CONTACT ──
+  sectionHeader('SECTION 03 — EMERGENCY CONTACT');
+  field('Name', d.emergency_name);
+  field('Phone', d.emergency_phone);
+  field('Relationship', d.emergency_relation);
+  if(d.emergency_address) field('Address', d.emergency_address);
+
+  // ── UPLOADED DOCUMENTS ──
+  sectionHeader('SECTION 04 — UPLOADED DOCUMENTS');
+  const allDocs = [
+    'Licence Front', 'Licence Back', 'Passport', 'Visa / VEVO', 'Medicare / ID'
+  ];
+  const uploadedLabels = (uploadedDocs || []).map(function(x){ return x.label; });
+  allDocs.forEach(function(docLabel){
+    checkPage(8);
+    const wasUploaded = uploadedLabels.indexOf(docLabel) !== -1;
+    // Checkbox
+    doc.setDrawColor(...DARK); doc.setLineWidth(0.3);
+    doc.rect(margin+2, y-3.5, 4, 4);
+    if(wasUploaded){
+      doc.setTextColor(0,150,0); doc.setFont('helvetica','bold');
+      doc.text('X', margin+2.8, y-0.4);
+    }
+    // Document name
+    doc.setFontSize(10); doc.setFont('helvetica','normal');
+    doc.setTextColor(30,30,30);
+    doc.text(docLabel, margin+10, y);
+    // Status text
+    doc.setFontSize(8);
+    if(wasUploaded){
+      doc.setTextColor(0,140,0);
+      const upDoc = uploadedDocs.find(function(x){ return x.label===docLabel; });
+      doc.text('Uploaded' + (upDoc && upDoc.fileName ? ' (' + upDoc.fileName + ')' : ''), margin+70, y);
+    } else {
+      doc.setTextColor(...GREY);
+      doc.text('Not uploaded', margin+70, y);
+    }
+    y += 7;
+  });
+  y += 3;
+
+  // ── INSURANCE DECLARATION QUESTIONS ──
+  sectionHeader('SECTION 05 — INSURANCE DECLARATION');
+  qYesNo(1, 'In the past 5 years, have you been involved in any accident (at fault or not at fault)?', d.had_accident);
+  if(d.had_accident && d.accident_details) field('Accident details', d.accident_details);
+  qYesNo(2, 'In the past 5 years have you had any insurance policy declined, cancelled, renewal declined, special conditions imposed or claim refused?', d.insurance_declined);
+  qYesNo(3, 'In the past 5 years have you committed any criminal act in relation to fraud, theft, burglary, drugs, arson, criminal, malicious or wilful damage?', d.criminal_history);
+  qYesNo(4, 'In the past 5 years have you been declared bankrupt or defaulted on a loan or credit card?', d.bankruptcy);
+
+  // ── FULL AGREEMENT ──
+  sectionHeader('RENTAL VEHICLE AGREEMENT — TERMS & CONDITIONS');
+  para('This is an agreement between the prospective hirer identified above (you) and the car owner(s) to rent the motor vehicle described including all accessories, tools, tyres, and equipment and any replacement vehicle (the vehicle).');
+
+  subHead('Contract Period: 3 / 6 Months (to be confirmed)   |   Bond: 4 weeks rent in advance');
+  subHead('Vehicle Insurance Excess: $1,195 + ($550 Age Excess if applicable)');
+  y += 1;
+
+  subHead('1. VEHICLE CONDITION AND RETURN');
+  para('The vehicle is delivered to you in good operating condition and reasonable order and with the seal on the odometer unbroken. You agree to return the vehicle in the same condition (except for ordinary wear and tear NOT INCLUDING WINDSCREEN AND TYRE DAMAGE) together with all tools, accessories, tyres, and equipment to the location specified and on the date specified (or sooner if demanded) to get a full refund of your bond money.');
+
+  subHead('2. UNAUTHORISED AND PROHIBITED USE');
+  para('Persons who must NOT drive the vehicle: (a) A person not identified in this agreement. (b) A person not licensed for that class of vehicle. (c) A person whose blood alcohol concentration exceeds the legal limit. (d) A person who provided false name, age, address or driver\'s license. (e) A person whose license has been cancelled or suspended within the last 3 years. (f) A person who has held an unconditional driver licence for less than 1 year. (g) A person under the age of 21. (h) Outside the area of use limitation. (i) On unsealed or off-road conditions unless authorised in writing.');
+
+  subHead('GENERAL PROVISIONS');
+  para('(a) You will promptly report any loss or damage to the vehicle. (b) All loss and damage per incident is subject to the damage liability charge. (c) We are not responsible if goods are left inside the car. (d) A late payment fee of 10% applies if invoice remains unpaid more than 2 days. (e) Bonds held for maximum 7 business days. (f) No bond refunded if you cannot abide by the agreement period.');
+
+  subHead('3. FUEL, CLEANLINESS AND EXTERIORS');
+  para('The vehicle must be returned with the same amount of fuel as at the time of rental. Same applies to the cleanliness and exteriors of the vehicle.');
+
+  subHead('4. LIABILITY FOR PENALTIES AND ADDRESS UPDATES');
+  para('During the hire period, the hirer is solely responsible for any penalties, fines, or misuse of the vehicle. The hirer must promptly notify Ozee Rentals of any changes to their address.');
+
+  subHead('5. VEHICLE TRACKING');
+  para('Most vehicles are equipped with GPS trackers. These allow monitoring of vehicle location and usage during the hire period.');
+
+  subHead('6. VEHICLE INSURANCE COVERAGE');
+  para('The Renter is liable for the applicable insurance excess in the event of any damage, loss, or incident. The authorized driver is solely responsible for their driving behavior and must ensure the vehicle is roadworthy before use.');
+  y += 2;
+
+  // ── DECLARATION CHECKBOXES ──
+  sectionHeader('DECLARATION');
+  function declLine(txt, checked){
+    checkPage(8);
+    doc.setDrawColor(...DARK); doc.setLineWidth(0.3);
+    doc.rect(margin+2, y-3.5, 4, 4);
+    if(checked){ doc.setTextColor(0,150,0); doc.setFont('helvetica','bold'); doc.text('X', margin+2.8, y-0.4); }
+    doc.setTextColor(30,30,30); doc.setFont('helvetica','normal'); doc.setFontSize(9);
+    const lines = doc.splitTextToSize(txt, pageW-margin*2-12);
+    doc.text(lines, margin+9, y);
+    y += Math.max(6, lines.length*4.5);
+  }
+  declLine('I have read, understood and accept these Terms and Conditions.', d.terms_accepted);
+  declLine('I declare that all information provided in this application is true and correct.', d.insurance_declared);
+  declLine('I agree to the rental vehicle agreement terms.', d.agreement_signed);
+  y += 4;
+
+  // ── SIGNATURE ──
+  sectionHeader('DIGITAL SIGNATURE');
+  if(signatureDataUrl){
+    checkPage(45);
+    doc.setDrawColor(200,200,200); doc.setFillColor(255,255,255);
+    doc.rect(margin+2, y, 85, 36, 'FD');
+    try{ doc.addImage(signatureDataUrl, 'PNG', margin+4, y+2, 81, 32); }catch(e){}
+    y += 40;
+  }
+  doc.setFontSize(8); doc.setTextColor(...GREY); doc.setFont('helvetica','bold');
+  doc.text('SIGNED BY', margin+2, y);
+  doc.setTextColor(30,30,30); doc.setFont('helvetica','normal');
+  doc.text(fullName, margin+35, y); y += 6;
+
+  const now = new Date();
+  const stamp = now.toLocaleDateString('en-AU') + ' at ' + now.toLocaleTimeString('en-AU');
+  doc.setFont('helvetica','bold'); doc.setTextColor(...GREY);
+  doc.text('SIGNED DATE', margin+2, y);
+  doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
+  doc.text(d.signed_date || now.toLocaleDateString('en-AU'), margin+35, y); y += 6;
+  doc.setFont('helvetica','bold'); doc.setTextColor(...GREY);
+  doc.text('SUBMITTED', margin+2, y);
+  doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
+  doc.text(stamp, margin+35, y);
+
+  // ── FOOTER ──
+  const pageCount = doc.internal.getNumberOfPages();
+  for(let i=1;i<=pageCount;i++){
+    doc.setPage(i);
+    doc.setFontSize(7); doc.setTextColor(150,150,150);
+    doc.text('Ozee Rentals Pty Ltd — Driver Application — Generated ' + now.toLocaleDateString('en-AU'), margin, pageH-8);
+    doc.text('Page ' + i + ' of ' + pageCount, pageW-margin-20, pageH-8);
+  }
+
+  const safeName = fullName.replace(/[^a-z0-9]/gi,'_');
+  doc.save('Ozee_Application_' + safeName + '.pdf');
+}
+
 </script>
 </body>
 </html>
