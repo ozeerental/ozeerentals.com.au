@@ -423,7 +423,7 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
       if(input.files[0]){
         const file = input.files[0];
         const path = `driver_${driver.id}/${f.type}_${Date.now()}.${file.name.split('.').pop()}`;
-        const {error: upErr} = await window._sb.storage.from('driver-documents').upload(path, file, {upsert:true});
+        const {error: upErr} = await window._sb.storage.from('driver-documents').upload(path, file);
         if(upErr) console.error('Doc storage error:', f.type, upErr.message);
         const { error: docErr } = await window._sb.from('documents').insert([{
           entity_type:'driver', entity_id:driver.id,
@@ -439,7 +439,7 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
     const sigPath = `driver_${driver.id}/signature_${Date.now()}.png`;
     const { error: sigUpErr } = await window._sb.storage
       .from('driver-documents')
-      .upload(sigPath, sigBlob, { upsert:true, contentType:'image/png' });
+      .upload(sigPath, sigBlob, { contentType:'image/png' });
     if(sigUpErr) console.error('Signature storage error:', sigUpErr.message);
     // Direct insert to documents table (proven working)
     const { error: sigInsErr } = await window._sb.from('documents').insert([{
