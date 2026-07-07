@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Driver Application Form — Ozee Rentals</title>
+<title>Driver Application — Form #001 — Ozee Rentals</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -68,7 +68,7 @@ textarea{resize:vertical;min-height:80px;}
 <body>
 <div class="top-bar">
   <a href="https://ozeerentals.com.au"><img src="logo.jpeg" alt="Ozee Rentals"></a>
-  <div class="form-id"> Driver Application</div>
+  <div class="form-id">Form #001 — Driver Application</div>
 </div>
 <div class="hero-bar">
   <h1>Driver <span>Application</span></h1>
@@ -156,7 +156,7 @@ textarea{resize:vertical;min-height:80px;}
       <div class="form-group"><label>Driver's Licence — Back <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="licBack" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_licBack"></div></div>
       <div class="form-group"><label>Passport <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="passport" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_passport"></div></div>
       <div class="form-group"><label>Visa / VEVO <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="visaDoc" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_visaDoc"></div></div>
-      <div class="form-group"><label>Rent / Bond's Payment Receipt <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="medicareId" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_medicareId"></div></div>
+      <div class="form-group"><label>Medicare Card or Photo ID <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="medicareId" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_medicareId"></div></div>
     </div>
 
     <!-- INSURANCE DECLARATION -->
@@ -270,6 +270,7 @@ textarea{resize:vertical;min-height:80px;}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+var OZ_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U';
 var PROJ='tbhqamcuewycaqertpba'; window._sb=window.supabase.createClient('https://'+PROJ+'.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U');
 </script>
 <script>
@@ -459,6 +460,36 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
     } catch(pdfErr) {
       console.error('PDF generation error:', pdfErr);
     }
+
+    // Notify admin of the new application (non-blocking - never breaks submission)
+    try {
+      const row = (l,v) => '<tr><td style="padding:8px 14px 8px 0;color:#777;white-space:nowrap">' + l + '</td><td style="padding:8px 0;font-weight:700;color:#222;font-size:15px">' + (v||'&mdash;') + '</td></tr>';
+      const submittedAt = new Date().toLocaleString('en-AU', { timeZone:'Australia/Sydney', dateStyle:'full', timeStyle:'short' });
+      const notifyHtml =
+        '<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:auto;border:1px solid #eee;border-radius:10px;overflow:hidden">'
+        + '<div style="background:#0a0a0c;padding:22px 28px"><span style="color:#F5A623;font-size:20px;font-weight:800">OZEE RENTALS</span><br><span style="color:#bbb;font-size:13px">Admin Notification</span></div>'
+        + '<div style="padding:26px 28px">'
+        + '<h2 style="margin:0 0 6px;color:#0a0a0c">&#128663; New Driver Application</h2>'
+        + '<p style="margin:0 0 18px;color:#666;font-size:14px">Received ' + submittedAt + '</p>'
+        + '<table style="border-collapse:collapse;font-size:14px;width:100%">'
+        + row('Name', driverData.first_name + ' ' + driverData.last_name)
+        + row('Phone', '<a href="tel:' + driverData.mobile + '" style="color:#0a6ebd;text-decoration:none">' + driverData.mobile + '</a>')
+        + row('Email', '<a href="mailto:' + driverData.email + '" style="color:#0a6ebd;text-decoration:none">' + driverData.email + '</a>')
+        + '</table>'
+        + '<a href="https://admin.ozeerentals.com.au/drivers" style="display:inline-block;margin-top:22px;background:#F5A623;color:#0a0a0c;font-weight:800;font-size:15px;padding:13px 26px;border-radius:8px;text-decoration:none">Review in Admin Panel &rarr;</a>'
+        + '</div>'
+        + '<div style="background:#f7f5f0;padding:14px 28px;color:#999;font-size:12px">Ozee Rentals Pty Ltd &middot; Newcastle &amp; Hunter Region NSW &middot; Automated notification.</div>'
+        + '</div>';
+      await fetch('https://' + PROJ + '.supabase.co/functions/v1/send-driver-email', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json', 'Authorization':'Bearer ' + OZ_ANON, 'apikey': OZ_ANON },
+        body: JSON.stringify({
+          to: 'admin@ozeerentals.com.au',
+          subject: 'New Driver Application - ' + driverData.first_name + ' ' + driverData.last_name,
+          html: notifyHtml
+        })
+      });
+    } catch(nErr) { console.error('Admin notify error:', nErr); }
 
     document.getElementById('successMsg').style.display='block';
     document.getElementById('driverForm').style.display='none';
