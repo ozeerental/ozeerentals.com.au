@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Driver Application — Form #001 — Ozee Rentals</title>
+<title>Driver Application — Form  — Ozee Rentals</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:"Barlow",sans-serif;background:#f5f5f5;color:#212529;line-height:1.6;padding-bottom:4rem;}
-.top-bar{background:#04090F;padding:1.2rem 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(245,166,35,.2);}
-.top-bar img{height:44px;filter:brightness(0) invert(1);}
-.form-id{background:#F5A623;color:#000;padding:.4rem 1rem;font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
-.hero-bar{background:linear-gradient(135deg,#04090F,#0d1f3c);color:#fff;padding:3rem 5%;text-align:center;border-bottom:3px solid #F5A623;}
+.top-bar{background:#04090F;padding:1rem 5%;display:flex;justify-content:space-between;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(245,166,35,.2);flex-wrap:wrap;}
+.top-bar img{height:52px;width:auto;}
+.form-id{background:#F5A623;color:#000;padding:.4rem 1rem;font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-radius:6px;white-space:nowrap;}
+.hero-bar{background:linear-gradient(135deg,#04090F,#0d1f3c);color:#fff;padding:2.2rem 5%;text-align:center;border-bottom:3px solid #F5A623;}
 .hero-bar h1{font-family:"Barlow Condensed",sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;text-transform:uppercase;letter-spacing:-1px;margin-bottom:.5rem;}
 .hero-bar h1 span{color:#F5A623;}
-.hero-bar p{color:rgba(255,255,255,.6);font-size:.95rem;}
+.hero-bar p{color:rgba(255,255,255,.6);font-size:.9rem;line-height:1.7;max-width:640px;margin:0 auto;word-break:break-word;}
 .container{max-width:860px;margin:2.5rem auto;padding:0 1.5rem;}
 .form-section{background:#fff;border-radius:4px;padding:2.5rem;margin-bottom:1.5rem;box-shadow:0 1px 4px rgba(0,0,0,.08);border-left:4px solid #F5A623;}
 .sec-header{display:flex;align-items:center;gap:.75rem;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid #eee;}
@@ -46,7 +46,7 @@ textarea{resize:vertical;min-height:80px;}
 .agree-check{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:1.2rem;}
 .agree-check input{width:20px;height:20px;margin-top:.15rem;flex-shrink:0;accent-color:#F5A623;}
 .agree-check label{font-size:.9rem;font-weight:500;cursor:pointer;line-height:1.5;}
-.agreement-scroll{max-height:450px;overflow-y:auto;background:#f8f9fa;border:1px solid #dee2e6;border-radius:3px;padding:1.5rem;margin-bottom:1.5rem;font-size:.83rem;line-height:1.8;color:#495057;}
+.agreement-scroll{max-height:60vh;overflow-y:auto;background:#f8f9fa;border:1px solid #dee2e6;border-radius:3px;padding:1.5rem;margin-bottom:1.5rem;font-size:.86rem;line-height:1.8;color:#495057;-webkit-overflow-scrolling:touch;}
 .agreement-scroll h4{color:#212529;font-size:.95rem;font-weight:700;margin:1.2rem 0 .5rem;}
 .agreement-scroll h4:first-child{margin-top:0;}
 .agreement-scroll table{width:100%;border-collapse:collapse;margin:1rem 0;}
@@ -63,16 +63,39 @@ textarea{resize:vertical;min-height:80px;}
 .admin-note{background:#fff3cd;border:1px solid #ffc107;padding:1rem 1.5rem;border-radius:3px;margin-bottom:1.5rem;font-size:.88rem;color:#856404;}
 .admin-note strong{display:block;margin-bottom:.25rem;}
 @media(max-width:768px){.form-row,.form-row-3{grid-template-columns:1fr;}}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:600px){
+  .top-bar{padding:.8rem 4%;}
+  .top-bar img{height:42px;}
+  .form-id{font-size:.6rem;letter-spacing:1px;padding:.35rem .7rem;}
+  .hero-bar{padding:1.8rem 5%;}
+  .hero-bar p{font-size:.82rem;}
+  .container{padding:0 .8rem;margin:1.5rem auto;}
+  .form-section{padding:1.5rem 1.1rem;}
+}
+@media(max-width:400px){
+  .form-id{font-size:.52rem;}
+  .top-bar img{height:38px;}
+}
+/* ═══ FULL-WIDTH AGREEMENT + FORCED READ ═══ */
+.agreement-full{margin-left:-2.5rem;margin-right:-2.5rem;border-left:none;border-right:none;border-radius:0;}
+@media(max-width:600px){.agreement-full{margin-left:-1.1rem;margin-right:-1.1rem;}.agreement-scroll{max-height:65vh;}}
+.read-note{background:#fff3cd;border:1px solid #ffe69c;color:#664d03;padding:.7rem 1rem;border-radius:6px;font-size:.82rem;font-weight:600;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+.read-note.done{background:#d1e7dd;border-color:#badbcc;color:#0f5132;}
+.agree-locked{opacity:.45;pointer-events:none;}
+.agree-check.locked{opacity:.45;pointer-events:none;}
+
 </style>
 </head>
 <body>
 <div class="top-bar">
-  <a href="https://ozeerentals.com.au"><img src="logo.jpeg" alt="Ozee Rentals"></a>
+  <a href="https://ozeerentals.com.au"><img src="https://ozeerentals.com.au/logo-white.png" alt="Ozee Rentals"></a>
   <div class="form-id">Form #001 — Driver Application</div>
 </div>
 <div class="hero-bar">
   <h1>Driver <span>Application</span></h1>
-  <p>Join our fleet and start earning | 17A Drift St, West Wallsend NSW 2286 | 0450 786 145 | omer@ozeerentals.com.au | ABN: 71 694 905 667</p>
+  <p>Join our fleet and start earning | 17A Drift St, West Wallsend NSW 2286 | 0450 786 145 | admin@ozeerentals.com.au | ABN: 71 694 905 667</p>
 </div>
 <div class="container">
   <form id="driverForm">
@@ -200,7 +223,8 @@ textarea{resize:vertical;min-height:80px;}
     <!-- RENTAL AGREEMENT -->
     <div class="form-section">
       <div class="sec-header"><span class="sec-icon">📋</span><div><div class="sec-num">SECTION 06</div><div class="sec-title">Rental Agreement</div></div></div>
-      <div class="agreement-scroll">
+      <div class="read-note" id="readNote">&#128070; Please scroll through and read the full agreement below to continue.</div>
+      <div class="agreement-scroll agreement-full" id="agreementBox">
         <h4>RENTAL AGREEMENT — RENTER INFORMATION</h4>
         <table>
           <tr><td>Name</td><td id="ag_name">—</td></tr>
@@ -221,26 +245,63 @@ textarea{resize:vertical;min-height:80px;}
           <tr><td>Vehicle Insurance Excess</td><td>$1,195 + ($550 Age Excess if applicable)</td></tr>
         </table>
         <h4>RENTAL VEHICLE AGREEMENT TERMS AND CONDITIONS</h4>
-        <p>This is an agreement between the prospective hirer identified above (you) and the car owner(s) to rent the motor vehicle described above including all accessories, tools, tyres, and equipment and any replacement vehicle (the vehicle).</p>
+        <p>This is an agreement between the prospective hirer identified on page 1 (you) and the car owner(s) to rent the motor vehicle described on Page 1 including all accessories, tools, tyres, and equipment and any replacement vehicle (the vehicle).</p>
+
         <h4>1. VEHICLE CONDITION AND RETURN</h4>
-        <p>The vehicle is delivered to you in good operating condition and reasonable order and with the seal on the odometer unbroken. You agree to return the vehicle in the same condition (except for ordinary wear and tear NOT INCLUDING WINDSCREEN AND TYRE DAMAGE) together with all tools, accessories, tyres, and equipment to the location specified and on the date specified (or sooner if demanded) to get a full refund of your bond money.</p>
+        <p>The vehicle is delivered to you in good operating condition and reasonable order and with the seal on the odometer unbroken. You agree to return the vehicle in the same condition (except for ordinary wear and tear NOT INCLUDING WINDSCREEN AND TYRE DAMAGE) together with all tools, accessories, tyres, and equipment to the location specified on page 1 and on the date specified (or sooner if demanded) to get a full refund of your bond money. The owner(s) may take possession of the vehicle without prior demand and at your expense, if it is illegally parked, used in violation of the law or this agreement or if it is apparently abandoned. Note: The owner(s) must be notified and agree to any extension of the period of the hire beyond that stated on page 1 of this agreement in advance of the return date and time or the vehicle will immediately be reported as stolen.</p>
+
         <h4>2. UNAUTHORISED AND PROHIBITED USE</h4>
-        <p>Persons who must NOT drive the vehicle: (a) A person not identified in this agreement. (b) A person not licensed for that class of vehicle. (c) A person whose blood alcohol concentration exceeds the legal limit. (d) A person who provided false name, age, address or driver\'s license. (e) A person whose license has been cancelled or suspended within the last 3 years. (f) A person who has held an unconditional driver licence for less than 1 year. (g) A person under the age of 21. (h) Outside the area of use limitation. (i) On unsealed or off-road conditions unless authorised in writing.</p>
+        <p><strong>Persons who must not drive the vehicle:</strong><br>
+        a. A person who is not identified on page 1 or has not been identified in writing to us or approved by us in writing.<br>
+        b. A person who is not licensed for that class of vehicle.<br>
+        c. A person whose blood alcohol concentration exceeds the legal limit.<br>
+        d. A person who has given or for whom you have given a false name, age, address or driver&rsquo;s license.<br>
+        e. A person whose license has been cancelled, endorsed or suspended within the last three years.<br>
+        f. A Person who has held a unconditional driver license for less than 1 years.<br>
+        g. A Person under the age of 21.<br>
+        h. Outside the area of use limitation specified on page 1.<br>
+        i. On unsealed roads or off-road conditions unless authorized by us in writing or on the face of this agreement.</p>
+
         <h4>GENERAL PROVISIONS</h4>
-        <p>(a) You will promptly report any loss or damage to the vehicle. (b) All loss and damage per incident is subject to the damage liability charge. (c) We are not responsible if goods are left inside the car. (d) A late payment fee of 10% applies if invoice remains unpaid more than 2 days. (e) Bonds held for maximum 7 business days. (f) No bond refunded if you cannot abide by the agreement period.</p>
+        <p>a. You will promptly report any loss or damage to the vehicle or loss involving the vehicle while rented under this agreement to us at the location where the vehicle was hired and will deliver to us immediately, every summons, complaint or paper in relation to such loss. Compliance with this sub paragraph does not excuse the hirer from reporting all incidents to police or other proper authorities.<br>
+        b. All loss and damage per incident and each incident leading to loss or damage is subject to the damage liability charge per incident.<br>
+        c. We are not responsible if goods are left inside the car. It is your responsibility to make sure car is empty upon delivery.<br>
+        d. If the car is dumped, abandoned or left behind within the Newcastle or Hunter Region, the hirer will be charged all costs associated with recovering the vehicle. If the vehicle is left outside the agreed location or outside the Newcastle and Hunter Region, the hirer will be responsible for all recovery costs and all transportation charges required to return the vehicle to the agreed location.<br>
+        e. Bonds will be held for a maximum of 7 business days to allow us to ensure that the vehicle remains in the same condition and working order that it was in when it was first picked up.<br>
+        f. A late payment fee of 10% applies should an invoice remain unpaid more than 2 days.<br>
+        g. No bond money would be refunded if you are unable to abide by the agreement period of hiring the vehicle.<br>
+        h. The contract would be considered as cancelled if the vehicle would be driven (odometer) much higher than a normal daily usage and the driver would have to return the vehicle within 3 business days of the notice, regardless of the remaining contract period left.</p>
+
         <h4>3. FUEL, CLEANLINESS AND EXTERIORS</h4>
-        <p>The vehicle must be returned with the same amount of fuel as at the time of rental. Same applies to the cleanliness and exteriors of the vehicle.</p>
+        <p>The vehicle must be returned with the amount of fuel equal to that at the time of the rental. If the vehicle is returned with less fuel the difference will be charged at a rate which may include a service component unless prior arrangements have been made and noted on page 1. Same applies to the cleanliness and exteriors of the vehicle.</p>
+
         <h4>4. LIABILITY FOR PENALTIES AND ADDRESS UPDATES</h4>
-        <p>During the hire period, the hirer is solely responsible for any penalties, fines, or misuse of the vehicle. The hirer must promptly notify Ozee Rentals of any changes to their address.</p>
-        <h4>5. VEHICLE TRACKING</h4>
-        <p>Most vehicles are equipped with GPS trackers. These allow monitoring of vehicle location and usage during the hire period.</p>
-        <h4>6. VEHICLE INSURANCE COVERAGE</h4>
-        <p>The Renter is liable for the applicable insurance excess in the event of any damage, loss, or incident. The authorized driver is solely responsible for their driving behavior and must ensure the vehicle is roadworthy before use.</p>
+        <p>During the hire period, the hirer is solely responsible for any penalties, fines, or misuse of the vehicle, regardless of whether they were driving at the time of the incident. The hirer must promptly notify us of any changes to their address to ensure accurate processing of any penalties, fines, or other notices related to the vehicle. If we do not receive an updated address, any such notices will be sent to the last address provided, and the hirer will remain responsible for all associated consequences.</p>
+
+        <h4>5. VEHICLE TRACKING AND IMMOBILISATION NOTICE</h4>
+        <p>The renter acknowledges and agrees that the vehicle is fitted with a GPS tracking device for security, theft prevention, vehicle recovery, fleet management, and compliance purposes.</p>
+        <p>The GPS device may collect and record vehicle location, speed, ignition status, and other vehicle-related operational data during the rental period.</p>
+        <p>The renter further acknowledges that the vehicle is equipped with a remote immobilisation system. This system may be activated by the owner only in circumstances including, but not limited to:</p>
+        <p>&bull; Theft or suspected theft of the vehicle.<br>
+        &bull; Failure to return the vehicle by the agreed return date and time.<br>
+        &bull; Serious breach of the rental agreement.<br>
+        &bull; Vehicle recovery operations authorised by law.</p>
+        <p>The owner will, where reasonably practicable, provide notice before activating the immobilisation system. The system will not be activated while the vehicle is in motion and will only be engaged when it is safe to do so.</p>
+        <p>By signing this agreement, the renter consents to the collection and use of GPS tracking data for the purposes outlined above and acknowledges the presence of the tracking and immobilisation systems in the vehicle.</p>
+
+        <h4>6. TERMINATION DUE TO UNAUTHORIZED USE OR EXCESS MILEAGE</h4>
+        <p>The contract will be considered canceled if the vehicle is driven by an unauthorized person not listed in the contract or if its mileage exceeds the allowed daily usage. In such cases, the hirer must return the vehicle within two business days of receiving notice, regardless of the remaining contract period, and the bond will be withheld.</p>
+
+        <h4>7. VEHICLE INSURANCE COVERAGE AND ASSOCIATED COSTS</h4>
+        <p>The Renter is liable for the applicable insurance excess in the event of any damage, loss, or incident involving the vehicle. This includes all administrative and processing fees, plus reasonable compensation for time lost due to insurance procedures, regardless of fault. Coverage applies only to the driver authorized in the rental contract.</p>
+        <p>The authorized driver is solely responsible for their driving behavior and must ensure the vehicle is roadworthy and safe to operate before use. If the vehicle is found to be unfit for driving, the driver must notify the Owner in writing to arrange necessary inspections or repairs. The driver shall be personally liable for any damage, loss, or harm caused to property or people due to negligence or failure to report such issues.</p>
+
+        <p style="margin-top:1.2rem;font-weight:700;color:#212529;">I HAVE READ, UNDERSTOOD AND ACCEPT THESE TERMS AND CONDITIONS AND ANY OTHER SPECIAL CONDITIONS OF THIS AGREEMENT</p>
       </div>
 
-      <div class="agree-check"><input type="checkbox" id="termsAccepted" required><label for="termsAccepted">I have read, understood and accept these Terms and Conditions and any other special conditions of this agreement <span class="req">*</span></label></div>
-      <div class="agree-check"><input type="checkbox" id="insuranceDecl" required><label for="insuranceDecl">I declare that all information provided in the Insurance Declaration is true and accurate to the best of my knowledge <span class="req">*</span></label></div>
-      <div class="agree-check"><input type="checkbox" id="rentalAgreement" required><label for="rentalAgreement">I agree to abide by all terms outlined in the Rental Agreement above <span class="req">*</span></label></div>
+      <div class="agree-check locked" id="agreeWrap1"><input type="checkbox" id="termsAccepted" required disabled><label for="termsAccepted">I have read, understood and accept these Terms and Conditions and any other special conditions of this agreement <span class="req">*</span></label></div>
+      <div class="agree-check locked" id="agreeWrap2"><input type="checkbox" id="insuranceDecl" required disabled><label for="insuranceDecl">I declare that all information provided in the Insurance Declaration is true and accurate to the best of my knowledge <span class="req">*</span></label></div>
+      <div class="agree-check locked" id="agreeWrap3"><input type="checkbox" id="rentalAgreement" required disabled><label for="rentalAgreement">I agree to abide by all terms outlined in the Rental Agreement above <span class="req">*</span></label></div>
     </div>
 
     <!-- SIGNATURE -->
@@ -261,7 +322,7 @@ textarea{resize:vertical;min-height:80px;}
     <div class="success-msg" id="successMsg">
       <h3>✅ Application Submitted!</h3>
       <p>Thank you for applying to drive with Ozee Rentals. We will review your application and contact you within 24–48 hours.</p>
-      <p style="margin-top:.75rem;"><strong>Phone:</strong> 0450 786 145 | <strong>Email:</strong> omer@ozeerentals.com.au</p>
+      <p style="margin-top:.75rem;"><strong>Phone:</strong> 0450 786 145 | <strong>Email:</strong> admin@ozeerentals.com.au</p>
     </div>
     <div class="error-msg" id="errorMsg"></div>
   </form>
@@ -570,7 +631,7 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
   doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','normal');
   doc.text('Driver Application & Rental Agreement', margin, 22);
   doc.setFontSize(7); doc.setTextColor(180,180,180);
-  doc.text('ABN 71 694 905 667  |  0450 786 145  |  omer@ozeerentals.com.au', margin, 27.5);
+  doc.text('ABN 71 694 905 667  |  0450 786 145  |  admin@ozeerentals.com.au', margin, 27.5);
   doc.text('17A Drift St, West Wallsend, Newcastle NSW 2286', margin, 30.5);
   y = 40;
 
@@ -649,32 +710,37 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
 
   // ── FULL AGREEMENT ──
   sectionHeader('RENTAL VEHICLE AGREEMENT — TERMS & CONDITIONS');
-  para('This is an agreement between the prospective hirer identified above (you) and the car owner(s) to rent the motor vehicle described including all accessories, tools, tyres, and equipment and any replacement vehicle (the vehicle).');
+  para('This is an agreement between the prospective hirer identified on page 1 (you) and the car owner(s) to rent the motor vehicle described on Page 1 including all accessories, tools, tyres, and equipment and any replacement vehicle (the vehicle).');
 
   subHead('Contract Period: 3 / 6 Months (to be confirmed)   |   Bond: 4 weeks rent in advance');
   subHead('Vehicle Insurance Excess: $1,195 + ($550 Age Excess if applicable)');
   y += 1;
 
   subHead('1. VEHICLE CONDITION AND RETURN');
-  para('The vehicle is delivered to you in good operating condition and reasonable order and with the seal on the odometer unbroken. You agree to return the vehicle in the same condition (except for ordinary wear and tear NOT INCLUDING WINDSCREEN AND TYRE DAMAGE) together with all tools, accessories, tyres, and equipment to the location specified and on the date specified (or sooner if demanded) to get a full refund of your bond money.');
+  para('The vehicle is delivered to you in good operating condition and reasonable order and with the seal on the odometer unbroken. You agree to return the vehicle in the same condition (except for ordinary wear and tear NOT INCLUDING WINDSCREEN AND TYRE DAMAGE) together with all tools, accessories, tyres, and equipment to the location specified on page 1 and on the date specified (or sooner if demanded) to get a full refund of your bond money. The owner(s) may take possession of the vehicle without prior demand and at your expense, if it is illegally parked, used in violation of the law or this agreement or if it is apparently abandoned. Note: The owner(s) must be notified and agree to any extension of the period of the hire beyond that stated on page 1 in advance of the return date and time or the vehicle will immediately be reported as stolen.');
 
   subHead('2. UNAUTHORISED AND PROHIBITED USE');
-  para('Persons who must NOT drive the vehicle: (a) A person not identified in this agreement. (b) A person not licensed for that class of vehicle. (c) A person whose blood alcohol concentration exceeds the legal limit. (d) A person who provided false name, age, address or driver\'s license. (e) A person whose license has been cancelled or suspended within the last 3 years. (f) A person who has held an unconditional driver licence for less than 1 year. (g) A person under the age of 21. (h) Outside the area of use limitation. (i) On unsealed or off-road conditions unless authorised in writing.');
+  para('Persons who must not drive the vehicle: (a) A person who is not identified on page 1 or approved by us in writing. (b) A person not licensed for that class of vehicle. (c) A person whose blood alcohol concentration exceeds the legal limit. (d) A person who has given a false name, age, address or driver\'s license. (e) A person whose license has been cancelled, endorsed or suspended within the last three years. (f) A person who has held an unconditional driver license for less than 1 year. (g) A person under the age of 21. (h) Outside the area of use limitation specified on page 1. (i) On unsealed or off-road conditions unless authorised in writing.');
 
   subHead('GENERAL PROVISIONS');
-  para('(a) You will promptly report any loss or damage to the vehicle. (b) All loss and damage per incident is subject to the damage liability charge. (c) We are not responsible if goods are left inside the car. (d) A late payment fee of 10% applies if invoice remains unpaid more than 2 days. (e) Bonds held for maximum 7 business days. (f) No bond refunded if you cannot abide by the agreement period.');
+  para('(a) You will promptly report any loss or damage to the vehicle and deliver every summons or complaint to us; this does not excuse reporting to police. (b) All loss and damage per incident is subject to the damage liability charge. (c) We are not responsible for goods left inside the car; ensure it is empty on delivery. (d) If the car is dumped, abandoned or left behind within the Newcastle or Hunter Region, the hirer will be charged all costs of recovering the vehicle. If left outside the agreed location or outside the Newcastle and Hunter Region, the hirer is responsible for all recovery and transportation charges to return the vehicle to the agreed location. (e) Bonds held for a maximum of 7 business days. (f) A late payment fee of 10% applies if an invoice is unpaid more than 2 days. (g) No bond refunded if you cannot abide by the agreement period. (h) The contract is cancelled if the vehicle is driven much higher than normal daily usage; the driver must return it within 3 business days of notice.');
 
   subHead('3. FUEL, CLEANLINESS AND EXTERIORS');
-  para('The vehicle must be returned with the same amount of fuel as at the time of rental. Same applies to the cleanliness and exteriors of the vehicle.');
+  para('The vehicle must be returned with fuel equal to that at the time of rental. If returned with less fuel the difference is charged at a rate which may include a service component. Same applies to cleanliness and exteriors of the vehicle.');
 
   subHead('4. LIABILITY FOR PENALTIES AND ADDRESS UPDATES');
-  para('During the hire period, the hirer is solely responsible for any penalties, fines, or misuse of the vehicle. The hirer must promptly notify Ozee Rentals of any changes to their address.');
+  para('During the hire period the hirer is solely responsible for any penalties, fines or misuse of the vehicle, regardless of who was driving. The hirer must promptly notify us of any address change; otherwise notices are sent to the last address provided and the hirer remains responsible for all consequences.');
 
-  subHead('5. VEHICLE TRACKING');
-  para('Most vehicles are equipped with GPS trackers. These allow monitoring of vehicle location and usage during the hire period.');
+  subHead('5. VEHICLE TRACKING AND IMMOBILISATION NOTICE');
+  para('The renter acknowledges the vehicle is fitted with a GPS tracking device for security, theft prevention, vehicle recovery, fleet management and compliance. The device may record location, speed, ignition status and other operational data during the rental period.');
+  para('The renter further acknowledges the vehicle is equipped with a remote immobilisation system, which may be activated by the owner only in circumstances including: theft or suspected theft; failure to return by the agreed date and time; serious breach of the agreement; or vehicle recovery operations authorised by law. Where reasonably practicable the owner will provide notice before activating it. It will not be activated while the vehicle is in motion and only when it is safe to do so.');
+  para('By signing this agreement the renter consents to the collection and use of GPS tracking data for the purposes above and acknowledges the presence of the tracking and immobilisation systems in the vehicle.');
 
-  subHead('6. VEHICLE INSURANCE COVERAGE');
-  para('The Renter is liable for the applicable insurance excess in the event of any damage, loss, or incident. The authorized driver is solely responsible for their driving behavior and must ensure the vehicle is roadworthy before use.');
+  subHead('6. TERMINATION DUE TO UNAUTHORIZED USE OR EXCESS MILEAGE');
+  para('The contract is cancelled if the vehicle is driven by an unauthorized person not listed in the contract or if mileage exceeds the allowed daily usage. The hirer must then return the vehicle within two business days of notice, regardless of the remaining period, and the bond will be withheld.');
+
+  subHead('7. VEHICLE INSURANCE COVERAGE AND ASSOCIATED COSTS');
+  para('The Renter is liable for the applicable insurance excess in the event of any damage, loss or incident, including all administrative and processing fees plus reasonable compensation for time lost due to insurance procedures, regardless of fault. Coverage applies only to the driver authorized in the rental contract. The authorized driver is solely responsible for their driving behaviour and must ensure the vehicle is roadworthy before use; if unfit, they must notify the Owner in writing. The driver is personally liable for any damage, loss or harm caused by negligence or failure to report such issues.');
   y += 2;
 
   // ── DECLARATION CHECKBOXES ──
@@ -731,6 +797,26 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
   const safeName = fullName.replace(/[^a-z0-9]/gi,'_');
   doc.save('Ozee_Application_' + safeName + '.pdf');
 }
+
+
+// ═══ FORCE READ AGREEMENT: unlock checkboxes only after scrolling to bottom ═══
+(function(){
+  var box=document.getElementById('agreementBox');
+  var note=document.getElementById('readNote');
+  if(!box) return;
+  function unlock(){
+    note.classList.add('done');
+    note.innerHTML='&#9989; Thank you for reading. You can now accept the agreement below.';
+    ['agreeWrap1','agreeWrap2','agreeWrap3'].forEach(function(id){var w=document.getElementById(id);if(w)w.classList.remove('locked');});
+    ['termsAccepted','insuranceDecl','rentalAgreement'].forEach(function(id){var cb=document.getElementById(id);if(cb)cb.disabled=false;});
+  }
+  function check(){
+    if(box.scrollTop + box.clientHeight >= box.scrollHeight - 20){ unlock(); box.removeEventListener('scroll',check); }
+  }
+  box.addEventListener('scroll',check,{passive:true});
+  // if content is short enough that no scroll is needed, unlock after a moment
+  setTimeout(function(){ if(box.scrollHeight <= box.clientHeight + 20) unlock(); },600);
+})();
 
 </script>
 </body>
