@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Driver Application — Form  — Ozee Rentals</title>
+<title>Driver Application — Form — Ozee Rentals</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -86,12 +86,26 @@ textarea{resize:vertical;min-height:80px;}
 .agree-locked{opacity:.45;pointer-events:none;}
 .agree-check.locked{opacity:.45;pointer-events:none;}
 
+
+/* ═══ BUILT BY MNJ FOOTER ═══ */
+.builtby{background:#04090F;padding:1.6rem 5% 1.8rem;text-align:center;border-top:1px solid rgba(245,166,35,.2);}
+.builtby .row{font-weight:700;font-size:1rem;color:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;gap:.55rem;flex-wrap:wrap;}
+.builtby .mnj{font-family:"Barlow Condensed",sans-serif;font-size:1.5rem;font-weight:900;letter-spacing:.05em;color:#F5A623;cursor:pointer;border:1.5px solid rgba(245,166,35,.4);background:transparent;padding:.1em .6em;border-radius:100px;line-height:1;transition:.2s;}
+.builtby .mnj:hover{transform:translateY(-1px) scale(1.05);color:#FFC94A;border-color:#FFC94A;background:rgba(245,166,35,.08);}
+.builtby .mnj .hint{font-size:.6rem;margin-left:.2em;vertical-align:middle;}
+.builtby .contact{display:none;gap:1.4rem;margin-top:1rem;flex-wrap:wrap;justify-content:center;}
+.builtby .contact.show{display:inline-flex;}
+.builtby .contact a{color:rgba(255,255,255,.6);font-weight:700;font-size:.85rem;text-decoration:none;transition:.2s;}
+.builtby .contact a:hover{color:#F5A623;}
+.builtby .wa:hover{color:#25D366;}
+@media(max-width:600px){.builtby .contact{flex-direction:column;gap:.6rem;}}
+
 </style>
 </head>
 <body>
 <div class="top-bar">
   <a href="https://ozeerentals.com.au"><img src="https://ozeerentals.com.au/logo-white.png" alt="Ozee Rentals"></a>
-  <div class="form-id">Form #001 — Driver Application</div>
+  <div class="form-id"> Driver Application</div>
 </div>
 <div class="hero-bar">
   <h1>Driver <span>Application</span></h1>
@@ -179,7 +193,7 @@ textarea{resize:vertical;min-height:80px;}
       <div class="form-group"><label>Driver's Licence — Back <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="licBack" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_licBack"></div></div>
       <div class="form-group"><label>Passport <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="passport" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_passport"></div></div>
       <div class="form-group"><label>Visa / VEVO <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="visaDoc" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_visaDoc"></div></div>
-      <div class="form-group"><label>Medicare Card or Photo ID <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="medicareId" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_medicareId"></div></div>
+      <div class="form-group"><label>Bond + Rent Payment Receipt <span class="opt">(optional)</span></label><p style="font-size:.82rem;color:#6c757d;margin:-.3rem 0 .6rem;">2 week bond + 1 week rent. You can upload this now or send it later.</p><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="medicareId" accept=".pdf,.jpg,.jpeg,.png" onchange="showPreview(this)"></div><div class="file-preview" id="prev_medicareId"></div></div>
     </div>
 
     <!-- INSURANCE DECLARATION -->
@@ -321,7 +335,7 @@ textarea{resize:vertical;min-height:80px;}
     <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
     <div class="success-msg" id="successMsg">
       <h3>✅ Application Submitted!</h3>
-      <p>Thank you for applying to drive with Ozee Rentals. We will review your application and contact you within 24–48 hours.</p>
+      <p>Thank you for applying to drive with Ozee Rentals. We will review your application and contact you within 24 hours.</p>
       <p style="margin-top:.75rem;"><strong>Phone:</strong> 0450 786 145 | <strong>Email:</strong> admin@ozeerentals.com.au</p>
     </div>
     <div class="error-msg" id="errorMsg"></div>
@@ -478,42 +492,48 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
       {id:'licBack', type:'license_back', label:'Licence Back'},
       {id:'passport', type:'passport', label:'Passport'},
       {id:'visaDoc', type:'visa_vevo', label:'Visa / VEVO'},
-      {id:'medicareId', type:'medicare_id', label:'Medicare / ID'},
+      {id:'medicareId', type:'bond_rent_receipt', label:'Bond + Rent Receipt'},
     ];
 
     const uploadedDocs = [];  // track what was uploaded for the PDF
 
+    // Build a list of upload jobs and run them ALL IN PARALLEL for speed
+    const uploadJobs = [];
     for(const f of files){
       const input = document.getElementById(f.id);
-      if(input.files[0]){
+      if(input && input.files[0]){
         const file = input.files[0];
         uploadedDocs.push({ label: f.label, fileName: file.name });
         const path = `driver_${driver.id}/${f.type}_${Date.now()}.${file.name.split('.').pop()}`;
-        const {error: upErr} = await window._sb.storage.from('driver-documents').upload(path, file);
-        if(upErr) console.error('Doc storage error:', f.type, upErr.message);
-        const { error: docErr } = await window._sb.from('documents').insert([{
-          entity_type:'driver', entity_id:driver.id,
-          document_type:f.type, file_name:file.name,
-          file_url:path, file_size:file.size, mime_type:file.type
-        }]);
-        if(docErr) console.error('Doc record error:', f.type, docErr.message);
+        uploadJobs.push(
+          window._sb.storage.from('driver-documents').upload(path, file)
+            .then(({error:upErr}) => { if(upErr) console.error('Doc storage error:', f.type, upErr.message); })
+            .then(() => window._sb.from('documents').insert([{
+              entity_type:'driver', entity_id:driver.id,
+              document_type:f.type, file_name:file.name,
+              file_url:path, file_size:file.size, mime_type:file.type
+            }]))
+            .then(({error:docErr}) => { if(docErr) console.error('Doc record error:', f.type, docErr.message); })
+        );
       }
     }
 
-    // Upload signature image to storage, then save record to documents table
+    // Signature upload job (also in parallel)
     const sigBlob = await(await fetch(sigData)).blob();
     const sigPath = `driver_${driver.id}/signature_${Date.now()}.png`;
-    const { error: sigUpErr } = await window._sb.storage
-      .from('driver-documents')
-      .upload(sigPath, sigBlob, { contentType:'image/png' });
-    if(sigUpErr) console.error('Signature storage error:', sigUpErr.message);
-    // Direct insert to documents table (proven working)
-    const { error: sigInsErr } = await window._sb.from('documents').insert([{
-      entity_type:'driver', entity_id:driver.id,
-      document_type:'signature', file_name:'signature.png',
-      file_url:sigPath, file_size:sigBlob.size, mime_type:'image/png'
-    }]);
-    if(sigInsErr) console.error('Signature record error:', sigInsErr.message);
+    uploadJobs.push(
+      window._sb.storage.from('driver-documents').upload(sigPath, sigBlob, { contentType:'image/png' })
+        .then(({error:sigUpErr}) => { if(sigUpErr) console.error('Signature storage error:', sigUpErr.message); })
+        .then(() => window._sb.from('documents').insert([{
+          entity_type:'driver', entity_id:driver.id,
+          document_type:'signature', file_name:'signature.png',
+          file_url:sigPath, file_size:sigBlob.size, mime_type:'image/png'
+        }]))
+        .then(({error:sigInsErr}) => { if(sigInsErr) console.error('Signature record error:', sigInsErr.message); })
+    );
+
+    // Wait for all uploads to finish together (much faster than one-by-one)
+    await Promise.all(uploadJobs);
 
     // Generate and download the complete application PDF
     try {
@@ -541,7 +561,7 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
         + '</div>'
         + '<div style="background:#f7f5f0;padding:14px 28px;color:#999;font-size:12px">Ozee Rentals Pty Ltd &middot; Newcastle &amp; Hunter Region NSW &middot; Automated notification.</div>'
         + '</div>';
-      await fetch('https://' + PROJ + '.supabase.co/functions/v1/send-driver-email', {
+      fetch('https://' + PROJ + '.supabase.co/functions/v1/send-driver-email', {
         method: 'POST',
         headers: { 'Content-Type':'application/json', 'Authorization':'Bearer ' + OZ_ANON, 'apikey': OZ_ANON },
         body: JSON.stringify({
@@ -549,7 +569,7 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
           subject: 'New Driver Application - ' + driverData.first_name + ' ' + driverData.last_name,
           html: notifyHtml
         })
-      });
+      }).catch(function(e){ console.error('Admin notify error:', e); });
     } catch(nErr) { console.error('Admin notify error:', nErr); }
 
     document.getElementById('successMsg').style.display='block';
@@ -669,7 +689,7 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
   // ── UPLOADED DOCUMENTS ──
   sectionHeader('SECTION 04 — UPLOADED DOCUMENTS');
   const allDocs = [
-    'Licence Front', 'Licence Back', 'Passport', 'Visa / VEVO', 'Medicare / ID'
+    'Licence Front', 'Licence Back', 'Passport', 'Visa / VEVO', 'Bond + Rent Receipt'
   ];
   const uploadedLabels = (uploadedDocs || []).map(function(x){ return x.label; });
   allDocs.forEach(function(docLabel){
@@ -818,6 +838,17 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
   setTimeout(function(){ if(box.scrollHeight <= box.clientHeight + 20) unlock(); },600);
 })();
 
+
+// MNJ contact reveal
+(function(){var b=document.getElementById('mnjBtn'),k=document.getElementById('mnjContact');if(b&&k){b.addEventListener('click',function(){var open=k.classList.toggle('show');b.setAttribute('aria-expanded',open?'true':'false');var h=b.querySelector('.hint');if(h)h.innerHTML=open?'&#9650;':'&#9660;';});}})();
+
 </script>
+<div class="builtby">
+  <div class="row">Built by <button type="button" class="mnj" id="mnjBtn" aria-expanded="false">MNJ<span class="hint">&#9660;</span></button></div>
+  <div class="contact" id="mnjContact">
+    <a href="mailto:nasirjamal@live.co.uk">&#9993; nasirjamal@live.co.uk</a>
+    <a class="wa" href="https://wa.me/61415741400" target="_blank" rel="noopener">&#128241; WhatsApp +61 415 741 400</a>
+  </div>
+</div>
 </body>
 </html>
