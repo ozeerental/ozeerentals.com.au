@@ -1,9 +1,9 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Driver Application — Form — Ozee Rentals</title>
+<title>Driver Application — Form  — Ozee Rentals</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -98,7 +98,34 @@ textarea{resize:vertical;min-height:80px;}
 .builtby .contact a{color:rgba(255,255,255,.6);font-weight:700;font-size:.85rem;text-decoration:none;transition:.2s;}
 .builtby .contact a:hover{color:#F5A623;}
 .builtby .wa:hover{color:#25D366;}
+
+/* MNJ: reveal on hover (desktop) — click still works everywhere incl. mobile */
+@media(hover:hover) and (pointer:fine){
+  
+  
+  .builtby .row:hover .mnj{transform:translateY(-1px) scale(1.06);}
+}
+
 @media(max-width:600px){.builtby .contact{flex-direction:column;gap:.6rem;}}
+
+@keyframes cfade{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+/* MNJ credit popup — floats ABOVE the button so nothing is pushed down or hidden */
+.builtby .mnjwrap{position:relative;display:inline-block;}
+.builtby .contact{
+  position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%);
+  display:none;flex-direction:column;align-items:center;gap:.6rem;
+  background:#0d2b2a;border:1px solid rgba(255,193,69,.4);border-radius:14px;
+  padding:.85rem 1.1rem;box-shadow:0 14px 34px rgba(0,0,0,.5);
+  z-index:980;white-space:nowrap;margin:0;
+}
+.builtby .contact::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:7px solid transparent;border-top-color:rgba(255,193,69,.4);
+}
+.builtby .contact.show{display:flex;animation:cfade .22s ease-out;}
+@media(hover:hover) and (pointer:fine){ .builtby .mnjwrap:hover .contact{display:flex;} }
+@media(max-width:420px){ .builtby .contact{padding:.75rem .9rem;} .builtby .contact a{font-size:.8rem;} }
 
 </style>
 </head>
@@ -237,6 +264,21 @@ textarea{resize:vertical;min-height:80px;}
     <!-- RENTAL AGREEMENT -->
     <div class="form-section">
       <div class="sec-header"><span class="sec-icon">📋</span><div><div class="sec-num">SECTION 06</div><div class="sec-title">Rental Agreement</div></div></div>
+      <div class="form-group" style="margin-bottom:1.2rem;">
+        <label>Preferred Rental Period <span class="req">*</span></label>
+        <p style="font-size:.82rem;color:#6c757d;margin:-.3rem 0 .5rem;">Minimum 2 weeks. This is your preference &mdash; the final period will be confirmed by Ozee Rentals on approval.</p>
+        <select class="form-input" id="requestedDuration" required onchange="updateAgreement()">
+            <option value="">-- Select preferred period --</option>
+            <option value="2 Weeks">2 Weeks (minimum)</option>
+            <option value="1 Month">1 Month</option>
+            <option value="2 Months">2 Months</option>
+            <option value="3 Months">3 Months</option>
+            <option value="4 Months">4 Months</option>
+            <option value="5 Months">5 Months</option>
+            <option value="6 Months">6 Months</option>
+            <option value="More than 6 Months">More than 6 Months (discuss with Ozee)</option>
+        </select>
+      </div>
       <div class="read-note" id="readNote">&#128070; Please scroll through and read the full agreement below to continue.</div>
       <div class="agreement-scroll agreement-full" id="agreementBox">
         <h4>RENTAL AGREEMENT — RENTER INFORMATION</h4>
@@ -247,8 +289,8 @@ textarea{resize:vertical;min-height:80px;}
           <tr><td>Driver's Licence</td><td id="ag_licence">—</td></tr>
           <tr><td>Contact No</td><td id="ag_mobile">—</td></tr>
           <tr><td>Email</td><td id="ag_email">—</td></tr>
-          <tr><td>Contract Period</td><td>3 / 6 Months (to be confirmed)</td></tr>
-          <tr><td>Bond</td><td>3 weeks rent in advance(2 weeks bond  1 week rent )</td></tr>
+          <tr><td>Contract Period</td><td id="ag_duration">&mdash;</td></tr>
+          <tr><td>Bond</td><td>4 weeks rent in advance</td></tr>
           <tr><td>Emergency Contact</td><td id="ag_emergency">—</td></tr>
         </table>
         <h4>VEHICLE DETAILS (Completed by Admin)</h4>
@@ -335,7 +377,7 @@ textarea{resize:vertical;min-height:80px;}
     <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
     <div class="success-msg" id="successMsg">
       <h3>✅ Application Submitted!</h3>
-      <p>Thank you for applying to drive with Ozee Rentals. We will review your application and contact you within 24 hours.</p>
+      <p>Thank you for applying to drive with Ozee Rentals. We will review your application and contact you within 24–48 hours.</p>
       <p style="margin-top:.75rem;"><strong>Phone:</strong> 0450 786 145 | <strong>Email:</strong> admin@ozeerentals.com.au</p>
     </div>
     <div class="error-msg" id="errorMsg"></div>
@@ -385,6 +427,9 @@ function showPreview(input){
 
 // Update agreement with form values
 function updateAgreement(){
+  var _dur = document.getElementById('requestedDuration');
+  var _durEl = document.getElementById('ag_duration');
+  if(_durEl) _durEl.textContent = (_dur && _dur.value) ? (_dur.value + ' (requested \u2014 subject to confirmation)') : '\u2014';
   const fn = document.getElementById('firstName').value;
   const mn = document.getElementById('middleName').value;
   const ln = document.getElementById('lastName').value;
@@ -476,6 +521,7 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
       insurance_declared: document.getElementById('insuranceDecl').checked,
       agreement_signed: document.getElementById('rentalAgreement').checked,
       signed_date: document.getElementById('signDate').value,
+      requested_duration: document.getElementById('requestedDuration').value || null,
       status: 'Pending'
     };
 
@@ -732,7 +778,7 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
   sectionHeader('RENTAL VEHICLE AGREEMENT — TERMS & CONDITIONS');
   para('This is an agreement between the prospective hirer identified on page 1 (you) and the car owner(s) to rent the motor vehicle described on Page 1 including all accessories, tools, tyres, and equipment and any replacement vehicle (the vehicle).');
 
-  subHead('Contract Period: 3 / 6 Months (to be confirmed)   |   Bond: 4 weeks rent in advance');
+  subHead('Contract Period: ' + (d.requested_duration ? d.requested_duration + ' (requested \u2014 subject to confirmation)' : 'To be confirmed') + '   |   Bond: 4 weeks rent in advance');
   subHead('Vehicle Insurance Excess: $1,195 + ($550 Age Excess if applicable)');
   y += 1;
 
@@ -840,15 +886,36 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
 
 
 // MNJ contact reveal
-(function(){var b=document.getElementById('mnjBtn'),k=document.getElementById('mnjContact');if(b&&k){b.addEventListener('click',function(){var open=k.classList.toggle('show');b.setAttribute('aria-expanded',open?'true':'false');var h=b.querySelector('.hint');if(h)h.innerHTML=open?'&#9650;':'&#9660;';});}})();
+
 
 </script>
 <div class="builtby">
-  <div class="row">Built by <button type="button" class="mnj" id="mnjBtn" aria-expanded="false">MNJ<span class="hint">&#9660;</span></button></div>
-  <div class="contact" id="mnjContact">
+  <div class="row">Built by <span class="mnjwrap"><button type="button" class="mnj" id="mnjBtn" aria-expanded="false">MNJ<span class="hint">&#9660;</span></button><div class="contact" id="mnjContact">
     <a href="mailto:nasirjamal@live.co.uk">&#9993; nasirjamal@live.co.uk</a>
     <a class="wa" href="https://wa.me/61415741400" target="_blank" rel="noopener">&#128241; WhatsApp +61 415 741 400</a>
-  </div>
+  </div></span></div>
 </div>
+<script>
+/* MNJ credit toggle — isolated so it never depends on other scripts */
+(function(){
+  function init(){
+    var b=document.getElementById('mnjBtn'), k=document.getElementById('mnjContact');
+    if(!b||!k) return;
+    b.addEventListener('click',function(e){
+      e.preventDefault(); e.stopPropagation();
+      var open=k.classList.toggle('show');
+      b.setAttribute('aria-expanded', open?'true':'false');
+      var h=b.querySelector('.hint'); if(h) h.innerHTML = open?'&#9650;':'&#9660;';
+    });
+    document.addEventListener('click',function(e){
+      if(!k.contains(e.target) && e.target!==b && !b.contains(e.target)){
+        k.classList.remove('show'); b.setAttribute('aria-expanded','false');
+        var h=b.querySelector('.hint'); if(h) h.innerHTML='&#9660;';
+      }
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
 </body>
 </html>
