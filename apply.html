@@ -290,14 +290,14 @@ textarea{resize:vertical;min-height:80px;}
           <tr><td>Contact No</td><td id="ag_mobile">—</td></tr>
           <tr><td>Email</td><td id="ag_email">—</td></tr>
           <tr><td>Contract Period</td><td id="ag_duration">&mdash;</td></tr>
-          <tr><td>Bond</td><td>4 weeks rent in advance</td></tr>
+          <tr><td>Bond</td><td>3 weeks rent in advance</td></tr>
           <tr><td>Emergency Contact</td><td id="ag_emergency">—</td></tr>
         </table>
         <h4>VEHICLE DETAILS (Completed by Admin)</h4>
         <table>
           <tr><td>Registration No</td><td><em>To be assigned by Ozee Rentals</em></td></tr>
           <tr><td>Car Make &amp; Model</td><td><em>To be assigned by Ozee Rentals</em></td></tr>
-          <tr><td>Bond Received</td><td><em>4 weeks rent in advance</em></td></tr>
+          <tr><td>Bond Received</td><td><em>3 weeks rent in advance</em></td></tr>
           <tr><td>Vehicle Insurance Excess</td><td>$1,195 + ($550 Age Excess if applicable)</td></tr>
         </table>
         <h4>RENTAL VEHICLE AGREEMENT TERMS AND CONDITIONS</h4>
@@ -778,7 +778,7 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
   sectionHeader('RENTAL VEHICLE AGREEMENT — TERMS & CONDITIONS');
   para('This is an agreement between the prospective hirer identified on page 1 (you) and the car owner(s) to rent the motor vehicle described on Page 1 including all accessories, tools, tyres, and equipment and any replacement vehicle (the vehicle).');
 
-  subHead('Contract Period: ' + (d.requested_duration ? d.requested_duration + ' (requested \u2014 subject to confirmation)' : 'To be confirmed') + '   |   Bond: 4 weeks rent in advance');
+  subHead('Contract Period: ' + (d.requested_duration ? d.requested_duration + ' (requested \u2014 subject to confirmation)' : 'To be confirmed') + '   |   Bond: 3 weeks rent in advance');
   subHead('Vehicle Insurance Excess: $1,195 + ($550 Age Excess if applicable)');
   y += 1;
 
