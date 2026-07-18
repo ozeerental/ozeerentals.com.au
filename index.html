@@ -323,6 +323,32 @@ footer .tg{color:var(--gold);font-weight:900;font-family:'Lilita One',cursive}
 .builtby .contact a:hover{color:var(--gold);transform:translateY(-2px)}
 .builtby .wa:hover{color:#25D366}
 
+/* MNJ: reveal on hover (desktop) — click still works everywhere incl. mobile */
+@media(hover:hover) and (pointer:fine){
+  
+  
+  .builtby .row:hover .mnj{transform:translateY(-1px) scale(1.06);}
+}
+
+
+
+/* MNJ credit popup — floats ABOVE the button so nothing is pushed down or hidden */
+.builtby .mnjwrap{position:relative;display:inline-block;}
+.builtby .contact{
+  position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%);
+  display:none;flex-direction:column;align-items:center;gap:.6rem;
+  background:#0d2b2a;border:1px solid rgba(255,193,69,.4);border-radius:14px;
+  padding:.85rem 1.1rem;box-shadow:0 14px 34px rgba(0,0,0,.5);
+  z-index:980;white-space:nowrap;margin:0;
+}
+.builtby .contact::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:7px solid transparent;border-top-color:rgba(255,193,69,.4);
+}
+.builtby .contact.show{display:flex;animation:cfade .22s ease-out;}
+@media(hover:hover) and (pointer:fine){ .builtby .mnjwrap:hover .contact{display:flex;} }
+@media(max-width:420px){ .builtby .contact{padding:.75rem .9rem;} .builtby .contact a{font-size:.8rem;} }
+
 </style></head><body>
 <div class="prog" id="prog"></div>
 <nav class="nav"><a href="/"><img class="lg" src="https://ozeerentals.com.au/logo-white.png" alt="Ozee Rentals"></a>
@@ -420,11 +446,15 @@ footer .tg{color:var(--gold);font-weight:900;font-family:'Lilita One',cursive}
 <div class="tg">Need a Car? We've Got You Covered.</div>
 </footer>
 <div class="builtby">
-  <div class="row">Built by <button type="button" class="mnj" id="mnjBtn" aria-expanded="false">MNJ<span class="hint">&#9660;</span></button></div>
-  <div class="contact" id="mnjContact">
+  <div class="bizcontact">
+    <a href="tel:0450786145">&#9742; 0450 786 145</a>
+    <span class="sep">&bull;</span>
+    <a href="mailto:admin@ozeerentals.com.au">&#9993; admin@ozeerentals.com.au</a>
+  </div>
+  <div class="row">Built by <span class="mnjwrap"><button type="button" class="mnj" id="mnjBtn" aria-expanded="false">MNJ<span class="hint">&#9660;</span></button><div class="contact" id="mnjContact">
     <a href="mailto:nasirjamal@live.co.uk">&#9993; nasirjamal@live.co.uk</a>
     <a class="wa" href="https://wa.me/61415741400" target="_blank" rel="noopener">&#128241; WhatsApp +61 415 741 400</a>
-  </div>
+  </div></span></div>
 </div>
 <div class="mbar"><a href="tel:0450786145" class="mc">&#9742; Call Now</a><a href="mailto:admin@ozeerentals.com.au" class="mm">&#9993; Email</a></div>
 
@@ -447,6 +477,28 @@ return '<div class="car"><div class="cim"><span class="bdg">Available</span>'+im
 w('.car')}catch(e){g.innerHTML=em}}
 
 // MNJ contact reveal
-(function(){var b=document.getElementById('mnjBtn'),k=document.getElementById('mnjContact');if(b&&k){b.addEventListener('click',function(){var open=k.classList.toggle('show');b.setAttribute('aria-expanded',open?'true':'false');var h=b.querySelector('.hint');if(h)h.innerHTML=open?'&#9650;':'&#9660;';});}})();
+
 window.addEventListener('load',lf);
-</script></body></html>
+</script><script>
+/* MNJ credit toggle — isolated so it never depends on other scripts */
+(function(){
+  function init(){
+    var b=document.getElementById('mnjBtn'), k=document.getElementById('mnjContact');
+    if(!b||!k) return;
+    b.addEventListener('click',function(e){
+      e.preventDefault(); e.stopPropagation();
+      var open=k.classList.toggle('show');
+      b.setAttribute('aria-expanded', open?'true':'false');
+      var h=b.querySelector('.hint'); if(h) h.innerHTML = open?'&#9650;':'&#9660;';
+    });
+    document.addEventListener('click',function(e){
+      if(!k.contains(e.target) && e.target!==b && !b.contains(e.target)){
+        k.classList.remove('show'); b.setAttribute('aria-expanded','false');
+        var h=b.querySelector('.hint'); if(h) h.innerHTML='&#9660;';
+      }
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
+</body></html>
