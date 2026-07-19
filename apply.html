@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Driver Application — Form  — Ozee Rentals</title>
+<title>Driver Application — Form — Ozee Rentals</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -127,12 +127,20 @@ textarea{resize:vertical;min-height:80px;}
 @media(hover:hover) and (pointer:fine){ .builtby .mnjwrap:hover .contact{display:flex;} }
 @media(max-width:420px){ .builtby .contact{padding:.75rem .9rem;} .builtby .contact a{font-size:.8rem;} }
 
+
+/* Submitting notice — keeps driver on page while the app + notification finish */
+.wait-msg{display:none;background:#fff3cd;border:2px solid #f5a623;color:#664d03;padding:1.1rem 1.2rem;border-radius:8px;margin-top:1rem;text-align:center;font-weight:700;line-height:1.6;}
+.wait-msg .big{display:block;font-size:1.05rem;margin-bottom:.3rem;}
+.wait-msg .sub{display:block;font-size:.88rem;font-weight:600;color:#7a5c07;}
+.wait-msg .spin{display:inline-block;width:15px;height:15px;border:3px solid #f5a623;border-top-color:transparent;border-radius:50%;animation:wspin .8s linear infinite;vertical-align:-2px;margin-right:.5rem;}
+@keyframes wspin{to{transform:rotate(360deg)}}
+
 </style>
 </head>
 <body>
 <div class="top-bar">
   <a href="https://ozeerentals.com.au"><img src="https://ozeerentals.com.au/logo-white.png" alt="Ozee Rentals"></a>
-  <div class="form-id"> Driver Application</div>
+  <div class="form-id">— Driver Application</div>
 </div>
 <div class="hero-bar">
   <h1>Driver <span>Application</span></h1>
@@ -290,14 +298,14 @@ textarea{resize:vertical;min-height:80px;}
           <tr><td>Contact No</td><td id="ag_mobile">—</td></tr>
           <tr><td>Email</td><td id="ag_email">—</td></tr>
           <tr><td>Contract Period</td><td id="ag_duration">&mdash;</td></tr>
-          <tr><td>Bond</td><td>3 weeks rent in advance</td></tr>
+          <tr><td>Bond</td><td>4 weeks rent in advance</td></tr>
           <tr><td>Emergency Contact</td><td id="ag_emergency">—</td></tr>
         </table>
         <h4>VEHICLE DETAILS (Completed by Admin)</h4>
         <table>
           <tr><td>Registration No</td><td><em>To be assigned by Ozee Rentals</em></td></tr>
           <tr><td>Car Make &amp; Model</td><td><em>To be assigned by Ozee Rentals</em></td></tr>
-          <tr><td>Bond Received</td><td><em>3 weeks rent in advance</em></td></tr>
+          <tr><td>Bond Received</td><td><em>4 weeks rent in advance</em></td></tr>
           <tr><td>Vehicle Insurance Excess</td><td>$1,195 + ($550 Age Excess if applicable)</td></tr>
         </table>
         <h4>RENTAL VEHICLE AGREEMENT TERMS AND CONDITIONS</h4>
@@ -375,13 +383,18 @@ textarea{resize:vertical;min-height:80px;}
     </div>
 
     <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
+  </form>
+    <div class="wait-msg" id="waitMsg">
+      <span class="big"><span class="spin"></span>Please wait &mdash; submitting your application&hellip;</span>
+      <span class="sub">Do not close or refresh this page. This only takes a few seconds.</span>
+    </div>
     <div class="success-msg" id="successMsg">
-      <h3>✅ Application Submitted!</h3>
-      <p>Thank you for applying to drive with Ozee Rentals. We will review your application and contact you within 24–48 hours.</p>
+      <h3>✅ Application Submitted Successfully!</h3>
+      <p>Thank you for applying to drive with Ozee Rentals. You will receive a confirmation email very soon.</p>
+      <p style="margin-top:.6rem;">If you have any questions about your application, you're welcome to call us at any time &mdash; we're happy to help.</p>
       <p style="margin-top:.75rem;"><strong>Phone:</strong> 0450 786 145 | <strong>Email:</strong> admin@ozeerentals.com.au</p>
     </div>
     <div class="error-msg" id="errorMsg"></div>
-  </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -486,12 +499,14 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
   e.preventDefault();
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  btn.textContent = 'Submitting...';
+  btn.textContent = 'Submitting... please wait';
+  var _wait = document.getElementById('waitMsg');
+  if(_wait){ _wait.style.display='block'; _wait.scrollIntoView({behavior:'smooth', block:'center'}); }
 
   // Check signature
   const sigData = canvas.toDataURL();
   const isBlank = !ctx.getImageData(0,0,canvas.width,canvas.height).data.some(v=>v!==0);
-  if(isBlank){ alert('Please sign the form before submitting.'); btn.disabled=false; btn.textContent='Submit Application'; return; }
+  if(isBlank){ alert('Please sign the form before submitting.'); var _wb=document.getElementById('waitMsg'); if(_wb) _wb.style.display='none'; btn.disabled=false; btn.textContent='Submit Application'; return; }
 
   try{
     // Prepare driver data
@@ -609,6 +624,7 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
         + '</div>';
       fetch('https://' + PROJ + '.supabase.co/functions/v1/send-driver-email', {
         method: 'POST',
+        keepalive: true,   // lets the request finish even if the driver closes the tab
         headers: { 'Content-Type':'application/json', 'Authorization':'Bearer ' + OZ_ANON, 'apikey': OZ_ANON },
         body: JSON.stringify({
           to: 'admin@ozeerentals.com.au',
@@ -618,8 +634,10 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
       }).catch(function(e){ console.error('Admin notify error:', e); });
     } catch(nErr) { console.error('Admin notify error:', nErr); }
 
+    var _w = document.getElementById('waitMsg'); if(_w) _w.style.display='none';
     document.getElementById('successMsg').style.display='block';
     document.getElementById('driverForm').style.display='none';
+    document.getElementById('successMsg').scrollIntoView({behavior:'smooth', block:'center'});
 
 
   } catch(err){
@@ -627,6 +645,7 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
     const errEl = document.getElementById('errorMsg');
     errEl.textContent = 'Submission failed: ' + (err.message || 'Please try again or contact us directly.');
     errEl.style.display='block';
+    var _we = document.getElementById('waitMsg'); if(_we) _we.style.display='none';
     btn.disabled=false;
     btn.textContent='Submit Application';
   }
@@ -778,7 +797,7 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
   sectionHeader('RENTAL VEHICLE AGREEMENT — TERMS & CONDITIONS');
   para('This is an agreement between the prospective hirer identified on page 1 (you) and the car owner(s) to rent the motor vehicle described on Page 1 including all accessories, tools, tyres, and equipment and any replacement vehicle (the vehicle).');
 
-  subHead('Contract Period: ' + (d.requested_duration ? d.requested_duration + ' (requested \u2014 subject to confirmation)' : 'To be confirmed') + '   |   Bond: 3 weeks rent in advance');
+  subHead('Contract Period: ' + (d.requested_duration ? d.requested_duration + ' (requested \u2014 subject to confirmation)' : 'To be confirmed') + '   |   Bond: 4 weeks rent in advance');
   subHead('Vehicle Insurance Excess: $1,195 + ($550 Age Excess if applicable)');
   y += 1;
 
