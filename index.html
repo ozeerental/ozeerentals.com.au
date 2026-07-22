@@ -495,7 +495,7 @@ else if(st==='Maintenance'){badge='<span class="bdg maint">In Maintenance</span>
 if(st!=='Available'){
   var f=c.available_from?fmtAvail(c.available_from):null;
   if(f){chip='<span class="avchip"><small>Available</small><b>'+f+'</b></span>';}
-  else{extra='<div class="cav na">Call for availability</div>';}
+  else{extra='<div class="cav na"></div>';}
 }
 return '<div class="'+cls+'"><div class="cim">'+badge+chip+im+'</div><div class="cbd"><div class="cnm">'+c.make_model+' '+(c.year||'')+'</div>'+extra+'<div class="cft"><div class="cpr">$'+c.weekly_rate+'<small>/WK</small></div>'+cta+'</div></div></div>';
 }
