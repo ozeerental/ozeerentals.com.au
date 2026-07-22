@@ -1,960 +1,509 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Driver Application — Ozee Rentals</title>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --dash:#1E2732; --panel:#2A3542; --edge:#414E5C; --amber:#FF8A3D; --amber-dim:#B5651F;
-  --text:#F4F8FC; --muted:#9AA8B7; --dim:#64707E; --go:#3DDC84; --bad:#FF6B6B;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-body{font-family:'Chakra Petch',system-ui,sans-serif;background:var(--dash);color:var(--text);line-height:1.55;padding-bottom:2rem;}
-
-/* ─── top bar ─── */
-.top-bar{background:#19212B;border-bottom:1px solid var(--edge);padding:.7rem 1.1rem;display:flex;align-items:center;justify-content:center;position:sticky;top:0;z-index:100;}
-.top-bar img{height:44px;width:auto;}
-
-/* ─── hero ─── */
-.hero-bar{padding:1.5rem 1.2rem 1.2rem;text-align:center;position:relative;overflow:hidden;border-bottom:1px solid var(--edge);}
-.hero-bar::before{content:'';position:absolute;inset:0;background:radial-gradient(90% 60% at 50% -10%,rgba(255,138,61,.13),transparent 65%);pointer-events:none;}
-.lamps{display:flex;gap:.45rem;margin-bottom:.9rem;position:relative;flex-wrap:wrap;justify-content:center;}
-.lamp{font-family:Inter,sans-serif;font-size:.55rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;padding:.22rem .5rem;border-radius:3px;border:1px solid var(--edge);color:var(--dim);white-space:nowrap;}
-.lamp.on{color:var(--amber);border-color:var(--amber-dim);background:rgba(255,138,61,.08);}
-.lamp.ok{color:var(--go);border-color:#1F5B3A;background:rgba(61,220,132,.07);}
-.hero-bar h1{font-size:2rem;font-weight:700;text-transform:uppercase;letter-spacing:.01em;line-height:1.05;position:relative;}
-.hero-bar h1 span{color:var(--amber);}
-.hero-bar p{font-family:Inter,sans-serif;font-size:.8rem;color:var(--muted);margin-top:.45rem;position:relative;line-height:1.7;max-width:640px;margin-left:auto;margin-right:auto;}
-.telem{display:flex;gap:1.5rem;margin-top:1.1rem;padding-top:.9rem;border-top:1px solid var(--edge);position:relative;flex-wrap:wrap;justify-content:center;}
-.telem div{line-height:1.15;}
-.telem b{display:block;font-size:1.15rem;font-weight:700;color:#fff;}
-.telem span{font-family:Inter,sans-serif;font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
-
-/* ─── sticky gauge cluster ─── */
-.cluster{position:sticky;top:0;z-index:90;background:rgba(25,33,43,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--edge);padding:.65rem 1.1rem;display:flex;align-items:center;justify-content:center;gap:.95rem;}
-.ring{width:56px;height:56px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--amber) 0deg 51deg,#1B2027 51deg 360deg);transition:background .3s;}
-.ring::after{content:'';position:absolute;inset:6px;border-radius:50%;background:#19212B;}
-.ring div{position:relative;z-index:1;text-align:center;line-height:1;}
-.ring .n{font-size:1.15rem;font-weight:700;color:#fff;}
-.ring .l{font-family:Inter,sans-serif;font-size:.44rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:.15rem;}
-.cluster .read h3{font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:.02em;line-height:1.1;}
-.cluster .read p{font-family:Inter,sans-serif;font-size:.66rem;color:var(--muted);letter-spacing:.04em;}
-
-/* ─── layout ─── */
-.container{max-width:820px;margin:1.1rem auto 0;padding:0 .9rem;}
-
-/* ─── section panels ─── */
-.form-section{background:var(--panel);border:1px solid var(--edge);border-radius:12px;margin-bottom:1.1rem;overflow:hidden;}
-.sec-header{padding:.9rem 1rem;border-bottom:1px solid var(--edge);display:flex;align-items:center;gap:.75rem;background:linear-gradient(180deg,rgba(255,138,61,.05),transparent);}
-.sec-icon{font-size:1.15rem;flex-shrink:0;filter:grayscale(.25);}
-.sec-num{font-family:Inter,sans-serif;font-size:.58rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);}
-.sec-title{font-size:1.02rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;line-height:1.15;color:var(--text);}
-.form-section > *:not(.sec-header){margin-left:1rem;margin-right:1rem;}
-.form-section > *:last-child{margin-bottom:1.2rem;}
-.form-section > .sec-header + *{margin-top:1.1rem;}
-
-/* ─── fields ─── */
-.form-group{margin-bottom:1rem;}
-label{display:block;font-family:Inter,sans-serif;font-size:.73rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#FFFFFF;margin-bottom:.4rem;padding-left:.55rem;border-left:3px solid var(--amber);}
-.req{color:var(--amber);}
-.opt{letter-spacing:.04em;color:var(--dim);text-transform:none;font-weight:400;}
-.form-input,input[type=text],input[type=tel],input[type=email],input[type=date],input[type=number],select,textarea{
-  width:100%;padding:.85rem .9rem;border:1px solid #4C5A68;border-radius:7px;background:#37434F;
-  font-family:'Chakra Petch',sans-serif;font-size:1rem;color:#FFFFFF;transition:.15s;}
-input::placeholder,textarea::placeholder{color:var(--dim);}
-.form-input:focus,input:focus,select:focus,textarea:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,138,61,.15),0 0 18px rgba(255,138,61,.12);}
-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2366737F' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right .75rem center;background-size:1.05rem;padding-right:2.3rem;}
-input[type=date]{color-scheme:dark;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
-.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;}
-.hint{font-family:Inter,sans-serif;font-size:.73rem;color:var(--muted);margin-top:.35rem;}
-.age-badge{display:inline-block;font-family:Inter,sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;color:var(--go);background:rgba(61,220,132,.08);border:1px solid #1F5B3A;padding:.2rem .5rem;border-radius:4px;margin-top:.35rem;}
-
-/* ─── uploads ─── */
-.file-zone{border:1px dashed #52606D;border-radius:8px;padding:1.25rem;text-align:center;background:#313D49;cursor:pointer;transition:.15s;}
-.file-zone:hover{border-color:var(--amber);background:rgba(255,138,61,.05);}
-.file-zone input[type=file]{display:none;}
-.fz-icon{font-size:1.35rem;}
-.file-zone p{font-family:Inter,sans-serif;font-size:.82rem;color:#B9C5D1;margin-top:.25rem;font-weight:600;}
-.file-preview{font-family:Inter,sans-serif;font-size:.76rem;color:var(--go);margin-top:.5rem;word-break:break-all;}
-
-/* ─── radios (insurance declaration) ─── */
-.radio-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem;}
-.radio-item{display:inline-flex;align-items:center;gap:.4rem;font-family:Inter,sans-serif;font-size:.82rem;font-weight:600;color:#E4EBF2;background:#37434F;border:1px solid #4C5A68;border-radius:6px;padding:.5rem .8rem;cursor:pointer;transition:.15s;}
-.radio-item:hover{border-color:var(--amber-dim);}
-.radio-item input{accent-color:var(--amber);width:16px;height:16px;}
-.conditional{margin-top:.8rem;padding:.9rem;border:1px solid var(--edge);border-radius:8px;background:#313D49;}
-
-/* ─── agreement ─── */
-.read-note{font-family:Inter,sans-serif;background:rgba(255,138,61,.07);border:1px solid var(--amber-dim);border-radius:7px;padding:.8rem .9rem;font-size:.79rem;font-weight:600;color:#E0A970;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;}
-.read-note.done{background:rgba(61,220,132,.07);border-color:#1F5B3A;color:var(--go);}
-.agreement-scroll{max-height:60vh;overflow-y:auto;border:1px solid #4C5A68;border-radius:8px;background:#2E3947;padding:1rem;font-family:Inter,sans-serif;font-size:.82rem;line-height:1.8;color:#DDE5ED;-webkit-overflow-scrolling:touch;margin-bottom:1.2rem;}
-.agreement-full{margin-left:-1rem;margin-right:-1rem;border-left:none;border-right:none;border-radius:0;}
-.agreement-scroll h4{font-family:'Chakra Petch',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);margin:1.1rem 0 .4rem;}
-.agreement-scroll h4:first-child{margin-top:0;}
-.agreement-scroll p{margin-bottom:.55rem;}
-.agreement-scroll strong{color:var(--text);}
-.agreement-scroll table{width:100%;border-collapse:collapse;margin:1rem 0;}
-.agreement-scroll table td{padding:.5rem;border:1px solid #262D36;font-size:.78rem;}
-.agreement-scroll table td:first-child{background:#37434F;font-weight:600;width:38%;color:var(--muted);}
-.agree-check{display:flex;align-items:flex-start;gap:.7rem;margin-bottom:1rem;transition:opacity .2s;}
-.agree-check.locked{opacity:.35;pointer-events:none;}
-.agree-check input{width:20px;height:20px;margin-top:.15rem;flex-shrink:0;accent-color:var(--amber);}
-.agree-check label{font-family:Inter,sans-serif;font-size:.83rem;font-weight:500;letter-spacing:0;text-transform:none;color:#E4EBF2;border-left:none;padding-left:0;cursor:pointer;line-height:1.55;margin:0;}
-
-/* ─── signature (canvas MUST stay white — ink is black) ─── */
-.sig-canvas{width:100%;height:180px;border:1px solid #52606D;border-radius:8px;cursor:crosshair;background:#fff;touch-action:none;display:block;}
-.sig-clear{margin-top:.5rem;background:none;border:none;color:var(--muted);font-family:Inter,sans-serif;font-size:.78rem;font-weight:600;text-decoration:underline;cursor:pointer;}
-
-/* ─── submit ─── */
-.submit-btn{display:block;width:100%;padding:1.15rem;border:none;border-radius:8px;background:var(--amber);color:#0A0C0F;
-  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
-  box-shadow:0 0 26px rgba(255,138,61,.28);transition:.15s;}
-.submit-btn:hover{background:#FF9C57;}
-.submit-btn:active{transform:translateY(1px);}
-.submit-btn:disabled{opacity:.65;cursor:not-allowed;box-shadow:none;}
-
-/* ─── messages ─── */
-.wait-msg{display:none;background:rgba(255,138,61,.08);border:1px solid var(--amber-dim);border-radius:8px;padding:1.1rem;margin-top:1rem;text-align:center;color:var(--amber);}
-.wait-msg .big{display:block;font-size:1rem;font-weight:700;letter-spacing:.04em;margin-bottom:.3rem;}
-.wait-msg .sub{display:block;font-family:Inter,sans-serif;font-size:.78rem;font-weight:500;color:#B07A4A;}
-.wait-msg .spin{display:inline-block;width:14px;height:14px;border:3px solid var(--amber);border-top-color:transparent;border-radius:50%;animation:wspin .8s linear infinite;vertical-align:-2px;margin-right:.5rem;}
-@keyframes wspin{to{transform:rotate(360deg)}}
-.success-msg{display:none;background:rgba(61,220,132,.07);border:1px solid #1F5B3A;border-radius:12px;padding:2rem 1.2rem;text-align:center;margin-top:1rem;}
-.success-msg h3{font-family:'Chakra Petch',sans-serif;font-size:1.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--go);margin-bottom:.6rem;}
-.success-msg p{font-family:Inter,sans-serif;font-size:.88rem;color:#E4EBF2;line-height:1.7;}
-.success-msg strong{color:var(--text);}
-.error-msg{display:none;background:rgba(255,92,92,.08);border:1px solid #6B2020;border-radius:8px;padding:1rem;margin-top:1rem;font-family:Inter,sans-serif;font-size:.85rem;color:var(--bad);}
-
-/* ─── built by MNJ ─── */
-.builtby{margin-top:2rem;border-top:1px solid var(--edge);padding:1.5rem 1.2rem 1.7rem;text-align:center;}
-.builtby .row{font-size:.9rem;font-weight:600;color:#AEBAC7;display:flex;align-items:center;justify-content:center;gap:.5rem;letter-spacing:.04em;flex-wrap:wrap;}
-.mnjwrap{position:relative;display:inline-block;}
-.builtby .mnj{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:.08em;color:var(--amber);background:rgba(255,138,61,.07);border:1px solid var(--amber-dim);border-radius:99px;padding:.12em .7em;cursor:pointer;line-height:1;transition:.2s;}
-.builtby .mnj:hover{background:rgba(255,138,61,.15);color:#FFA45C;}
-.builtby .mnj .hint{font-family:inherit;font-size:.6rem;margin-left:.2em;vertical-align:middle;color:inherit;margin-top:0;}
-.builtby .contact{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%);display:none;flex-direction:column;gap:.5rem;background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:.8rem 1rem;white-space:nowrap;box-shadow:0 14px 34px rgba(0,0,0,.6);z-index:120;}
-.builtby .contact::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:7px solid transparent;border-top-color:var(--edge);}
-.builtby .contact.show{display:flex;animation:cfade .22s ease-out;}
-@keyframes cfade{from{opacity:0}to{opacity:1}}
-.builtby .contact a{font-family:Inter,sans-serif;color:#E4EBF2;font-size:.79rem;font-weight:600;text-decoration:none;transition:.2s;}
-.builtby .contact a:hover{color:var(--amber);}
-.builtby .wa:hover{color:#25D366;}
-@media(hover:hover) and (pointer:fine){.mnjwrap:hover .contact{display:flex;}}
-
-/* ─── responsive ─── */
-@media(max-width:600px){
-  .top-bar{padding:.6rem .9rem;}
-  .top-bar img{height:38px;}
-  .hero-bar{padding:1.2rem 1rem 1rem;}
-  .hero-bar h1{font-size:1.65rem;}
-  .hero-bar p{font-size:.75rem;}
-  .telem{gap:1.1rem;}
-  .telem b{font-size:1rem;}
-  .container{padding:0 .7rem;}
-  .form-section > *:not(.sec-header){margin-left:.85rem;margin-right:.85rem;}
-  .agreement-full{margin-left:-.85rem;margin-right:-.85rem;}
-  .form-row,.form-row-3{grid-template-columns:1fr;}
-  
-}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto;}}
-</style>
-</head>
-<body>
-<div class="top-bar">
-  <a href="https://ozeerentals.com.au"><img src="https://ozeerentals.com.au/logo-white.png" alt="Ozee Rentals"></a>
-</div>
-<div class="hero-bar">
-  <div class="lamps">
-    <span class="lamp ok">&#9679; Secure</span>
-    <span class="lamp on">&#9679; Newcastle NSW</span>
-  </div>
-  <h1>Driver <span>Application</span></h1>
-  <p>Join our fleet and start earning | 17A Drift St, West Wallsend NSW 2286 | 0450 786 145 | admin@ozeerentals.com.au | ABN: 71 694 905 667</p>
-  <div class="telem">
-    <div><b>$175</b><span>per week</span></div>
-    <div><b>1 HR</b><span>approval</span></div>
-    <div><b>2 WK</b><span>minimum</span></div>
-  </div>
-</div>
-<div class="cluster">
-  <div class="ring" id="gaugeRing"><div><div class="n" id="gaugeNum">1</div><div class="l">of 7</div></div></div>
-  <div class="read"><h3 id="gaugeName">Personal</h3><p id="gaugeCap">Section 01 &middot; in progress</p></div>
-</div>
-<div class="container">
-  <form id="driverForm">
-
-    <!-- SECTION 1: PERSONAL INFO -->
-    <div class="form-section">
-      <div class="sec-header"><span class="sec-icon">👤</span><div><div class="sec-num">SECTION 01</div><div class="sec-title">Personal Information</div></div></div>
-      <div class="form-row">
-        <div class="form-group"><label>First Name <span class="req">*</span></label><input type="text" id="firstName" required placeholder="First name"></div>
-        <div class="form-group"><label>Middle Name <span class="opt">(optional)</span></label><input type="text" id="middleName" placeholder="Middle name (if any)"></div>
-      </div>
-      <div class="form-group"><label>Last Name <span class="req">*</span></label><input type="text" id="lastName" required placeholder="Last name"></div>
-      <div class="form-group">
-        <label>Date of Birth <span class="req">*</span></label>
-        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;">
-          <input type="date" id="dob" required style="flex:1;min-width:180px;" onchange="calcAge()">
-          <span class="age-badge" id="ageDisplay" style="display:none;"></span>
-        </div>
-      </div>
-      <div class="form-group"><label>Full Residential Address <span class="req">*</span></label><textarea id="address" required placeholder="Street address, suburb, state, postcode"></textarea></div>
-      <div class="form-row">
-        <div class="form-group"><label>Mobile Number <span class="req">*</span></label><input type="tel" id="mobile" required placeholder="0412 345 678"></div>
-        <div class="form-group"><label>Email Address <span class="req">*</span></label><input type="email" id="email" required placeholder="your@email.com"></div>
-      </div>
-      <div class="form-group">
-        <label>Visa Status <span class="req">*</span></label>
-        <select id="visaStatus" required>
-          <option value="">Select visa status</option>
-          <option>Australian Citizen</option>
-          <option>Permanent Resident (PR)</option>
-          <option>Temporary Visa</option>
-          <option>Student Visa</option>
-          <option>Work Visa</option>
-          <option>Other</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- DRIVER LICENSE -->
-    <div class="form-section">
-      <div class="sec-header"><span class="sec-icon">🪪</span><div><div class="sec-num">SECTION 02</div><div class="sec-title">Driver's Licence</div></div></div>
-      <div class="form-group"><label>Licence Number <span class="req">*</span></label><input type="text" id="licenseNum" required placeholder="Enter licence number"></div>
-      <div class="form-row-3">
-        <div class="form-group">
-          <label>State <span class="req">*</span></label>
-          <select id="licenseState" required>
-            <option value="">Select</option>
-            <option>NSW</option><option>VIC</option><option>QLD</option>
-            <option>SA</option><option>WA</option><option>TAS</option>
-            <option>NT</option><option>ACT</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Expiry Date <span class="req">*</span></label><input type="date" id="licenseExpiry" required></div>
-        <div class="form-group">
-          <label>Year Obtained <span class="req">*</span></label>
-          <div style="display:flex;align-items:center;gap:.5rem;">
-            <input type="number" id="licenseYear" required placeholder="e.g. 2015" min="1950" max="2026" style="flex:1;" onchange="calcLicenseAge()">
-            <span class="age-badge" id="licenseAgeDisplay" style="display:none;"></span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- EMERGENCY CONTACT -->
-    <div class="form-section">
-      <div class="sec-header"><span class="sec-icon">🚨</span><div><div class="sec-num">SECTION 03</div><div class="sec-title">Emergency Contact</div></div></div>
-      <div class="form-row">
-        <div class="form-group"><label>Full Name <span class="req">*</span></label><input type="text" id="emergencyName" required placeholder="Emergency contact name"></div>
-        <div class="form-group"><label>Phone Number <span class="req">*</span></label><input type="tel" id="emergencyPhone" required placeholder="0412 345 678"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Relationship <span class="req">*</span></label><input type="text" id="emergencyRelation" required placeholder="e.g. Spouse, Parent, Friend"></div>
-        <div class="form-group"><label>Address <span class="opt">(optional)</span></label><input type="text" id="emergencyAddress" placeholder="Contact address"></div>
-      </div>
-    </div>
-
-    <!-- DOCUMENTS -->
-    <div class="form-section">
-      <div class="sec-header"><span class="sec-icon">📄</span><div><div class="sec-num">SECTION 04</div><div class="sec-title">Required Documents</div></div></div>
-      <div class="form-group"><label>Driver's Licence — Front <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><p style="font-size:.75rem;margin-top:.25rem;">PDF, JPG or PNG — max 10MB</p><input type="file" id="licFront" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_licFront"></div></div>
-      <div class="form-group"><label>Driver's Licence — Back <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="licBack" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_licBack"></div></div>
-      <div class="form-group"><label>Passport <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="passport" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_passport"></div></div>
-      <div class="form-group"><label>Visa / VEVO <span class="req">*</span></label><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="visaDoc" accept=".pdf,.jpg,.jpeg,.png" required onchange="showPreview(this)"></div><div class="file-preview" id="prev_visaDoc"></div></div>
-      <div class="form-group"><label>Bond + Rent Payment Receipt <span class="opt">(optional)</span></label><p style="font-size:.82rem;color:#6c757d;margin:-.3rem 0 .6rem;">2 week bond + 1 week rent. You can upload this now or send it later.</p><div class="file-zone" onclick="this.querySelector('input').click()"><div class="fz-icon">📎</div><p>Click to upload or drag &amp; drop</p><input type="file" id="medicareId" accept=".pdf,.jpg,.jpeg,.png" onchange="showPreview(this)"></div><div class="file-preview" id="prev_medicareId"></div></div>
-    </div>
-
-    <!-- INSURANCE DECLARATION -->
-    <div class="form-section">
-      <div class="sec-header"><span class="sec-icon">🛡️</span><div><div class="sec-num">SECTION 05</div><div class="sec-title">Insurance Declaration</div></div></div>
-      <div class="form-group">
-        <label>1. In the past 5 years, have you been involved in any accident (at fault or not at fault)? <span class="req">*</span></label>
-        <div class="radio-row">
-          <div class="radio-item"><input type="radio" name="accident" value="no" id="accNo" required checked><label for="accNo">No</label></div>
-          <div class="radio-item"><input type="radio" name="accident" value="yes" id="accYes"><label for="accYes">Yes</label></div>
-        </div>
-        <div class="conditional" id="accDetails">
-          <div class="form-group"><label>When did it occur? (Month/Year approximate)</label><input type="text" id="accDate" placeholder="e.g. March 2022"></div>
-          <div class="form-group"><label>Were you at fault?</label><div class="radio-row"><div class="radio-item"><input type="radio" name="fault" value="at_fault"><label>At Fault</label></div><div class="radio-item"><input type="radio" name="fault" value="not_fault"><label>Not At Fault</label></div></div></div>
-          <div class="form-group"><label>Was excess paid?</label><div class="radio-row"><div class="radio-item"><input type="radio" name="excess" value="yes"><label>Yes</label></div><div class="radio-item"><input type="radio" name="excess" value="no"><label>No</label></div></div></div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>2. In the past 5 years have you had any insurance policy declined, cancelled, renewal declined, special conditions imposed or claim refused? <span class="req">*</span></label>
-        <div class="radio-row">
-          <div class="radio-item"><input type="radio" name="insDec" value="no" required checked><label>No</label></div>
-          <div class="radio-item"><input type="radio" name="insDec" value="yes"><label>Yes</label></div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>3. In the past 5 years have you committed any criminal act in relation to fraud, theft, burglary, drugs, arson, criminal, malicious or wilful damage? <span class="req">*</span></label>
-        <div class="radio-row">
-          <div class="radio-item"><input type="radio" name="criminal" value="no" required checked><label>No</label></div>
-          <div class="radio-item"><input type="radio" name="criminal" value="yes"><label>Yes</label></div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>4. In the past 5 years have you been declared bankrupt or defaulted on a loan or credit card? <span class="req">*</span></label>
-        <div class="radio-row">
-          <div class="radio-item"><input type="radio" name="bankrupt" value="no" required checked><label>No</label></div>
-          <div class="radio-item"><input type="radio" name="bankrupt" value="yes"><label>Yes</label></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- RENTAL AGREEMENT -->
-    <div class="form-section">
-      <div class="sec-header"><span class="sec-icon">📋</span><div><div class="sec-num">SECTION 06</div><div class="sec-title">Rental Agreement</div></div></div>
-      <div class="form-group" style="margin-bottom:1.2rem;">
-        <label>Preferred Rental Period <span class="req">*</span></label>
-        <p style="font-size:.82rem;color:#6c757d;margin:-.3rem 0 .5rem;">Minimum 2 weeks. This is your preference &mdash; the final period will be confirmed by Ozee Rentals on approval.</p>
-        <select class="form-input" id="requestedDuration" required onchange="updateAgreement()">
-            <option value="">-- Select preferred period --</option>
-            <option value="2 Weeks">2 Weeks (minimum)</option>
-            <option value="1 Month">1 Month</option>
-            <option value="2 Months">2 Months</option>
-            <option value="3 Months">3 Months</option>
-            <option value="4 Months">4 Months</option>
-            <option value="5 Months">5 Months</option>
-            <option value="6 Months">6 Months</option>
-            <option value="More than 6 Months">More than 6 Months (discuss with Ozee)</option>
-        </select>
-      </div>
-      <div class="read-note" id="readNote">&#128070; Please scroll through and read the full agreement below to continue.</div>
-      <div class="agreement-scroll agreement-full" id="agreementBox">
-        <h4>RENTAL AGREEMENT — RENTER INFORMATION</h4>
-        <table>
-          <tr><td>Name</td><td id="ag_name">—</td></tr>
-          <tr><td>Date of Birth</td><td id="ag_dob">—</td></tr>
-          <tr><td>Address</td><td id="ag_address">—</td></tr>
-          <tr><td>Driver's Licence</td><td id="ag_licence">—</td></tr>
-          <tr><td>Contact No</td><td id="ag_mobile">—</td></tr>
-          <tr><td>Email</td><td id="ag_email">—</td></tr>
-          <tr><td>Contract Period</td><td id="ag_duration">&mdash;</td></tr>
-          <tr><td>Bond</td><td>4 weeks rent in advance</td></tr>
-          <tr><td>Emergency Contact</td><td id="ag_emergency">—</td></tr>
-        </table>
-        <h4>VEHICLE DETAILS (Completed by Admin)</h4>
-        <table>
-          <tr><td>Registration No</td><td><em>To be assigned by Ozee Rentals</em></td></tr>
-          <tr><td>Car Make &amp; Model</td><td><em>To be assigned by Ozee Rentals</em></td></tr>
-          <tr><td>Bond Received</td><td><em>4 weeks rent in advance</em></td></tr>
-          <tr><td>Vehicle Insurance Excess</td><td>$1,195 + ($550 Age Excess if applicable)</td></tr>
-        </table>
-        <h4>RENTAL VEHICLE AGREEMENT TERMS AND CONDITIONS</h4>
-        <p>This is an agreement between the prospective hirer identified on page 1 (you) and the car owner(s) to rent the motor vehicle described on Page 1 including all accessories, tools, tyres, and equipment and any replacement vehicle (the vehicle).</p>
-
-        <h4>1. VEHICLE CONDITION AND RETURN</h4>
-        <p>The vehicle is delivered to you in good operating condition and reasonable order and with the seal on the odometer unbroken. You agree to return the vehicle in the same condition (except for ordinary wear and tear NOT INCLUDING WINDSCREEN AND TYRE DAMAGE) together with all tools, accessories, tyres, and equipment to the location specified on page 1 and on the date specified (or sooner if demanded) to get a full refund of your bond money. The owner(s) may take possession of the vehicle without prior demand and at your expense, if it is illegally parked, used in violation of the law or this agreement or if it is apparently abandoned. Note: The owner(s) must be notified and agree to any extension of the period of the hire beyond that stated on page 1 of this agreement in advance of the return date and time or the vehicle will immediately be reported as stolen.</p>
-
-        <h4>2. UNAUTHORISED AND PROHIBITED USE</h4>
-        <p><strong>Persons who must not drive the vehicle:</strong><br>
-        a. A person who is not identified on page 1 or has not been identified in writing to us or approved by us in writing.<br>
-        b. A person who is not licensed for that class of vehicle.<br>
-        c. A person whose blood alcohol concentration exceeds the legal limit.<br>
-        d. A person who has given or for whom you have given a false name, age, address or driver&rsquo;s license.<br>
-        e. A person whose license has been cancelled, endorsed or suspended within the last three years.<br>
-        f. A Person who has held a unconditional driver license for less than 1 years.<br>
-        g. A Person under the age of 21.<br>
-        h. Outside the area of use limitation specified on page 1.<br>
-        i. On unsealed roads or off-road conditions unless authorized by us in writing or on the face of this agreement.</p>
-
-        <h4>GENERAL PROVISIONS</h4>
-        <p>a. You will promptly report any loss or damage to the vehicle or loss involving the vehicle while rented under this agreement to us at the location where the vehicle was hired and will deliver to us immediately, every summons, complaint or paper in relation to such loss. Compliance with this sub paragraph does not excuse the hirer from reporting all incidents to police or other proper authorities.<br>
-        b. All loss and damage per incident and each incident leading to loss or damage is subject to the damage liability charge per incident.<br>
-        c. We are not responsible if goods are left inside the car. It is your responsibility to make sure car is empty upon delivery.<br>
-        d. If the car is dumped, abandoned or left behind within the Newcastle or Hunter Region, the hirer will be charged all costs associated with recovering the vehicle. If the vehicle is left outside the agreed location or outside the Newcastle and Hunter Region, the hirer will be responsible for all recovery costs and all transportation charges required to return the vehicle to the agreed location.<br>
-        e. Bonds will be held for a maximum of 7 business days to allow us to ensure that the vehicle remains in the same condition and working order that it was in when it was first picked up.<br>
-        f. A late payment fee of 10% applies should an invoice remain unpaid more than 2 days.<br>
-        g. No bond money would be refunded if you are unable to abide by the agreement period of hiring the vehicle.<br>
-        h. The contract would be considered as cancelled if the vehicle would be driven (odometer) much higher than a normal daily usage and the driver would have to return the vehicle within 3 business days of the notice, regardless of the remaining contract period left.</p>
-
-        <h4>3. FUEL, CLEANLINESS AND EXTERIORS</h4>
-        <p>The vehicle must be returned with the amount of fuel equal to that at the time of the rental. If the vehicle is returned with less fuel the difference will be charged at a rate which may include a service component unless prior arrangements have been made and noted on page 1. Same applies to the cleanliness and exteriors of the vehicle.</p>
-
-        <h4>4. LIABILITY FOR PENALTIES AND ADDRESS UPDATES</h4>
-        <p>During the hire period, the hirer is solely responsible for any penalties, fines, or misuse of the vehicle, regardless of whether they were driving at the time of the incident. The hirer must promptly notify us of any changes to their address to ensure accurate processing of any penalties, fines, or other notices related to the vehicle. If we do not receive an updated address, any such notices will be sent to the last address provided, and the hirer will remain responsible for all associated consequences.</p>
-
-        <h4>5. VEHICLE TRACKING AND IMMOBILISATION NOTICE</h4>
-        <p>The renter acknowledges and agrees that the vehicle is fitted with a GPS tracking device for security, theft prevention, vehicle recovery, fleet management, and compliance purposes.</p>
-        <p>The GPS device may collect and record vehicle location, speed, ignition status, and other vehicle-related operational data during the rental period.</p>
-        <p>The renter further acknowledges that the vehicle is equipped with a remote immobilisation system. This system may be activated by the owner only in circumstances including, but not limited to:</p>
-        <p>&bull; Theft or suspected theft of the vehicle.<br>
-        &bull; Failure to return the vehicle by the agreed return date and time.<br>
-        &bull; Serious breach of the rental agreement.<br>
-        &bull; Vehicle recovery operations authorised by law.</p>
-        <p>The owner will, where reasonably practicable, provide notice before activating the immobilisation system. The system will not be activated while the vehicle is in motion and will only be engaged when it is safe to do so.</p>
-        <p>By signing this agreement, the renter consents to the collection and use of GPS tracking data for the purposes outlined above and acknowledges the presence of the tracking and immobilisation systems in the vehicle.</p>
-
-        <h4>6. TERMINATION DUE TO UNAUTHORIZED USE OR EXCESS MILEAGE</h4>
-        <p>The contract will be considered canceled if the vehicle is driven by an unauthorized person not listed in the contract or if its mileage exceeds the allowed daily usage. In such cases, the hirer must return the vehicle within two business days of receiving notice, regardless of the remaining contract period, and the bond will be withheld.</p>
-
-        <h4>7. VEHICLE INSURANCE COVERAGE AND ASSOCIATED COSTS</h4>
-        <p>The Renter is liable for the applicable insurance excess in the event of any damage, loss, or incident involving the vehicle. This includes all administrative and processing fees, plus reasonable compensation for time lost due to insurance procedures, regardless of fault. Coverage applies only to the driver authorized in the rental contract.</p>
-        <p>The authorized driver is solely responsible for their driving behavior and must ensure the vehicle is roadworthy and safe to operate before use. If the vehicle is found to be unfit for driving, the driver must notify the Owner in writing to arrange necessary inspections or repairs. The driver shall be personally liable for any damage, loss, or harm caused to property or people due to negligence or failure to report such issues.</p>
-
-        <p style="margin-top:1.2rem;font-weight:700;color:#212529;">I HAVE READ, UNDERSTOOD AND ACCEPT THESE TERMS AND CONDITIONS AND ANY OTHER SPECIAL CONDITIONS OF THIS AGREEMENT</p>
-      </div>
-
-      <div class="agree-check locked" id="agreeWrap1"><input type="checkbox" id="termsAccepted" required disabled><label for="termsAccepted">I have read, understood and accept these Terms and Conditions and any other special conditions of this agreement <span class="req">*</span></label></div>
-      <div class="agree-check locked" id="agreeWrap2"><input type="checkbox" id="insuranceDecl" required disabled><label for="insuranceDecl">I declare that all information provided in the Insurance Declaration is true and accurate to the best of my knowledge <span class="req">*</span></label></div>
-      <div class="agree-check locked" id="agreeWrap3"><input type="checkbox" id="rentalAgreement" required disabled><label for="rentalAgreement">I agree to abide by all terms outlined in the Rental Agreement above <span class="req">*</span></label></div>
-    </div>
-
-    <!-- SIGNATURE -->
-    <div class="form-section">
-      <div class="sec-header"><span class="sec-icon">✍️</span><div><div class="sec-num">SECTION 07</div><div class="sec-title">Digital Signature</div></div></div>
-      <div class="form-group">
-        <label>Hirer Signature <span class="req">*</span></label>
-        <canvas class="sig-canvas" id="sigCanvas"></canvas>
-        <button type="button" class="sig-clear" onclick="clearSig()">✕ Clear Signature</button>
-      </div>
-      <div class="form-group">
-        <label>Date</label>
-        <input type="date" id="signDate" value="" readonly style="background:#f8f9fa;cursor:not-allowed;">
-      </div>
-    </div>
-
-    <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
-  </form>
-    <div class="wait-msg" id="waitMsg">
-      <span class="big"><span class="spin"></span>Please wait &mdash; submitting your application&hellip;</span>
-      <span class="sub">Do not close or refresh this page. This only takes a few seconds.</span>
-    </div>
-    <div class="success-msg" id="successMsg">
-      <h3>✅ Application Submitted Successfully!</h3>
-      <p>Thank you for applying to drive with Ozee Rentals. You will receive a confirmation email very soon.</p>
-      <p style="margin-top:.6rem;">If you have any questions about your application, you're welcome to call us at any time &mdash; we're happy to help.</p>
-      <p style="margin-top:.75rem;"><strong>Phone:</strong> 0450 786 145 | <strong>Email:</strong> admin@ozeerentals.com.au</p>
-    </div>
-    <div class="error-msg" id="errorMsg"></div>
-</div>
-
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Ozee Rentals — weekly car rental Newcastle & Hunter Region from $175/wk all-inclusive. Insurance, roadside, servicing included. Call 0450 786 145.">
+<title>Ozee Rentals | Car Rental Newcastle & Hunter Region | $175/wk</title>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-var OZ_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U';
-var PROJ='tbhqamcuewycaqertpba'; window._sb=window.supabase.createClient('https://'+PROJ+'.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U');
-</script>
-<script>
-// Set today's date
-document.getElementById('signDate').value = new Date().toISOString().split('T')[0];
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--cream:#FFF8EE;--peach:#FFE3C2;--sun:#FF6B35;--sun2:#FFA34D;--suntxt:#D4450F;--sundeep:#C93F0B;--gold:#FFC145;--teal:#0E7C7B;--teal2:#17A09E;--deep:#0F3433;--ink:#22312F;--mut:#5E706E}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden}
+a{text-decoration:none;color:inherit}img{display:block;max-width:100%}
+.lt{font-family:'Lilita One',cursive}
+/* ═ SCROLL PROGRESS ═ */
+.prog{position:fixed;top:0;left:0;height:5px;width:0;z-index:999;background:linear-gradient(90deg,var(--sun),var(--gold),var(--teal2));border-radius:0 4px 4px 0;transition:width .1s}
+/* ═ NAV ═ */
+.nav{position:fixed;inset:0 0 auto;z-index:900;height:88px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;background:rgba(255,248,238,.88);backdrop-filter:blur(16px);border-bottom:2px solid rgba(14,124,123,.1)}
+.nav{height:98px}.nav .lg{height:74px;background:var(--deep);padding:10px 18px;border-radius:20px;box-shadow:0 8px 22px rgba(15,52,51,.28);transition:transform .35s cubic-bezier(.3,1.6,.5,1);animation:logobob 4s ease-in-out infinite}
+@keyframes logobob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.nav a:hover .lg{transform:rotate(-5deg) scale(1.07)}
+.nl{display:flex;gap:2rem;align-items:center}
+.nl>a:not(.cta){font-weight:900;font-size:.86rem;color:var(--teal);position:relative}
+.nl>a:not(.cta)::after{content:'';position:absolute;left:0;bottom:-6px;width:100%;height:3px;border-radius:2px;background:var(--sun);transform:scaleX(0);transition:transform .25s}
+.nl>a:not(.cta):hover::after{transform:scaleX(1)}
+.cta{background:linear-gradient(135deg,#EA4E15,#F58A2E);color:#fff;font-weight:900;padding:.78rem 1.7rem;border-radius:100px;box-shadow:0 8px 24px rgba(255,107,53,.4);transition:.25s;position:relative;overflow:hidden}
+.cta::after{content:'';position:absolute;top:0;left:-80%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-25deg);animation:shn 3s ease-in-out infinite}
+@keyframes shn{0%,55%{left:-80%}100%{left:135%}}
+.cta:hover{transform:translateY(-3px) rotate(-1deg)}
+@media(max-width:800px){.nl>a:not(.cta){display:none}.nav{height:82px}.nav .lg{height:58px}}
+/* ═ HERO ═ */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:140px 5% 215px;overflow:hidden;background:linear-gradient(180deg,#FFEBD1 0%,#FFDCA8 40%,#8FD0CE 100%)}
+.sun{position:absolute;top:8%;right:9%;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 38% 38%,#FFE08A,#FF9E4D);box-shadow:0 0 100px rgba(255,158,77,.85);animation:sunf 7s ease-in-out infinite}
+@keyframes sunf{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-16px) scale(1.03)}}
+.rays{position:absolute;top:8%;right:9%;width:170px;height:170px;animation:spn 28s linear infinite}
+.rays i{position:absolute;top:50%;left:50%;width:255px;height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(255,209,102,.55),transparent);transform-origin:0 0}
+@keyframes spn{to{transform:rotate(360deg)}}
+.cloud{position:absolute;background:#fff;border-radius:100px;opacity:.9;animation:cl linear infinite}
+.cloud::before,.cloud::after{content:'';position:absolute;background:#fff;border-radius:50%}
+.c1{width:125px;height:42px;top:14%;left:-150px;animation-duration:34s}
+.c1::before{width:54px;height:54px;top:-25px;left:20px}.c1::after{width:42px;height:42px;top:-17px;left:64px}
+.c2{width:88px;height:32px;top:27%;left:-110px;animation-duration:48s;animation-delay:7s;opacity:.65}
+.c2::before{width:40px;height:40px;top:-19px;left:15px}.c2::after{width:30px;height:30px;top:-13px;left:46px}
+.c3{width:70px;height:26px;top:38%;left:-90px;animation-duration:60s;animation-delay:16s;opacity:.5}
+.c3::before{width:32px;height:32px;top:-15px;left:12px}.c3::after{width:24px;height:24px;top:-10px;left:37px}
+@keyframes cl{to{transform:translateX(125vw)}}
+.gull{position:absolute;font-size:1.25rem;color:rgba(15,52,51,.55);animation:fly linear infinite}
+.g1{top:19%;animation-duration:23s}.g2{top:25%;animation-duration:31s;animation-delay:7s;font-size:.95rem}
+@keyframes fly{from{left:-6%;transform:translateY(0)}25%{transform:translateY(-20px)}50%{transform:translateY(8px)}75%{transform:translateY(-14px)}to{left:106%;transform:translateY(0)}}
+.hin{position:relative;z-index:4;max-width:1150px;margin:auto;width:100%}
+.loc{display:inline-flex;align-items:center;gap:.55rem;background:#fff;color:var(--teal);font-weight:900;padding:.62rem 1.5rem;border-radius:100px;font-size:.84rem;box-shadow:0 10px 26px rgba(15,52,51,.15);margin-bottom:1.6rem;opacity:0;animation:pnc .7s .2s cubic-bezier(.3,1.7,.5,1) forwards}
+.loc .dot{width:9px;height:9px;border-radius:50%;background:var(--sun);animation:blip 1.6s ease-in-out infinite}
+@keyframes blip{50%{opacity:.25;transform:scale(.8)}}
+.loc b{color:var(--sundeep)}
+h1{font-family:'Lilita One',cursive;font-size:clamp(3.4rem,10vw,7.2rem);line-height:.92;color:var(--deep);letter-spacing:-.01em}
+h1 .w{display:inline-block;opacity:0;animation:pnc .72s cubic-bezier(.3,1.7,.5,1) forwards}
+h1 .w:nth-child(1){animation-delay:.34s}h1 .w:nth-child(2){animation-delay:.47s}h1 .w:nth-child(3){animation-delay:.6s;color:var(--suntxt);text-shadow:0 6px 0 rgba(212,69,15,.16)}
+@keyframes pnc{0%{opacity:0;transform:translateY(44px) scale(.75)}60%{opacity:1;transform:translateY(-9px) scale(1.05)}100%{opacity:1;transform:none}}
+h1 .spin{display:inline-block;animation:spp .85s .95s cubic-bezier(.3,1.6,.5,1) both;color:var(--teal);text-shadow:0 6px 0 rgba(14,124,123,.16)}
+@keyframes spp{from{opacity:0;transform:rotate(-220deg) scale(.15)}70%{transform:rotate(8deg) scale(1.08)}to{opacity:1;transform:none}}
+.tag{margin:1.5rem 0 2rem;font-size:clamp(1.05rem,2.4vw,1.3rem);font-weight:900;color:#33504d;opacity:0;animation:fade .7s 1.15s forwards}
+.tag b{color:var(--sundeep);position:relative;white-space:nowrap}
+.tag b::after{content:'';position:absolute;left:0;bottom:-3px;width:100%;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--sun),var(--gold));transform:scaleX(0);transform-origin:left;animation:uln .6s 1.7s cubic-bezier(.6,0,.2,1) forwards}
+@keyframes uln{to{transform:scaleX(1)}}
+@keyframes fade{to{opacity:1}}
+.btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fade .7s 1.35s forwards}
+.b1{background:linear-gradient(135deg,#EA4E15,#F58A2E);color:#fff;font-weight:900;font-size:1.1rem;padding:1.12rem 2.4rem;border-radius:100px;box-shadow:0 12px 34px rgba(255,107,53,.45);transition:.25s;animation:beat 2.7s 2.2s ease-in-out infinite;position:relative;overflow:hidden}
+.b1::after{content:'';position:absolute;top:0;left:-80%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-25deg);animation:shn 3.4s 1s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+.b1:hover{transform:translateY(-4px) scale(1.05)!important}
+.b2{background:#fff;color:var(--teal);font-weight:900;padding:1.12rem 2.1rem;border-radius:100px;box-shadow:0 10px 26px rgba(15,52,51,.14);transition:.25s}
+.b2:hover{transform:translateY(-4px) rotate(1deg)}
+.ppill{position:absolute;right:8%;bottom:190px;z-index:4;background:#fff;border-radius:26px;padding:1.4rem 2rem 1.2rem;text-align:center;box-shadow:0 24px 55px rgba(15,52,51,.22);opacity:0;animation:ppin .75s 1.5s cubic-bezier(.3,1.65,.5,1) forwards,ppf 5.5s 2.3s ease-in-out infinite}
+@keyframes ppin{from{opacity:0;transform:rotate(14deg) scale(.3)}to{opacity:1;transform:rotate(3deg) scale(1)}}
+@keyframes ppf{0%,100%{transform:rotate(3deg) translateY(0)}50%{transform:rotate(3deg) translateY(-13px)}}
+.ppill .t{position:absolute;top:-15px;left:50%;transform:translateX(-50%) rotate(-3deg);background:var(--teal);color:#fff;font-weight:900;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;padding:.42rem 1.2rem;border-radius:100px;white-space:nowrap;box-shadow:0 6px 16px rgba(14,124,123,.4)}
+.ppill .lt{font-size:3.6rem;color:var(--suntxt);line-height:1}
+.ppill .lt sup{font-size:.4em;color:var(--suntxt);opacity:.8}
+.ppill small{font-weight:900;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+@media(max-width:920px){.ppill{display:none}}
+/* hero car */
+.hcar{position:absolute;bottom:126px;left:-270px;z-index:3;width:235px;height:94px;animation:crin 1.6s .55s cubic-bezier(.2,.9,.3,1) forwards;opacity:0}
+@keyframes crin{from{left:-270px;opacity:0}55%{left:9.5%;opacity:1}to{left:6%;opacity:1}}
+@media(max-width:920px){.hcar{scale:.68;bottom:124px}}
+.hsh{position:absolute;bottom:4px;left:18px;width:200px;height:14px;background:rgba(15,52,51,.3);filter:blur(8px);border-radius:50%;animation:hshm 3.4s 2.2s ease-in-out infinite}
+@keyframes hshm{0%,100%{transform:scaleX(1);opacity:.3}50%{transform:scaleX(.9);opacity:.17}}
+.hbody{position:absolute;bottom:20px;width:235px;height:51px;background:linear-gradient(180deg,#fff,#e8e8eb);border-radius:22px 32px 14px 14px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.07),0 16px 30px rgba(15,52,51,.26)}
+.htop{position:absolute;bottom:55px;left:52px;width:118px;height:39px;background:linear-gradient(180deg,#fff,#dde1e4);border-radius:18px 26px 6px 6px}
+.hwn{position:absolute;bottom:59px;left:62px;width:43px;height:26px;background:linear-gradient(180deg,#c4e8ff,#8fcdf0);border-radius:9px 4px 4px 4px}
+.hwn2{position:absolute;bottom:59px;left:113px;width:43px;height:26px;background:linear-gradient(180deg,#c4e8ff,#8fcdf0);border-radius:4px 13px 4px 4px}
+.hst{position:absolute;bottom:34px;left:0;width:235px;height:6px;background:linear-gradient(90deg,var(--sun),var(--gold))}
+.hbg{position:absolute;bottom:58px;left:95px;background:var(--sun);color:#fff;font-family:'Lilita One',cursive;font-size:.72rem;padding:.08rem .5rem;border-radius:4px;z-index:3;box-shadow:0 3px 8px rgba(255,107,53,.4)}
+.hhd{position:absolute;bottom:26px;right:-5px;width:13px;height:13px;background:radial-gradient(circle,#fff6c8,#ffd166);border-radius:50%;box-shadow:0 0 18px 5px rgba(255,209,102,.9);animation:hdg 1.4s ease-in-out infinite}
+@keyframes hdg{50%{box-shadow:0 0 10px 2px rgba(255,209,102,.6)}}
+.hwl{position:absolute;bottom:0;width:41px;height:41px;background:#1c1c22;border-radius:50%;border:8px solid #33333c;animation:wsp 1.05s linear infinite;animation-play-state:paused}
+.hcar.roll .hwl{animation-play-state:running}
+.hwl::after{content:'';position:absolute;inset:5px;border-radius:50%;border:2px dashed #999}
+.w1{left:27px}.w2{right:27px}
+@keyframes wsp{to{transform:rotate(360deg)}}
+/* sailboat */
+.boat{position:absolute;bottom:78px;right:-90px;z-index:2;font-size:2.3rem;animation:sail 26s 3s linear infinite;filter:drop-shadow(0 6px 10px rgba(15,52,51,.3))}
+@keyframes sail{0%{right:-90px;transform:rotate(0) translateY(0)}25%{transform:rotate(-3deg) translateY(-8px)}50%{transform:rotate(2deg) translateY(4px)}75%{transform:rotate(-2deg) translateY(-6px)}100%{right:108%;transform:rotate(0) translateY(0)}}
+.scrollhint{position:absolute;bottom:130px;left:50%;transform:translateX(-50%);z-index:4;color:var(--deep);font-weight:900;font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;opacity:.55;animation:sb 2s ease-in-out infinite;display:flex;flex-direction:column;align-items:center;gap:.3rem}
+.scrollhint::after{content:'▼';font-size:.8rem}
+@keyframes sb{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+@media(max-width:920px){.scrollhint{display:none}}
+.waves{position:absolute;bottom:-2px;left:0;right:0;height:125px;z-index:2}
+.waves svg{position:absolute;bottom:0;width:200%;height:100%;animation:wv 12s linear infinite}
+.waves svg:nth-child(2){animation-duration:19s;opacity:.55;bottom:9px}
+@keyframes wv{to{transform:translateX(-50%)}}
+/* ═ CONTACT STRIP ═ */
+.cstrip{background:linear-gradient(135deg,var(--teal),var(--teal2));padding:1.9rem 5%;position:relative;z-index:5;overflow:hidden}
+.cstrip::before{content:'';position:absolute;top:-40px;right:-40px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.08);animation:ppf 7s ease-in-out infinite}
+.csin{max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;position:relative}
+@media(max-width:820px){.csin{grid-template-columns:1fr}}
+.cs{display:flex;gap:1rem;align-items:center;color:#fff;opacity:0;transform:translateY(22px)}
+.cs.vis{opacity:1;transform:none;transition:opacity .5s,transform .5s}
+.cs:hover .i{transform:rotate(-10deg) scale(1.12)}
+.cs .i{width:54px;height:54px;flex:none;background:#fff;color:var(--teal);border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;box-shadow:0 8px 20px rgba(0,0,0,.2);transition:transform .3s;animation:wob 3.2s ease-in-out infinite}
+.cs:nth-child(2) .i{animation-delay:.5s}.cs:nth-child(3) .i{animation-delay:1s}
+@keyframes wob{0%,100%{transform:rotate(0)}50%{transform:rotate(-8deg)}}
+.cs .l{font-size:.72rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;opacity:.85}
+.cs .v{font-weight:900;font-size:1.06rem}
+/* ═ SECTIONS ═ */
+section{padding:6.2rem 5%}.wrap{max-width:1150px;margin:auto}
+.kick{display:inline-block;background:rgba(212,69,15,.1);color:var(--sundeep);font-weight:900;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;padding:.52rem 1.25rem;border-radius:100px;margin-bottom:1rem}
+h2{font-family:'Lilita One',cursive;font-size:clamp(2.5rem,5.6vw,4.2rem);line-height:1;color:var(--deep)}
+h2 em{font-style:normal;color:var(--suntxt);display:inline-block}
+.rv{opacity:0;transform:translateY(32px);transition:opacity .6s,transform .6s}
+.rv.vis{opacity:1;transform:none}
+.rv.vis em.pop{animation:emp .65s .2s cubic-bezier(.3,1.7,.5,1) both}
+@keyframes emp{0%{transform:scale(.3) rotate(-10deg);opacity:0}60%{transform:scale(1.14) rotate(2deg)}100%{transform:none;opacity:1}}
+/* ═ INCLUDED ═ */
+.igrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.35rem;margin-top:2.8rem}
+@media(max-width:900px){.igrid{grid-template-columns:1fr 1fr}}
+.ic{background:#fff;border-radius:24px;padding:1.9rem 1.3rem;text-align:center;box-shadow:0 14px 34px rgba(15,52,51,.09);opacity:0;transform:translateY(34px) scale(.86);transition:opacity .5s,transform .55s cubic-bezier(.3,1.6,.5,1);position:relative;overflow:hidden}
+.ic.vis{opacity:1;transform:none}
+.ic:hover{transform:translateY(-9px) rotate(-.6deg)!important;box-shadow:0 26px 54px rgba(15,52,51,.16)}
+.ic:hover .ico{transform:rotate(-12deg) scale(1.15)}
+.ico{width:66px;height:66px;margin:0 auto 1rem;border-radius:21px;background:linear-gradient(135deg,var(--sun),var(--sun2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 10px 24px rgba(255,107,53,.35);transition:transform .35s cubic-bezier(.3,1.6,.5,1);animation:icf 4s ease-in-out infinite}
+.ic:nth-child(2n) .ico{background:linear-gradient(135deg,var(--teal),var(--teal2));box-shadow:0 10px 24px rgba(14,124,123,.35);animation-delay:.7s}
+.ic:nth-child(3n) .ico{animation-delay:1.3s}
+@keyframes icf{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.ic h3{font-family:'Lilita One',cursive;font-size:1.14rem;color:var(--deep)}
+/* ═ STATS ═ */
+.stats{background:var(--deep);padding:3.4rem 5%;position:relative;overflow:hidden}
+.stats::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 2px,transparent 2px);background-size:26px 26px;animation:dots 24s linear infinite}
+@keyframes dots{to{background-position:260px 130px}}
+.stin{max-width:1000px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;text-align:center;position:relative}
+@media(max-width:640px){.stin{grid-template-columns:1fr 1fr}}
+.st .n{font-family:'Lilita One',cursive;font-size:2.7rem;color:var(--gold);line-height:1}
+.st .l{color:rgba(255,255,255,.75);font-weight:900;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;margin-top:.35rem}
+/* ═ PLATFORM MARQUEE ═ */
+.plats{background:#fff;padding:1.1rem 0;overflow:hidden;border-bottom:2px solid rgba(14,124,123,.08)}
+.pt{display:flex;width:max-content;animation:mq 24s linear infinite}
+.pt span{font-family:'Lilita One',cursive;font-size:1.05rem;color:var(--teal);padding:0 1.7rem;white-space:nowrap}
+.pt span:nth-child(2n){color:var(--sundeep)}
+.pt span::after{content:'•';margin-left:1.7rem;color:var(--gold)}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* ═ FLEET ═ */
+.fleet{background:linear-gradient(180deg,var(--cream),#FDEFDC)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;margin-top:2.8rem}
+.car{background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 16px 42px rgba(15,52,51,.1);opacity:0;transform:translateY(36px);transition:opacity .55s,transform .55s}
+.car.vis{opacity:1;transform:none}
+.car:hover{transform:translateY(-9px) rotate(-.5deg)!important;box-shadow:0 30px 64px rgba(15,52,51,.18)}
+.cim{height:200px;position:relative;overflow:hidden;background:#F4E9D9}
+.cim img{width:100%;height:100%;object-fit:cover;transition:transform .55s}
+.car:hover .cim img{transform:scale(1.09)}
+.cim .ph{height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:.2}
+.bdg{position:absolute;top:.9rem;left:.9rem;background:var(--teal);color:#fff;font-size:.68rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;padding:.42rem .95rem;border-radius:100px;overflow:hidden}
+.bdg::after{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-25deg);animation:shn 2.6s ease-in-out infinite}
+.bdg.avail{background:#16A34A}
+.bdg.rented{background:#DC2626}
+.bdg.maint{background:#F59E0B;color:#14181c}
+.cav{font-size:.78rem;font-weight:700;margin-top:.35rem}
+.cav.na{color:#8a929b}
+/* Available-from chip — top-right of photo */
+.avchip{position:absolute;top:.75rem;right:.75rem;z-index:2;background:linear-gradient(160deg,#FFC145,#F5A623);color:#14181c;border-radius:10px;padding:.4rem .7rem .45rem;text-align:center;line-height:1.1;box-shadow:0 4px 14px rgba(0,0,0,.35),0 0 0 2px rgba(255,255,255,.6);transform:rotate(2deg)}
+.avchip small{display:block;font-size:.52rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+.avchip b{display:block;font-size:.88rem;font-weight:900;letter-spacing:.02em;margin-top:.12rem}
+.cbd{padding:1.35rem 1.45rem 1.5rem}
+.cnm{font-family:'Lilita One',cursive;font-size:1.32rem;color:var(--deep);margin-bottom:.6rem}
+.cft{display:flex;justify-content:space-between;align-items:center;border-top:2px dashed #f0e4d4;padding-top:1.05rem}
+.cpr{font-family:'Lilita One',cursive;font-size:1.75rem;color:var(--suntxt)}
+.cpr small{font-family:'Nunito';font-size:.72rem;color:var(--mut);font-weight:900}
+.ccall{background:linear-gradient(135deg,#C93F0B,#E8511A);color:#fff;font-weight:900;font-size:.82rem;padding:.72rem 1.25rem;border-radius:100px;box-shadow:0 8px 20px rgba(255,107,53,.35);transition:.22s}
+.ccall:hover{transform:scale(1.1) rotate(-2deg)}
+.fempty{grid-column:1/-1;background:#fff;border-radius:30px;text-align:center;padding:3.6rem 2rem;box-shadow:0 16px 42px rgba(15,52,51,.1)}
+.fempty .lt{font-size:2.3rem;color:var(--deep);margin-bottom:.5rem}
+.fempty p{color:var(--mut);font-weight:800;margin-bottom:1.7rem}
+.skel{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+.sk{height:330px;border-radius:28px;background:linear-gradient(100deg,#f3ead9 40%,#fdf6e9 50%,#f3ead9 60%);background-size:200% 100%;animation:skm 1.3s linear infinite}
+@keyframes skm{to{background-position:-200% 0}}
+/* ═ HOW ═ */
+.how{background:var(--deep);color:#fff;overflow:hidden;position:relative}
+.how h2{color:#fff}
+.roadline{position:relative;max-width:1000px;margin:3.2rem auto 0}
+.rl{position:absolute;top:44px;left:6%;right:6%;height:5px;display:none}
+@media(min-width:881px){.rl{display:block}}
+.rl .dash{position:absolute;inset:0;background:repeating-linear-gradient(90deg,var(--gold) 0 24px,transparent 24px 50px);border-radius:3px;opacity:.45;animation:rdm 1.3s linear infinite}
+@keyframes rdm{to{background-position:50px 0}}
+.rl .cr{position:absolute;top:-21px;left:-3%;font-size:2rem;filter:drop-shadow(0 4px 12px rgba(255,193,69,.5));animation:crd 7.5s ease-in-out infinite}
+@keyframes crd{0%{left:-3%}46%,54%{left:48%}100%{left:102%}}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;position:relative;z-index:2}
+@media(max-width:880px){.steps{grid-template-columns:1fr;max-width:420px;margin:auto}}
+.stp{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.13);border-radius:28px;padding:2.3rem 1.7rem;text-align:center;opacity:0;transform:scale(.82);transition:opacity .5s,transform .58s cubic-bezier(.3,1.6,.5,1)}
+.stp.vis{opacity:1;transform:none}
+.stp:hover{border-color:rgba(255,193,69,.5)}
+.bub{width:90px;height:90px;margin:0 auto 1.15rem;border-radius:50%;background:linear-gradient(135deg,var(--sun),var(--sun2));display:flex;align-items:center;justify-content:center;font-size:2.15rem;box-shadow:0 14px 34px rgba(255,107,53,.4);position:relative;animation:bb 4.4s ease-in-out infinite}
+.stp:nth-child(2) .bub{animation-delay:.55s;background:linear-gradient(135deg,var(--teal2),var(--teal))}
+.stp:nth-child(3) .bub{animation-delay:1.1s;background:linear-gradient(135deg,var(--gold),var(--sun2))}
+@keyframes bb{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+.bub .n{position:absolute;top:-6px;right:-6px;width:33px;height:33px;border-radius:50%;background:#fff;color:var(--deep);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.92rem;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+.stp h3{font-family:'Lilita One',cursive;font-size:1.4rem;margin-bottom:.4rem}
+.stp p{color:rgba(255,255,255,.62);font-weight:800;font-size:.88rem;line-height:1.55}
+.stp a{display:inline-block;margin-top:1.05rem;background:#fff;color:var(--deep);font-weight:900;padding:.65rem 1.4rem;border-radius:100px;transition:.22s}
+.stp a:hover{transform:scale(1.08) rotate(-1.5deg)}
+/* ═ REGION ═ */
+.region{background:linear-gradient(135deg,#ED4F16,#F58A2E 60%,#FFB84D);text-align:center;padding:5.4rem 5%;position:relative;overflow:hidden}
+.region .bub1,.region .bub2,.region .bub3{position:absolute;border-radius:50%;background:rgba(255,255,255,.13)}
+.region .bub1{width:400px;height:400px;top:-190px;left:-140px;animation:ppf 8s ease-in-out infinite}
+.region .bub2{width:280px;height:280px;bottom:-140px;right:-90px;animation:ppf 10s 1s ease-in-out infinite}
+.region .bub3{width:130px;height:130px;top:20%;right:16%;animation:ppf 6s 2s ease-in-out infinite}
+.region .lt{font-size:clamp(2.1rem,6.4vw,4.4rem);color:#fff;line-height:1.05;position:relative;text-shadow:0 6px 26px rgba(0,0,0,.18)}
+.region .lt .bw{display:inline-block}
+.region.vis .lt .bw{animation:pnc .7s cubic-bezier(.3,1.7,.5,1) both}
+.region p{margin-top:1rem;color:rgba(255,255,255,.92);font-weight:900;letter-spacing:.2em;text-transform:uppercase;font-size:.8rem;position:relative}
+/* ═ CTA ═ */
+.ctas{text-align:center;background:var(--cream);position:relative;overflow:hidden}
+.ctas::before{content:'☀';position:absolute;font-size:9rem;opacity:.06;top:8%;left:6%;animation:spn 30s linear infinite}
+.ctas::after{content:'🚗';position:absolute;font-size:7rem;opacity:.06;bottom:8%;right:6%;animation:bb 6s ease-in-out infinite}
+.bignum{display:inline-flex;align-items:center;gap:1rem;background:var(--deep);color:#fff;font-family:'Lilita One',cursive;font-size:clamp(1.9rem,5.8vw,3.4rem);padding:1.15rem 2.7rem;border-radius:26px;margin-top:1.9rem;box-shadow:0 22px 56px rgba(15,52,51,.32);transition:.25s;animation:bt2 2.8s ease-in-out infinite;position:relative;overflow:hidden}
+.bignum::after{content:'';position:absolute;top:0;left:-80%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.25),transparent);transform:skewX(-25deg);animation:shn 3.2s ease-in-out infinite}
+@keyframes bt2{0%,100%{box-shadow:0 22px 56px rgba(15,52,51,.32)}50%{box-shadow:0 22px 66px rgba(15,52,51,.45),0 0 0 8px rgba(255,107,53,.16)}}
+.bignum:hover{transform:translateY(-5px) rotate(-1deg)}
+.cml{display:block;margin-top:1.5rem;color:var(--teal);font-weight:900;font-size:1.08rem;text-decoration:underline;text-decoration-color:var(--suntxt);text-decoration-thickness:3px;text-underline-offset:6px}
+.chr{margin-top:1.8rem;color:var(--mut);font-weight:900;letter-spacing:.18em;text-transform:uppercase;font-size:.72rem}
+/* ═ FOOTER ═ */
+.fwave{display:block;width:100%;height:70px;background:var(--cream)}
+.fwave svg{width:100%;height:100%;display:block}
+footer{background:var(--deep);color:#fff;padding:2.8rem 5% 3rem;display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap}
+footer img{height:66px;background:rgba(255,255,255,.06);padding:8px 14px;border-radius:16px;transition:transform .3s}
+footer img:hover{transform:rotate(-4deg) scale(1.06)}
+footer .cp{color:rgba(255,255,255,.45);font-size:.78rem;line-height:1.65;font-weight:800}
+footer .tg{color:var(--gold);font-weight:900;font-family:'Lilita One',cursive}
+@media(max-width:768px){footer{padding-bottom:1.5rem}}
+.mbar{position:fixed;left:0;right:0;bottom:0;z-index:960;display:none;grid-template-columns:1fr 1fr;box-shadow:0 -8px 30px rgba(15,52,51,.2)}
+@media(max-width:768px){body{padding-bottom:64px}}
+.mbar a{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:1.12rem;font-weight:900;font-size:.94rem}
+.mc{background:linear-gradient(135deg,#EA4E15,#F58A2E);color:#fff}.mm{background:var(--deep);color:#fff}
+@media(max-width:768px){.mbar{display:grid}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.ic,.car,.stp,.cs,.rv{opacity:1!important;transform:none!important}h1 .w,h1 .spin,.loc,.tag,.btns,.ppill,.hcar{opacity:1!important}}
 
-// Age calculator
-function calcAge(){
-  const dob = document.getElementById('dob').value;
-  if(!dob) return;
-  const age = Math.floor((new Date() - new Date(dob)) / (365.25*24*60*60*1000));
-  const el = document.getElementById('ageDisplay');
-  el.textContent = `Age: ${age} yrs`;
-  el.style.display = 'inline-block';
-  updateAgreement();
-}
-
-// License age calculator
-function calcLicenseAge(){
-  const yr = parseInt(document.getElementById('licenseYear').value);
-  if(!yr) return;
-  const age = new Date().getFullYear() - yr;
-  const el = document.getElementById('licenseAgeDisplay');
-  el.textContent = `${age} yrs experience`;
-  el.style.display = 'inline-block';
-}
-
-// Show file preview
-function showPreview(input){
-  const id = 'prev_' + input.id;
-  const el = document.getElementById(id);
-  if(input.files[0]){
-    el.textContent = '✓ ' + input.files[0].name;
-    el.style.display = 'block';
-  }
-}
-
-// Update agreement with form values
-function updateAgreement(){
-  var _dur = document.getElementById('requestedDuration');
-  var _durEl = document.getElementById('ag_duration');
-  if(_durEl) _durEl.textContent = (_dur && _dur.value) ? (_dur.value + ' (requested \u2014 subject to confirmation)') : '\u2014';
-  const fn = document.getElementById('firstName').value;
-  const mn = document.getElementById('middleName').value;
-  const ln = document.getElementById('lastName').value;
-  const fullName = [fn, mn, ln].filter(Boolean).join(' ');
-  if(document.getElementById('ag_name')) document.getElementById('ag_name').textContent = fullName || '—';
-  const dob = document.getElementById('dob').value;
-  if(document.getElementById('ag_dob')) document.getElementById('ag_dob').textContent = dob ? new Date(dob).toLocaleDateString('en-AU') : '—';
-  const addr = document.getElementById('address').value;
-  if(document.getElementById('ag_address')) document.getElementById('ag_address').textContent = addr || '—';
-  const licNum = document.getElementById('licenseNum').value;
-  const licState = document.getElementById('licenseState').value;
-  if(document.getElementById('ag_licence')) document.getElementById('ag_licence').textContent = licNum ? `${licNum} (${licState})` : '—';
-  if(document.getElementById('ag_mobile')) document.getElementById('ag_mobile').textContent = document.getElementById('mobile').value || '—';
-  if(document.getElementById('ag_email')) document.getElementById('ag_email').textContent = document.getElementById('email').value || '—';
-  const en = document.getElementById('emergencyName').value;
-  const ep = document.getElementById('emergencyPhone').value;
-  const er = document.getElementById('emergencyRelation').value;
-  if(document.getElementById('ag_emergency')) document.getElementById('ag_emergency').textContent = en ? `${en} (${er}) — ${ep}` : '—';
-}
-
-// Live update agreement
-['firstName','middleName','lastName','dob','address','mobile','email','licenseNum','licenseState','emergencyName','emergencyPhone','emergencyRelation'].forEach(id=>{
-  const el = document.getElementById(id);
-  if(el) el.addEventListener('input', updateAgreement);
-  if(el) el.addEventListener('change', updateAgreement);
-});
-
-// Accident conditional
-document.querySelectorAll('input[name="accident"]').forEach(r=>{
-  r.addEventListener('change',()=>{
-    document.getElementById('accDetails').classList.toggle('show', r.value==='yes' && r.checked);
-  });
-});
-
-// Signature pad
-const canvas = document.getElementById('sigCanvas');
-const ctx = canvas.getContext('2d');
-let drawing = false;
-function getPos(e){
-  const rect = canvas.getBoundingClientRect();
-  const src = e.touches ? e.touches[0] : e;
-  return [src.clientX - rect.left, src.clientY - rect.top];
-}
-canvas.addEventListener('mousedown', e=>{ drawing=true; ctx.beginPath(); const [x,y]=getPos(e); ctx.moveTo(x,y); });
-canvas.addEventListener('mousemove', e=>{ if(!drawing) return; const [x,y]=getPos(e); ctx.lineTo(x,y); ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.lineCap='round'; ctx.stroke(); });
-canvas.addEventListener('mouseup', ()=>drawing=false);
-canvas.addEventListener('touchstart', e=>{ e.preventDefault(); drawing=true; ctx.beginPath(); const [x,y]=getPos(e); ctx.moveTo(x,y); });
-canvas.addEventListener('touchmove', e=>{ e.preventDefault(); if(!drawing) return; const [x,y]=getPos(e); ctx.lineTo(x,y); ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.lineCap='round'; ctx.stroke(); });
-canvas.addEventListener('touchend', ()=>drawing=false);
-function clearSig(){ ctx.clearRect(0,0,canvas.width,canvas.height); }
-
-// SUBMIT
-document.getElementById('driverForm').addEventListener('submit', async(e)=>{
-  e.preventDefault();
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = 'Submitting... please wait';
-  var _wait = document.getElementById('waitMsg');
-  if(_wait){ _wait.style.display='block'; _wait.scrollIntoView({behavior:'smooth', block:'center'}); }
-
-  // Check signature
-  const sigData = canvas.toDataURL();
-  const isBlank = !ctx.getImageData(0,0,canvas.width,canvas.height).data.some(v=>v!==0);
-  if(isBlank){ alert('Please sign the form before submitting.'); var _wb=document.getElementById('waitMsg'); if(_wb) _wb.style.display='none'; btn.disabled=false; btn.textContent='Submit Application'; return; }
-
-  try{
-    // Prepare driver data
-    const driverData = {
-      first_name: document.getElementById('firstName').value,
-      middle_name: document.getElementById('middleName').value || null,
-      last_name: document.getElementById('lastName').value,
-      dob: document.getElementById('dob').value,
-      address: document.getElementById('address').value,
-      mobile: document.getElementById('mobile').value,
-      email: document.getElementById('email').value,
-      visa_status: document.getElementById('visaStatus').value,
-      license_number: document.getElementById('licenseNum').value,
-      license_state: document.getElementById('licenseState').value,
-      license_expiry: document.getElementById('licenseExpiry').value,
-      license_year: parseInt(document.getElementById('licenseYear').value),
-      emergency_name: document.getElementById('emergencyName').value,
-      emergency_phone: document.getElementById('emergencyPhone').value,
-      emergency_relation: document.getElementById('emergencyRelation').value,
-      emergency_address: document.getElementById('emergencyAddress').value || null,
-      had_accident: document.querySelector('input[name="accident"]:checked')?.value === 'yes',
-      accident_details: document.getElementById('accDate')?.value || null,
-      insurance_declined: document.querySelector('input[name="insDec"]:checked')?.value === 'yes',
-      criminal_history: document.querySelector('input[name="criminal"]:checked')?.value === 'yes',
-      bankruptcy: document.querySelector('input[name="bankrupt"]:checked')?.value === 'yes',
-      terms_accepted: document.getElementById('termsAccepted').checked,
-      insurance_declared: document.getElementById('insuranceDecl').checked,
-      agreement_signed: document.getElementById('rentalAgreement').checked,
-      signed_date: document.getElementById('signDate').value,
-      requested_duration: document.getElementById('requestedDuration').value || null,
-      status: 'Pending'
-    };
-
-    // Insert driver record
-    // Use secure function to bypass RLS permission issues
-    const {data: driverId, error: driverErr} = await window._sb
-      .rpc('submit_driver_application', { driver_data: driverData });
-    if(driverErr) throw driverErr;
-    const driver = { id: driverId };
-
-    // Upload documents
-    const files = [
-      {id:'licFront', type:'license_front', label:'Licence Front'},
-      {id:'licBack', type:'license_back', label:'Licence Back'},
-      {id:'passport', type:'passport', label:'Passport'},
-      {id:'visaDoc', type:'visa_vevo', label:'Visa / VEVO'},
-      {id:'medicareId', type:'bond_rent_receipt', label:'Bond + Rent Receipt'},
-    ];
-
-    const uploadedDocs = [];  // track what was uploaded for the PDF
-
-    // Build a list of upload jobs and run them ALL IN PARALLEL for speed
-    const uploadJobs = [];
-    for(const f of files){
-      const input = document.getElementById(f.id);
-      if(input && input.files[0]){
-        const file = input.files[0];
-        uploadedDocs.push({ label: f.label, fileName: file.name });
-        const path = `driver_${driver.id}/${f.type}_${Date.now()}.${file.name.split('.').pop()}`;
-        uploadJobs.push(
-          window._sb.storage.from('driver-documents').upload(path, file)
-            .then(({error:upErr}) => { if(upErr) console.error('Doc storage error:', f.type, upErr.message); })
-            .then(() => window._sb.from('documents').insert([{
-              entity_type:'driver', entity_id:driver.id,
-              document_type:f.type, file_name:file.name,
-              file_url:path, file_size:file.size, mime_type:file.type
-            }]))
-            .then(({error:docErr}) => { if(docErr) console.error('Doc record error:', f.type, docErr.message); })
-        );
-      }
-    }
-
-    // Signature upload job (also in parallel)
-    const sigBlob = await(await fetch(sigData)).blob();
-    const sigPath = `driver_${driver.id}/signature_${Date.now()}.png`;
-    uploadJobs.push(
-      window._sb.storage.from('driver-documents').upload(sigPath, sigBlob, { contentType:'image/png' })
-        .then(({error:sigUpErr}) => { if(sigUpErr) console.error('Signature storage error:', sigUpErr.message); })
-        .then(() => window._sb.from('documents').insert([{
-          entity_type:'driver', entity_id:driver.id,
-          document_type:'signature', file_name:'signature.png',
-          file_url:sigPath, file_size:sigBlob.size, mime_type:'image/png'
-        }]))
-        .then(({error:sigInsErr}) => { if(sigInsErr) console.error('Signature record error:', sigInsErr.message); })
-    );
-
-    // Wait for all uploads to finish together (much faster than one-by-one)
-    await Promise.all(uploadJobs);
-
-    // Generate and download the complete application PDF
-    try {
-      generateApplicationPDF(driverData, sigData, uploadedDocs);
-    } catch(pdfErr) {
-      console.error('PDF generation error:', pdfErr);
-    }
-
-    // Notify admin of the new application (non-blocking - never breaks submission)
-    try {
-      const row = (l,v) => '<tr><td style="padding:8px 14px 8px 0;color:#777;white-space:nowrap">' + l + '</td><td style="padding:8px 0;font-weight:700;color:#222;font-size:15px">' + (v||'&mdash;') + '</td></tr>';
-      const submittedAt = new Date().toLocaleString('en-AU', { timeZone:'Australia/Sydney', dateStyle:'full', timeStyle:'short' });
-      const notifyHtml =
-        '<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:auto;border:1px solid #eee;border-radius:10px;overflow:hidden">'
-        + '<div style="background:#0a0a0c;padding:22px 28px"><span style="color:#F5A623;font-size:20px;font-weight:800">OZEE RENTALS</span><br><span style="color:#bbb;font-size:13px">Admin Notification</span></div>'
-        + '<div style="padding:26px 28px">'
-        + '<h2 style="margin:0 0 6px;color:#0a0a0c">&#128663; New Driver Application</h2>'
-        + '<p style="margin:0 0 18px;color:#666;font-size:14px">Received ' + submittedAt + '</p>'
-        + '<table style="border-collapse:collapse;font-size:14px;width:100%">'
-        + row('Name', driverData.first_name + ' ' + driverData.last_name)
-        + row('Phone', '<a href="tel:' + driverData.mobile + '" style="color:#0a6ebd;text-decoration:none">' + driverData.mobile + '</a>')
-        + row('Email', '<a href="mailto:' + driverData.email + '" style="color:#0a6ebd;text-decoration:none">' + driverData.email + '</a>')
-        + '</table>'
-        + '<a href="https://admin.ozeerentals.com.au/drivers" style="display:inline-block;margin-top:22px;background:#F5A623;color:#0a0a0c;font-weight:800;font-size:15px;padding:13px 26px;border-radius:8px;text-decoration:none">Review in Admin Panel &rarr;</a>'
-        + '</div>'
-        + '<div style="background:#f7f5f0;padding:14px 28px;color:#999;font-size:12px">Ozee Rentals Pty Ltd &middot; Newcastle &amp; Hunter Region NSW &middot; Automated notification.</div>'
-        + '</div>';
-      fetch('https://' + PROJ + '.supabase.co/functions/v1/send-driver-email', {
-        method: 'POST',
-        keepalive: true,   // lets the request finish even if the driver closes the tab
-        headers: { 'Content-Type':'application/json', 'Authorization':'Bearer ' + OZ_ANON, 'apikey': OZ_ANON },
-        body: JSON.stringify({
-          to: 'admin@ozeerentals.com.au',
-          subject: 'New Driver Application - ' + driverData.first_name + ' ' + driverData.last_name,
-          html: notifyHtml
-        })
-      }).catch(function(e){ console.error('Admin notify error:', e); });
-    } catch(nErr) { console.error('Admin notify error:', nErr); }
-
-    var _w = document.getElementById('waitMsg'); if(_w) _w.style.display='none';
-    // hide the whole page chrome — only the success message remains
-    ['.hero-bar','.cluster','.builtby'].forEach(function(sel){ var el=document.querySelector(sel); if(el) el.style.display='none'; });
-    document.getElementById('driverForm').style.display='none';
-    document.getElementById('successMsg').style.display='block';
-    window.scrollTo({top:0,behavior:'smooth'});
+/* SECTION SUN (small, in every section corner) */
+.ssun{position:absolute;top:34px;right:5%;width:74px;height:74px;border-radius:50%;background:radial-gradient(circle at 38% 38%,#FFE08A,#FF9E4D);box-shadow:0 0 46px rgba(255,158,77,.6);animation:sunf 6s ease-in-out infinite;z-index:1;pointer-events:none;opacity:.9}
+.ssun i{position:absolute;top:50%;left:50%;width:118px;height:4px;border-radius:3px;background:linear-gradient(90deg,rgba(255,193,69,.55),transparent);transform-origin:0 0}
+.ssun.rot{animation:sunf 6s ease-in-out infinite}
+.ssun-rays{position:absolute;top:34px;right:5%;width:74px;height:74px;animation:spn 24s linear infinite;z-index:1;pointer-events:none}
+.ssun-rays i{position:absolute;top:50%;left:50%;width:112px;height:4px;border-radius:3px;background:linear-gradient(90deg,rgba(255,193,69,.5),transparent);transform-origin:0 0}
+@media(max-width:700px){.ssun,.ssun-rays{width:52px;height:52px;top:24px}.ssun-rays i,.ssun i{width:82px}}
+.dark .ssun{background:radial-gradient(circle at 38% 38%,#FFE08A,#FFB84D);box-shadow:0 0 46px rgba(255,193,69,.5)}
+/* SECTION WAVE TOP DIVIDER */
+.swave{position:absolute;top:-1px;left:0;right:0;height:44px;overflow:hidden;line-height:0;z-index:1;pointer-events:none}
+.swave svg{position:absolute;bottom:0;width:200%;height:100%;animation:wv 14s linear infinite}
+.swave svg:nth-child(2){animation-duration:22s;opacity:.5}
+/* SECTION MINI CAR driving across bottom of section */
+.scar{position:absolute;font-size:1.55rem;z-index:1;pointer-events:none;filter:drop-shadow(0 4px 8px rgba(15,52,51,.22));white-space:nowrap;animation-timing-function:linear;animation-iteration-count:infinite}
+/* HORIZONTAL: left-to-right (flip emoji to face right) */
+.scar.lr{left:-8%;animation-name:scLR}
+@keyframes scLR{from{left:-8%;transform:scaleX(-1)}to{left:108%;transform:scaleX(-1)}}
+/* HORIZONTAL: right-to-left */
+.scar.rl{left:108%;animation-name:scRL}
+@keyframes scRL{from{left:108%}to{left:-8%}}
+/* VERTICAL: bottom-to-top */
+.scar.up{top:108%;animation-name:scUP}
+@keyframes scUP{from{top:108%;transform:rotate(-90deg)}to{top:-12%;transform:rotate(-90deg)}}
+/* VERTICAL: top-to-bottom */
+.scar.dn{top:-12%;animation-name:scDN}
+@keyframes scDN{from{top:-12%;transform:rotate(90deg)}to{top:108%;transform:rotate(90deg)}}
+/* DIAGONAL: down-right */
+.scar.dr{left:-8%;top:-12%;animation-name:scDR}
+@keyframes scDR{from{left:-8%;top:-12%;transform:scaleX(-1) rotate(25deg)}to{left:108%;top:108%;transform:scaleX(-1) rotate(25deg)}}
+/* DIAGONAL: up-left */
+.scar.ul{left:108%;top:108%;animation-name:scUL}
+@keyframes scUL{from{left:108%;top:108%;transform:rotate(25deg)}to{left:-8%;top:-12%;transform:rotate(25deg)}}
+/* horizontal lane heights (for lr/rl only) */
+.scar.lr.lane-a,.scar.rl.lane-a{bottom:12px;top:auto}
+.scar.lr.lane-b,.scar.rl.lane-b{bottom:60px;top:auto}
+.scar.lr.lane-c,.scar.rl.lane-c{bottom:110px;top:auto}
+.scar.lr.lane-d,.scar.rl.lane-d{top:100px;bottom:auto}
+.scar.lr.lane-e,.scar.rl.lane-e{top:150px;bottom:auto}
+/* vertical column positions (for up/dn) */
+.col-1{left:14%}.col-2{left:38%}.col-3{left:62%}.col-4{left:84%}
+/* speeds */
+.sp1{animation-duration:9s}.sp2{animation-duration:13s}.sp3{animation-duration:17s}.sp4{animation-duration:21s}.sp5{animation-duration:26s}
+/* negative delays so cars already spread across screen at load */
+.dl0{animation-delay:-1s}.dl1{animation-delay:-4s}.dl2{animation-delay:-7s}.dl3{animation-delay:-10s}.dl4{animation-delay:-13s}.dl5{animation-delay:-2.5s}.dl6{animation-delay:-8s}.dl7{animation-delay:-5s}
+.scar.big{font-size:1.9rem}.scar.sm{font-size:1.18rem;opacity:.82}
+@media(max-width:700px){.scar{font-size:1.2rem}.scar.big{font-size:1.45rem}.scar.lr.lane-c,.scar.rl.lane-c{bottom:84px}.scar.lr.lane-d,.scar.rl.lane-d{top:78px}.scar.lr.lane-e,.scar.rl.lane-e{top:118px}}
+/* section needs relative + clip */
+.dec{position:relative;overflow:hidden}
+/* SECTION DESCRIPTION text */
+.sdesc{max-width:46ch;margin:1rem auto 0;color:var(--mut);font-weight:800;font-size:1.02rem;line-height:1.6;opacity:0;transform:translateY(18px);transition:opacity .6s .15s,transform .6s .15s}
+.sdesc.vis{opacity:1;transform:none}
+.dark .sdesc{color:rgba(255,255,255,.62)}
+/* animated kicker */
+.kick{position:relative;overflow:hidden}
+.kick.rv{opacity:0;transform:translateY(14px) scale(.9);transition:opacity .5s,transform .5s cubic-bezier(.3,1.7,.5,1)}
+.kick.rv.vis{opacity:1;transform:none}
+.kick.rv.vis::after{content:'';position:absolute;top:0;left:-90%;width:55%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);animation:shn 2.4s .3s ease-in-out}
 
 
-  } catch(err){
-    console.error(err);
-    const errEl = document.getElementById('errorMsg');
-    errEl.textContent = 'Submission failed: ' + (err.message || 'Please try again or contact us directly.');
-    errEl.style.display='block';
-    var _we = document.getElementById('waitMsg'); if(_we) _we.style.display='none';
-    btn.disabled=false;
-    btn.textContent='Submit Application';
-  }
-});
 
 
-// ═══════════════════════════════════════════════════════
-// GENERATE COMPLETE APPLICATION PDF — full agreement, all data
-// ═══════════════════════════════════════════════════════
-function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit:'mm', format:'a4' });
-  const pageW = 210, pageH = 297, margin = 15;
-  let y = margin;
-  const GOLD = [255,138,61], DARK = [10,12,15], GREY = [110,118,127];
+.builtby .bizcontact{display:flex;align-items:center;justify-content:center;gap:.9rem;flex-wrap:wrap;margin-bottom:1rem;position:relative;z-index:2}
+.builtby .bizcontact a{color:var(--gold);font-weight:900;font-size:1rem;transition:.2s}
+.builtby .bizcontact a:hover{color:var(--sun2);transform:translateY(-1px)}
+.builtby .bizcontact .sep{color:rgba(255,255,255,.3)}
+@media(max-width:600px){.builtby .bizcontact{gap:.5rem;flex-direction:column}.builtby .bizcontact .sep{display:none}.builtby .bizcontact a{font-size:.95rem}}
+/* BUILT BY MNJ credit */
+.builtby{background:#0a2726;padding:1.5rem 5% 1.6rem;text-align:center;position:relative;overflow:hidden}
+.builtby .row{position:relative;z-index:2;font-weight:800;font-size:1.05rem;color:rgba(255,255,255,.75);display:flex;align-items:center;justify-content:center;gap:.55rem;flex-wrap:wrap;padding-top:1.1rem;margin-top:.4rem;border-top:1px solid rgba(255,255,255,.1)}
+.builtby .mnj{position:relative;font-family:'Lilita One',cursive;font-size:1.7rem;letter-spacing:.06em;color:var(--gold);cursor:pointer;border:none;background:transparent;padding:.15em .55em;transition:.2s;line-height:1;border:1.5px solid rgba(255,193,69,.4);border-radius:100px;animation:mnjglow 2.6s ease-in-out infinite}
+@keyframes mnjglow{0%,100%{box-shadow:0 0 0 0 rgba(255,193,69,.35)}50%{box-shadow:0 0 18px 2px rgba(255,193,69,.28)}}
+.builtby .mnj:hover{transform:translateY(-1px) scale(1.06);color:var(--sun2);border-color:var(--sun2);background:rgba(255,193,69,.08)}
+.builtby .mnj::after{content:'';position:absolute;left:0;right:0;bottom:-3px;height:2px;background:var(--gold);border-radius:2px;transform:scaleX(0);transition:transform .25s}
+.builtby .mnj:hover::after{transform:scaleX(1)}
+.builtby .mnj .hint{font-size:.62rem;margin-left:.15em;color:var(--sun2);vertical-align:middle}
+.builtby .contact{display:none;gap:1.4rem;margin-top:1rem;flex-wrap:wrap;justify-content:center;position:relative;z-index:2}
+.builtby .contact.show{display:inline-flex;animation:cfade .4s ease-out}
+@keyframes cfade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.builtby .contact a{display:inline-flex;align-items:center;gap:.4rem;color:rgba(255,255,255,.6);font-weight:800;font-size:.85rem;transition:.2s}
+.builtby .contact a:hover{color:var(--gold);transform:translateY(-2px)}
+.builtby .wa:hover{color:#25D366}
 
-  function checkPage(needed){ if(y + needed > pageH - margin){ doc.addPage(); y = margin; } }
-  function sectionHeader(title){
-    checkPage(14);
-    doc.setFillColor(...DARK); doc.rect(margin, y, pageW-margin*2, 9, 'F');
-    doc.setTextColor(...GOLD); doc.setFontSize(11); doc.setFont('helvetica','bold');
-    doc.text(title, margin+3, y+6.2);
-    y += 13; doc.setTextColor(40,40,40); doc.setFont('helvetica','normal');
-  }
-  function field(label, value){
-    value = (value===null||value===undefined||value==='') ? '—' : String(value);
-    checkPage(8);
-    doc.setFontSize(8); doc.setTextColor(...GREY); doc.setFont('helvetica','bold');
-    doc.text(label.toUpperCase(), margin+2, y);
-    doc.setFontSize(10); doc.setTextColor(30,30,30); doc.setFont('helvetica','normal');
-    const lines = doc.splitTextToSize(value, pageW-margin*2-52);
-    doc.text(lines, margin+52, y);
-    y += Math.max(6, lines.length*5);
-  }
-  function para(txt, size){
-    size = size || 8;
-    doc.setFontSize(size); doc.setTextColor(60,60,60); doc.setFont('helvetica','normal');
-    const lines = doc.splitTextToSize(txt, pageW-margin*2-4);
-    checkPage(lines.length*(size*0.5) + 2);
-    doc.text(lines, margin+2, y);
-    y += lines.length*(size*0.5) + 2.5;
-  }
-  function subHead(txt){
-    checkPage(9);
-    doc.setFontSize(9); doc.setTextColor(...DARK); doc.setFont('helvetica','bold');
-    doc.text(txt, margin+2, y); y += 5;
-    doc.setFont('helvetica','normal');
-  }
-  function qYesNo(num, question, bool){
-    checkPage(12);
-    doc.setFontSize(8.5); doc.setTextColor(40,40,40); doc.setFont('helvetica','normal');
-    const lines = doc.splitTextToSize(num + '. ' + question, pageW-margin*2-24);
-    doc.text(lines, margin+2, y);
-    const answer = bool ? 'YES' : 'NO';
-    doc.setFont('helvetica','bold');
-    doc.setTextColor(bool ? 200 : 0, bool ? 0 : 140, 0);
-    doc.text(answer, pageW-margin-16, y);
-    doc.setTextColor(40,40,40); doc.setFont('helvetica','normal');
-    y += Math.max(7, lines.length*4.5) + 1.5;
-  }
-
-  const fullName = [d.first_name, d.middle_name, d.last_name].filter(Boolean).join(' ');
-
-  // ── HEADER ──
-  doc.setFillColor(...DARK); doc.rect(0, 0, pageW, 32, 'F');
-  doc.setTextColor(...GOLD); doc.setFontSize(24); doc.setFont('helvetica','bold');
-  doc.text('OZEE RENTALS', margin, 15);
-  doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','normal');
-  doc.text('Driver Application & Rental Agreement', margin, 22);
-  doc.setFontSize(7); doc.setTextColor(180,180,180);
-  doc.text('ABN 71 694 905 667  |  0450 786 145  |  admin@ozeerentals.com.au', margin, 27.5);
-  doc.text('17A Drift St, West Wallsend, Newcastle NSW 2286', margin, 30.5);
-  y = 40;
-
-  // ── NAME BANNER ──
-  doc.setFillColor(...GOLD); doc.rect(margin, y, pageW-margin*2, 10, 'F');
-  doc.setTextColor(...DARK); doc.setFontSize(13); doc.setFont('helvetica','bold');
-  doc.text(fullName || 'Applicant', margin+3, y+6.8);
-  doc.setFontSize(8); doc.setFont('helvetica','normal');
-  doc.text('Status: PENDING', pageW-margin-32, y+6.8);
-  y += 15;
-
-  // ── PERSONAL DETAILS ──
-  sectionHeader('SECTION 01 — PERSONAL INFORMATION');
-  field('Full Name', fullName);
-  field('Date of Birth', d.dob);
-  field('Residential Address', d.address);
-  field('Mobile Number', d.mobile);
-  field('Email Address', d.email);
-  field('Visa Status', d.visa_status);
-
-  // ── LICENCE ──
-  sectionHeader('SECTION 02 — DRIVER LICENCE');
-  field('Licence Number', d.license_number);
-  field('Licence State', d.license_state);
-  field('Licence Expiry', d.license_expiry);
-  field('Years Licence Held', d.license_year);
-
-  // ── EMERGENCY CONTACT ──
-  sectionHeader('SECTION 03 — EMERGENCY CONTACT');
-  field('Name', d.emergency_name);
-  field('Phone', d.emergency_phone);
-  field('Relationship', d.emergency_relation);
-  if(d.emergency_address) field('Address', d.emergency_address);
-
-  // ── UPLOADED DOCUMENTS ──
-  sectionHeader('SECTION 04 — UPLOADED DOCUMENTS');
-  const allDocs = [
-    'Licence Front', 'Licence Back', 'Passport', 'Visa / VEVO', 'Bond + Rent Receipt'
-  ];
-  const uploadedLabels = (uploadedDocs || []).map(function(x){ return x.label; });
-  allDocs.forEach(function(docLabel){
-    checkPage(8);
-    const wasUploaded = uploadedLabels.indexOf(docLabel) !== -1;
-    // Checkbox
-    doc.setDrawColor(...DARK); doc.setLineWidth(0.3);
-    doc.rect(margin+2, y-3.5, 4, 4);
-    if(wasUploaded){
-      doc.setTextColor(0,150,0); doc.setFont('helvetica','bold');
-      doc.text('X', margin+2.8, y-0.4);
-    }
-    // Document name
-    doc.setFontSize(10); doc.setFont('helvetica','normal');
-    doc.setTextColor(30,30,30);
-    doc.text(docLabel, margin+10, y);
-    // Status text
-    doc.setFontSize(8);
-    if(wasUploaded){
-      doc.setTextColor(0,140,0);
-      const upDoc = uploadedDocs.find(function(x){ return x.label===docLabel; });
-      doc.text('Uploaded' + (upDoc && upDoc.fileName ? ' (' + upDoc.fileName + ')' : ''), margin+70, y);
-    } else {
-      doc.setTextColor(...GREY);
-      doc.text('Not uploaded', margin+70, y);
-    }
-    y += 7;
-  });
-  y += 3;
-
-  // ── INSURANCE DECLARATION QUESTIONS ──
-  sectionHeader('SECTION 05 — INSURANCE DECLARATION');
-  qYesNo(1, 'In the past 5 years, have you been involved in any accident (at fault or not at fault)?', d.had_accident);
-  if(d.had_accident && d.accident_details) field('Accident details', d.accident_details);
-  qYesNo(2, 'In the past 5 years have you had any insurance policy declined, cancelled, renewal declined, special conditions imposed or claim refused?', d.insurance_declined);
-  qYesNo(3, 'In the past 5 years have you committed any criminal act in relation to fraud, theft, burglary, drugs, arson, criminal, malicious or wilful damage?', d.criminal_history);
-  qYesNo(4, 'In the past 5 years have you been declared bankrupt or defaulted on a loan or credit card?', d.bankruptcy);
-
-  // ── FULL AGREEMENT ──
-  sectionHeader('RENTAL VEHICLE AGREEMENT — TERMS & CONDITIONS');
-  para('This is an agreement between the prospective hirer identified on page 1 (you) and the car owner(s) to rent the motor vehicle described on Page 1 including all accessories, tools, tyres, and equipment and any replacement vehicle (the vehicle).');
-
-  subHead('Contract Period: ' + (d.requested_duration ? d.requested_duration + ' (requested \u2014 subject to confirmation)' : 'To be confirmed') + '   |   Bond: 4 weeks rent in advance');
-  subHead('Vehicle Insurance Excess: $1,195 + ($550 Age Excess if applicable)');
-  y += 1;
-
-  subHead('1. VEHICLE CONDITION AND RETURN');
-  para('The vehicle is delivered to you in good operating condition and reasonable order and with the seal on the odometer unbroken. You agree to return the vehicle in the same condition (except for ordinary wear and tear NOT INCLUDING WINDSCREEN AND TYRE DAMAGE) together with all tools, accessories, tyres, and equipment to the location specified on page 1 and on the date specified (or sooner if demanded) to get a full refund of your bond money. The owner(s) may take possession of the vehicle without prior demand and at your expense, if it is illegally parked, used in violation of the law or this agreement or if it is apparently abandoned. Note: The owner(s) must be notified and agree to any extension of the period of the hire beyond that stated on page 1 in advance of the return date and time or the vehicle will immediately be reported as stolen.');
-
-  subHead('2. UNAUTHORISED AND PROHIBITED USE');
-  para('Persons who must not drive the vehicle: (a) A person who is not identified on page 1 or approved by us in writing. (b) A person not licensed for that class of vehicle. (c) A person whose blood alcohol concentration exceeds the legal limit. (d) A person who has given a false name, age, address or driver\'s license. (e) A person whose license has been cancelled, endorsed or suspended within the last three years. (f) A person who has held an unconditional driver license for less than 1 year. (g) A person under the age of 21. (h) Outside the area of use limitation specified on page 1. (i) On unsealed or off-road conditions unless authorised in writing.');
-
-  subHead('GENERAL PROVISIONS');
-  para('(a) You will promptly report any loss or damage to the vehicle and deliver every summons or complaint to us; this does not excuse reporting to police. (b) All loss and damage per incident is subject to the damage liability charge. (c) We are not responsible for goods left inside the car; ensure it is empty on delivery. (d) If the car is dumped, abandoned or left behind within the Newcastle or Hunter Region, the hirer will be charged all costs of recovering the vehicle. If left outside the agreed location or outside the Newcastle and Hunter Region, the hirer is responsible for all recovery and transportation charges to return the vehicle to the agreed location. (e) Bonds held for a maximum of 7 business days. (f) A late payment fee of 10% applies if an invoice is unpaid more than 2 days. (g) No bond refunded if you cannot abide by the agreement period. (h) The contract is cancelled if the vehicle is driven much higher than normal daily usage; the driver must return it within 3 business days of notice.');
-
-  subHead('3. FUEL, CLEANLINESS AND EXTERIORS');
-  para('The vehicle must be returned with fuel equal to that at the time of rental. If returned with less fuel the difference is charged at a rate which may include a service component. Same applies to cleanliness and exteriors of the vehicle.');
-
-  subHead('4. LIABILITY FOR PENALTIES AND ADDRESS UPDATES');
-  para('During the hire period the hirer is solely responsible for any penalties, fines or misuse of the vehicle, regardless of who was driving. The hirer must promptly notify us of any address change; otherwise notices are sent to the last address provided and the hirer remains responsible for all consequences.');
-
-  subHead('5. VEHICLE TRACKING AND IMMOBILISATION NOTICE');
-  para('The renter acknowledges the vehicle is fitted with a GPS tracking device for security, theft prevention, vehicle recovery, fleet management and compliance. The device may record location, speed, ignition status and other operational data during the rental period.');
-  para('The renter further acknowledges the vehicle is equipped with a remote immobilisation system, which may be activated by the owner only in circumstances including: theft or suspected theft; failure to return by the agreed date and time; serious breach of the agreement; or vehicle recovery operations authorised by law. Where reasonably practicable the owner will provide notice before activating it. It will not be activated while the vehicle is in motion and only when it is safe to do so.');
-  para('By signing this agreement the renter consents to the collection and use of GPS tracking data for the purposes above and acknowledges the presence of the tracking and immobilisation systems in the vehicle.');
-
-  subHead('6. TERMINATION DUE TO UNAUTHORIZED USE OR EXCESS MILEAGE');
-  para('The contract is cancelled if the vehicle is driven by an unauthorized person not listed in the contract or if mileage exceeds the allowed daily usage. The hirer must then return the vehicle within two business days of notice, regardless of the remaining period, and the bond will be withheld.');
-
-  subHead('7. VEHICLE INSURANCE COVERAGE AND ASSOCIATED COSTS');
-  para('The Renter is liable for the applicable insurance excess in the event of any damage, loss or incident, including all administrative and processing fees plus reasonable compensation for time lost due to insurance procedures, regardless of fault. Coverage applies only to the driver authorized in the rental contract. The authorized driver is solely responsible for their driving behaviour and must ensure the vehicle is roadworthy before use; if unfit, they must notify the Owner in writing. The driver is personally liable for any damage, loss or harm caused by negligence or failure to report such issues.');
-  y += 2;
-
-  // ── DECLARATION CHECKBOXES ──
-  sectionHeader('DECLARATION');
-  function declLine(txt, checked){
-    checkPage(8);
-    doc.setDrawColor(...DARK); doc.setLineWidth(0.3);
-    doc.rect(margin+2, y-3.5, 4, 4);
-    if(checked){ doc.setTextColor(0,150,0); doc.setFont('helvetica','bold'); doc.text('X', margin+2.8, y-0.4); }
-    doc.setTextColor(30,30,30); doc.setFont('helvetica','normal'); doc.setFontSize(9);
-    const lines = doc.splitTextToSize(txt, pageW-margin*2-12);
-    doc.text(lines, margin+9, y);
-    y += Math.max(6, lines.length*4.5);
-  }
-  declLine('I have read, understood and accept these Terms and Conditions.', d.terms_accepted);
-  declLine('I declare that all information provided in this application is true and correct.', d.insurance_declared);
-  declLine('I agree to the rental vehicle agreement terms.', d.agreement_signed);
-  y += 4;
-
-  // ── SIGNATURE ──
-  sectionHeader('DIGITAL SIGNATURE');
-  if(signatureDataUrl){
-    checkPage(45);
-    doc.setDrawColor(200,200,200); doc.setFillColor(255,255,255);
-    doc.rect(margin+2, y, 85, 36, 'FD');
-    try{ doc.addImage(signatureDataUrl, 'PNG', margin+4, y+2, 81, 32); }catch(e){}
-    y += 40;
-  }
-  doc.setFontSize(8); doc.setTextColor(...GREY); doc.setFont('helvetica','bold');
-  doc.text('SIGNED BY', margin+2, y);
-  doc.setTextColor(30,30,30); doc.setFont('helvetica','normal');
-  doc.text(fullName, margin+35, y); y += 6;
-
-  const now = new Date();
-  const stamp = now.toLocaleDateString('en-AU') + ' at ' + now.toLocaleTimeString('en-AU');
-  doc.setFont('helvetica','bold'); doc.setTextColor(...GREY);
-  doc.text('SIGNED DATE', margin+2, y);
-  doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
-  doc.text(d.signed_date || now.toLocaleDateString('en-AU'), margin+35, y); y += 6;
-  doc.setFont('helvetica','bold'); doc.setTextColor(...GREY);
-  doc.text('SUBMITTED', margin+2, y);
-  doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
-  doc.text(stamp, margin+35, y);
-
-  // ── FOOTER ──
-  const pageCount = doc.internal.getNumberOfPages();
-  for(let i=1;i<=pageCount;i++){
-    doc.setPage(i);
-    doc.setFontSize(7); doc.setTextColor(150,150,150);
-    doc.text('Ozee Rentals Pty Ltd — Driver Application — Generated ' + now.toLocaleDateString('en-AU'), margin, pageH-8);
-    doc.text('Page ' + i + ' of ' + pageCount, pageW-margin-20, pageH-8);
-  }
-
-  const safeName = fullName.replace(/[^a-z0-9]/gi,'_');
-  doc.save('Ozee_Application_' + safeName + '.pdf');
+/* MNJ: reveal on hover (desktop) — click still works everywhere incl. mobile */
+@media(hover:hover) and (pointer:fine){
+  
+  
+  .builtby .row:hover .mnj{transform:translateY(-1px) scale(1.06);}
 }
 
 
-// ═══ FORCE READ AGREEMENT: unlock checkboxes only after scrolling to bottom ═══
-(function(){
-  var box=document.getElementById('agreementBox');
-  var note=document.getElementById('readNote');
-  if(!box) return;
-  function unlock(){
-    note.classList.add('done');
-    note.innerHTML='&#9989; Thank you for reading. You can now accept the agreement below.';
-    ['agreeWrap1','agreeWrap2','agreeWrap3'].forEach(function(id){var w=document.getElementById(id);if(w)w.classList.remove('locked');});
-    ['termsAccepted','insuranceDecl','rentalAgreement'].forEach(function(id){var cb=document.getElementById(id);if(cb)cb.disabled=false;});
-  }
-  function check(){
-    if(box.scrollTop + box.clientHeight >= box.scrollHeight - 20){ unlock(); box.removeEventListener('scroll',check); }
-  }
-  box.addEventListener('scroll',check,{passive:true});
-  // if content is short enough that no scroll is needed, unlock after a moment
-  setTimeout(function(){ if(box.scrollHeight <= box.clientHeight + 20) unlock(); },600);
-})();
 
+/* MNJ credit popup — floats ABOVE the button so nothing is pushed down or hidden */
+.builtby .mnjwrap{position:relative;display:inline-block;}
+.builtby .contact{
+  position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%);
+  display:none;flex-direction:column;align-items:center;gap:.6rem;
+  background:#0d2b2a;border:1px solid rgba(255,193,69,.4);border-radius:14px;
+  padding:.85rem 1.1rem;box-shadow:0 14px 34px rgba(0,0,0,.5);
+  z-index:980;white-space:nowrap;margin:0;
+}
+.builtby .contact::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:7px solid transparent;border-top-color:rgba(255,193,69,.4);
+}
+.builtby .contact.show{display:flex;animation:cfade .22s ease-out;}
+@media(hover:hover) and (pointer:fine){ .builtby .mnjwrap:hover .contact{display:flex;} }
+@media(max-width:420px){ .builtby .contact{padding:.75rem .9rem;} .builtby .contact a{font-size:.8rem;} }
 
-// MNJ contact reveal
+</style></head><body>
+<div class="prog" id="prog"></div>
+<nav class="nav"><a href="/"><img class="lg" src="https://ozeerentals.com.au/logo-white.png" alt="Ozee Rentals"></a>
+<div class="nl"><a href="#inc">Included</a><a href="#fleet">Fleet</a><a href="#how">How</a><a href="tel:0450786145" class="cta">&#9742; Call Now</a></div></nav>
 
+<header class="hero">
+<div class="rays"><i style="transform:rotate(0)"></i><i style="transform:rotate(45deg)"></i><i style="transform:rotate(90deg)"></i><i style="transform:rotate(135deg)"></i><i style="transform:rotate(180deg)"></i><i style="transform:rotate(225deg)"></i><i style="transform:rotate(270deg)"></i><i style="transform:rotate(315deg)"></i></div>
+<div class="sun"></div>
+<div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+<div class="gull g1">&#128038;</div><div class="gull g2">&#128038;</div>
+<div class="hin">
+<div class="loc"><span class="dot"></span><b>Newcastle</b>&nbsp;&amp; Hunter Region</div>
+<h1><span class="w">Need</span> <span class="w">a</span> <span class="w">car?</span><br><span class="spin lt">We've got you!</span></h1>
+<p class="tag">One call. <b>You're driving.</b> From $175/wk — all-in.</p>
+<div class="btns"><a href="tel:0450786145" class="b1">&#9742; Call 0450 786 145</a><a href="mailto:admin@ozeerentals.com.au" class="b2">&#9993; Email</a></div>
+</div>
+<div class="ppill"><div class="t">All-inclusive</div><div class="lt">$175<sup>/wk</sup></div><small>Insurance &middot; Roadside &middot; Servicing</small></div>
+<div class="hcar" id="hcar"><div class="hsh"></div><div class="hbody"></div><div class="hst"></div><div class="htop"></div><div class="hwn"></div><div class="hwn2"></div><div class="hbg">OZEE</div><div class="hhd"></div><div class="hwl w1"></div><div class="hwl w2"></div></div>
+<div class="boat">&#9973;</div>
+<div class="scrollhint">Scroll</div>
+<div class="waves">
+<svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,60 C240,110 480,10 720,60 C960,110 1200,10 1440,60 L1440,120 L0,120 Z" fill="#FFF8EE"/><path d="M1440,60 C1680,110 1920,10 2160,60 C2400,110 2640,10 2880,60 L2880,120 L1440,120 Z" fill="#FFF8EE"/></svg>
+<svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,70 C240,20 480,115 720,70 C960,25 1200,115 1440,70 L1440,120 L0,120 Z" fill="#0E7C7B"/><path d="M1440,70 C1680,20 1920,115 2160,70 C2400,25 2640,115 2880,70 L2880,120 L1440,120 Z" fill="#0E7C7B"/></svg>
+</div>
+</header>
 
-</script>
+<div class="cstrip"><div class="csin">
+<a class="cs" href="tel:0450786145"><div class="i">&#9742;</div><div><div class="l">Call</div><div class="v">0450 786 145</div></div></a>
+<a class="cs" href="mailto:admin@ozeerentals.com.au"><div class="i">&#9993;</div><div><div class="l">Email</div><div class="v">admin@ozeerentals.com.au</div></div></a>
+<div class="cs"><div class="i">&#128205;</div><div><div class="l">Serving</div><div class="v">Newcastle &amp; Hunter</div></div></div>
+</div></div>
+
+<section id="inc" class="dec"><div class="ssun"></div><div class="ssun-rays"><i style="transform:rotate(0)"></i><i style="transform:rotate(60deg)"></i><i style="transform:rotate(120deg)"></i><i style="transform:rotate(180deg)"></i><i style="transform:rotate(240deg)"></i><i style="transform:rotate(300deg)"></i></div><div class="scar lr lane-a sp2 dl0">&#128663;</div><div class="scar rl lane-b sp3 dl2">&#128661;</div><div class="scar lr lane-c sp4 dl4 sm">&#128665;</div><div class="scar rl lane-a sp1 dl3 big">&#128666;</div><div class="scar up col-2 sp4 dl1 sm">&#128663;</div><div class="scar dn col-4 sp5 dl5 sm">&#128661;</div><div class="scar dr sp5 dl6 sm">&#128667;</div><div class="wrap" style="text-align:center">
+<span class="kick rv">One weekly payment</span>
+<h2 class="rv">Everything <em class="pop">included.</em></h2>
+<p class="sdesc">One flat weekly rate covers the lot &mdash; no hidden fees, no surprises. Just drive.</p>
+<div class="igrid">
+<div class="ic"><div class="ico">&#128737;</div><h3>Insurance</h3></div>
+<div class="ic"><div class="ico">&#128690;</div><h3>24/7 Roadside</h3></div>
+<div class="ic"><div class="ico">&#128295;</div><h3>Free Servicing</h3></div>
+<div class="ic"><div class="ico">&#128196;</div><h3>Rego &amp; CTP</h3></div>
+<div class="ic"><div class="ico">&#128176;</div><h3>Simple Bond</h3></div>
+<div class="ic"><div class="ico">&#9889;</div><h3>Uber Approved</h3></div>
+</div></div></section>
+
+<div class="stats dec"><div class="scar lr lane-a sp2 dl0 sm">&#128663;</div><div class="scar rl lane-a sp3 dl3 sm">&#128661;</div><div class="scar dn col-3 sp5 dl5 sm">&#128665;</div><div class="stin">
+<div class="st"><div class="n" data-c="175" data-pre="$">$175</div><div class="l">Per week</div></div>
+<div class="st"><div class="n">24/7</div><div class="l">Roadside</div></div>
+<div class="st"><div class="n" data-c="1" data-suf="hr">1hr</div><div class="l">Approval</div></div>
+<div class="st"><div class="n" data-c="100" data-suf="%">100%</div><div class="l">Insured</div></div>
+</div></div>
+
+<div class="plats"><div class="pt">
+<span>Uber</span><span>Uber Eats</span><span>DoorDash</span><span>Menulog</span><span>DiDi</span><span>Amazon Flex</span><span>Private Use</span><span>Ola</span>
+<span>Uber</span><span>Uber Eats</span><span>DoorDash</span><span>Menulog</span><span>DiDi</span><span>Amazon Flex</span><span>Private Use</span><span>Ola</span>
+</div></div>
+
+<section class="fleet dec" id="fleet"><div class="swave"><svg viewBox="0 0 1440 44" preserveAspectRatio="none"><path d="M0,22 C240,44 480,0 720,22 C960,44 1200,0 1440,22 L1440,0 L0,0 Z" fill="#FFF8EE"/><path d="M1440,22 C1680,44 1920,0 2160,22 C2400,44 2640,0 2880,22 L2880,0 L1440,0 Z" fill="#FFF8EE"/></svg><svg viewBox="0 0 1440 44" preserveAspectRatio="none"><path d="M0,26 C240,4 480,44 720,26 C960,8 1200,44 1440,26 L1440,0 L0,0 Z" fill="#FFF8EE" opacity=".5"/><path d="M1440,26 C1680,4 1920,44 2160,26 C2400,8 2640,44 2880,26 L2880,0 L1440,0 Z" fill="#FFF8EE" opacity=".5"/></svg></div><div class="ssun"></div><div class="ssun-rays"><i style="transform:rotate(0)"></i><i style="transform:rotate(60deg)"></i><i style="transform:rotate(120deg)"></i><i style="transform:rotate(180deg)"></i><i style="transform:rotate(240deg)"></i><i style="transform:rotate(300deg)"></i></div><div class="scar rl lane-a sp3 dl0">&#128663;</div><div class="scar lr lane-b sp2 dl2">&#128661;</div><div class="scar rl lane-c sp5 dl5 sm">&#128667;</div><div class="scar lr lane-a sp1 dl4 big">&#128665;</div><div class="scar dn col-1 sp4 dl3 sm">&#128663;</div><div class="scar up col-3 sp5 dl6 sm">&#128666;</div><div class="scar ul sp5 dl7 sm">&#128661;</div><div class="wrap" style="text-align:center">
+<span class="kick rv">Available now</span><h2 class="rv">Our <em class="pop">fleet</em></h2>
+<p class="sdesc">Every car is inspected, serviced and ready to work. See one you like? Just call.</p>
+<div class="fgrid" id="fg"><div class="skel"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
+</div></section>
+
+<section class="how dec dark" id="how"><div class="swave"><svg viewBox="0 0 1440 44" preserveAspectRatio="none"><path d="M0,22 C240,44 480,0 720,22 C960,44 1200,0 1440,22 L1440,0 L0,0 Z" fill="#FDEFDC"/><path d="M1440,22 C1680,44 1920,0 2160,22 C2400,44 2640,0 2880,22 L2880,0 L1440,0 Z" fill="#FDEFDC"/></svg><svg viewBox="0 0 1440 44" preserveAspectRatio="none"><path d="M0,26 C240,4 480,44 720,26 C960,8 1200,44 1440,26 L1440,0 L0,0 Z" fill="#FDEFDC" opacity=".5"/><path d="M1440,26 C1680,4 1920,44 2160,26 C2400,8 2640,44 2880,26 L2880,0 L1440,0 Z" fill="#FDEFDC" opacity=".5"/></svg></div><div class="ssun"></div><div class="ssun-rays"><i style="transform:rotate(0)"></i><i style="transform:rotate(60deg)"></i><i style="transform:rotate(120deg)"></i><i style="transform:rotate(180deg)"></i><i style="transform:rotate(240deg)"></i><i style="transform:rotate(300deg)"></i></div><div class="scar lr lane-a sp2 dl1">&#128663;</div><div class="scar rl lane-d sp3 dl3">&#128661;</div><div class="scar lr lane-e sp4 dl6 sm">&#128665;</div><div class="scar rl lane-a sp1 dl2 big">&#128666;</div><div class="scar up col-1 sp4 dl0 sm">&#128663;</div><div class="scar dn col-4 sp5 dl4 sm">&#128667;</div><div class="scar dr sp5 dl5 sm">&#128661;</div><div class="wrap" style="text-align:center">
+<span class="kick rv" style="background:rgba(255,255,255,.12);color:var(--gold)">How it works</span>
+<h2 class="rv">3 <em class="pop" style="color:var(--gold)">easy</em> steps</h2>
+<p class="sdesc">From phone call to keys in your hand &mdash; most drivers are approved within the hour.</p>
+<div class="roadline">
+<div class="rl"><div class="dash"></div><div class="cr">&#128663;</div></div>
+<div class="steps">
+<div class="stp"><div class="bub">&#9742;<div class="n">1</div></div><h3>Call Us</h3><p>Tell us what you drive for.</p><a href="tel:0450786145">0450 786 145</a></div>
+<div class="stp"><div class="bub">&#128663;<div class="n">2</div></div><h3>We Match</h3><p>Right car, sorted on the phone.</p></div>
+<div class="stp"><div class="bub">&#128273;<div class="n">3</div></div><h3>Drive!</h3><p>Keys in hand &mdash; earn same day.</p></div>
+</div></div></div></section>
+
+<section class="region rv dec" style="padding:5.4rem 5%">
+<div class="scar lr lane-a sp2 dl1 sm">&#128663;</div><div class="scar rl lane-d sp3 dl4 sm">&#128661;</div><div class="scar up col-1 sp5 dl2 sm">&#128665;</div><div class="scar dn col-4 sp5 dl6 sm">&#128667;</div><div class="bub1"></div><div class="bub2"></div><div class="bub3"></div>
+<div class="lt"><span class="bw" style="animation-delay:.05s">Proudly</span> <span class="bw" style="animation-delay:.15s">local.</span><br><span class="bw" style="animation-delay:.3s">Newcastle</span> <span class="bw" style="animation-delay:.42s">&amp;</span> <span class="bw" style="animation-delay:.54s">the</span> <span class="bw" style="animation-delay:.66s">Hunter.</span></div>
+<p>Local team &bull; Local cars &bull; Local support</p>
+</section>
+
+<section class="ctas dec"><div class="ssun"></div><div class="ssun-rays"><i style="transform:rotate(0)"></i><i style="transform:rotate(60deg)"></i><i style="transform:rotate(120deg)"></i><i style="transform:rotate(180deg)"></i><i style="transform:rotate(240deg)"></i><i style="transform:rotate(300deg)"></i></div><div class="scar rl lane-a sp2 dl0">&#128663;</div><div class="scar lr lane-b sp3 dl2">&#128661;</div><div class="scar rl lane-d sp4 dl4 sm">&#128667;</div><div class="scar lr lane-a sp1 dl3 big">&#128665;</div><div class="scar dn col-2 sp4 dl1 sm">&#128663;</div><div class="scar up col-4 sp5 dl6 sm">&#128666;</div><div class="scar ul sp5 dl7 sm">&#128661;</div><div class="wrap">
+<span class="kick rv">Skip the browsing</span>
+<h2 class="rv">Just <em class="pop">call us.</em></h2>
+<p class="sdesc">Availability, matching and pickup &mdash; all sorted in one quick conversation.</p>
+<a href="tel:0450786145" class="bignum">&#9742; 0450 786 145</a>
+<a href="mailto:admin@ozeerentals.com.au" class="cml">admin@ozeerentals.com.au</a>
+<div class="chr">Mon&ndash;Sun 8am&ndash;6pm &bull; West Wallsend, Newcastle NSW</div>
+</div></section>
+
+<div class="fwave" style="background:var(--cream)"><svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,35 C360,75 1080,-5 1440,35 L1440,70 L0,70 Z" fill="#0F3433"/></svg></div>
+<footer>
+<img src="https://ozeerentals.com.au/logo-white.png" alt="Ozee Rentals">
+<div class="cp">&copy; 2026 Ozee Rentals Pty Ltd &middot; ABN 71 694 905 667<br>Newcastle &amp; Hunter Region NSW</div>
+<div class="tg">Need a Car? We've Got You Covered.</div>
+</footer>
 <div class="builtby">
+  <div class="bizcontact">
+    <a href="tel:0450786145">&#9742; 0450 786 145</a>
+    <span class="sep">&bull;</span>
+    <a href="mailto:admin@ozeerentals.com.au">&#9993; admin@ozeerentals.com.au</a>
+  </div>
   <div class="row">Built by <span class="mnjwrap"><button type="button" class="mnj" id="mnjBtn" aria-expanded="false">MNJ<span class="hint">&#9660;</span></button><div class="contact" id="mnjContact">
     <a href="mailto:nasirjamal@live.co.uk">&#9993; nasirjamal@live.co.uk</a>
     <a class="wa" href="https://wa.me/61415741400" target="_blank" rel="noopener">&#128241; WhatsApp +61 415 741 400</a>
   </div></span></div>
 </div>
+<div class="mbar"><a href="tel:0450786145" class="mc">&#9742; Call Now</a><a href="mailto:admin@ozeerentals.com.au" class="mm">&#9993; Email</a></div>
+
 <script>
+var PROJ='tbhqamcuewycaqertpba';
+var DB=window.supabase.createClient('https://'+PROJ+'.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFhbWN1ZXd5Y2FxZXJ0cGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjA1OTQsImV4cCI6MjA5MzIzNjU5NH0.EPUMyCFVLpCn2omxMtDOASANEz4vAqECxs6Y2_hs96U');
+var IO=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');IO.unobserve(e.target)}})},{threshold:.14});
+function w(s){document.querySelectorAll(s).forEach(function(el,i){el.style.transitionDelay=(i%6)*.08+'s';IO.observe(el)})}
+w('.ic');w('.stp');w('.cs');w('.rv');w('.sdesc');
+setTimeout(function(){var h=document.getElementById('hcar');if(h)h.classList.add('roll')},600);
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('prog').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%'},{passive:true});
+var CO=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&e.target.dataset.c){var el=e.target,c=+el.dataset.c,pre=el.dataset.pre||'',suf=el.dataset.suf||'',s=performance.now();(function st(n){var p=Math.min((n-s)/1500,1),ea=1-Math.pow(1-p,3);el.textContent=pre+Math.round(ea*c)+suf;if(p<1)requestAnimationFrame(st)})(performance.now());CO.unobserve(el)}})},{threshold:.6});
+document.querySelectorAll('[data-c]').forEach(function(el){CO.observe(el)});
+async function lf(){var g=document.getElementById('fg');
+var em='<div class="fempty"><div class="lt">Fleet moves fast!</div><p>Call for what\'s available right now.</p><a href="tel:0450786145" class="b1">&#9742; Call 0450 786 145</a></div>';
+try{var r=await DB.from('cars').select('*').in('status',['Available','Rented','Maintenance']).order('weekly_rate');if(r.error)throw r.error;var cs=r.data||[];
+if(!cs.length){g.innerHTML=em;return}
+var rank={Available:0,Rented:1,Maintenance:2};
+cs.sort(function(a,b){return (rank[a.status]||0)-(rank[b.status]||0)||(a.weekly_rate-b.weekly_rate)});
+g.innerHTML=cs.map(renderCar).join('');
+try{w('.car')}catch(_e){}}catch(e){g.innerHTML=em}}
+function fmtAvail(d){try{var dt=new Date(d+'T00:00:00');if(isNaN(dt.getTime()))return null;return dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'}).toUpperCase()}catch(e){return null}}
+function renderCar(c){
+var im=c.photo_url?'<img src="'+c.photo_url+'" loading="lazy" alt="'+c.make_model+'">':'<div class="ph">&#128663;</div>';
+var st=c.status||'Available';
+var badge='<span class="bdg avail">Available</span>', extra='', chip='', cls='car', cta='<a href="tel:0450786145" class="ccall">&#9742; Book</a>';
+if(st==='Rented'){badge='<span class="bdg rented">Rented</span>';cls='car unavail';cta='<a href="tel:0450786145" class="ccall">&#9742; Reserve</a>';}
+else if(st==='Maintenance'){badge='<span class="bdg maint">In Maintenance</span>';cls='car unavail';cta='<a href="tel:0450786145" class="ccall">&#9742; Reserve</a>';}
+if(st!=='Available'){
+  var f=c.available_from?fmtAvail(c.available_from):null;
+  if(f){chip='<span class="avchip"><small>Available</small><b>'+f+'</b></span>';}
+  else{extra='<div class="cav na">Call for availability</div>';}
+}
+return '<div class="'+cls+'"><div class="cim">'+badge+chip+im+'</div><div class="cbd"><div class="cnm">'+c.make_model+' '+(c.year||'')+'</div>'+extra+'<div class="cft"><div class="cpr">$'+c.weekly_rate+'<small>/WK</small></div>'+cta+'</div></div></div>';
+}
+
+// MNJ contact reveal
+
+window.addEventListener('load',lf);
+</script><script>
 /* MNJ credit toggle — isolated so it never depends on other scripts */
 (function(){
   function init(){
@@ -976,41 +525,4 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
 </script>
-<script>
-/* Instrument-cluster gauge — purely visual, isolated from all form logic */
-(function(){
-  function init(){
-    var secs=document.querySelectorAll('.form-section'),
-        ring=document.getElementById('gaugeRing'),
-        num=document.getElementById('gaugeNum'),
-        nm=document.getElementById('gaugeName'),
-        cap=document.getElementById('gaugeCap');
-    if(!secs.length||!ring) return;
-    var names=['Personal','Licence','Emergency','Documents','Insurance','Agreement','Signature'];
-    var total=secs.length;
-    function upd(){
-      var idx=0;
-      for(var i=0;i<secs.length;i++){ if(secs[i].getBoundingClientRect().top<170) idx=i; }
-      var deg=Math.round(((idx+1)/total)*360);
-      ring.style.background='conic-gradient(#FF8A3D 0deg '+deg+'deg,#1B2027 '+deg+'deg 360deg)';
-      num.textContent=idx+1;
-      nm.textContent=names[idx]||('Section '+(idx+1));
-      cap.textContent='Section '+(idx+1<10?'0':'')+(idx+1)+' \u00b7 '+(idx===total-1?'final step':'in progress');
-    }
-    // pin cluster exactly to the bottom edge of the sticky header, whatever its real height
-    var bar=document.querySelector('.top-bar'), cl=document.querySelector('.cluster');
-    function pin(){ if(bar&&cl) cl.style.top=(bar.offsetHeight-1)+'px'; }
-    window.addEventListener('scroll',upd,{passive:true});
-    window.addEventListener('resize',function(){pin();upd();},{passive:true});
-    pin(); upd();
-    /* re-pin whenever the header height can change: logo load, font load, late layout */
-    var logo=bar?bar.querySelector('img'):null;
-    if(logo){ if(logo.complete) pin(); else logo.addEventListener('load',pin); }
-    if(document.fonts && document.fonts.ready) document.fonts.ready.then(pin);
-    setTimeout(pin,300); setTimeout(pin,1200);
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
-})();
-</script>
-</body>
-</html>
+</body></html>
