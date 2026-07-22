@@ -782,7 +782,8 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
   field('Licence Number', d.license_number);
   field('Licence State', d.license_state);
   field('Licence Expiry', d.license_expiry);
-  field('Years Licence Held', d.license_year);
+  (function(){ var y=parseInt(d.license_year); var e=(y&&!isNaN(y))?(new Date().getFullYear()-y):null;
+  field('Licence Year Obtained', d.license_year ? (d.license_year + ((e!==null&&e>=0&&e<=80)?' ('+e+' years experience)':'')) : d.license_year); })();
 
   // ── EMERGENCY CONTACT ──
   sectionHeader('SECTION 03 — EMERGENCY CONTACT');
