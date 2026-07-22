@@ -168,6 +168,16 @@ h2 em{font-style:normal;color:var(--suntxt);display:inline-block}
 .cim .ph{height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:.2}
 .bdg{position:absolute;top:.9rem;left:.9rem;background:var(--teal);color:#fff;font-size:.68rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;padding:.42rem .95rem;border-radius:100px;overflow:hidden}
 .bdg::after{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-25deg);animation:shn 2.6s ease-in-out infinite}
+.bdg.avail{background:#16A34A}
+.bdg.rented{background:#DC2626}
+.bdg.maint{background:#F59E0B;color:#14181c}
+.cav{font-size:.78rem;font-weight:700;margin-top:.35rem}
+.cav.na{color:#8a929b}
+.car.unavail .cim img,.car.unavail .cim .ph{filter:grayscale(.45);opacity:.85}
+/* Available-from chip — top-right of photo */
+.avchip{position:absolute;top:.75rem;right:.75rem;z-index:2;background:linear-gradient(160deg,#FFC145,#F5A623);color:#14181c;border-radius:10px;padding:.4rem .7rem .45rem;text-align:center;line-height:1.1;box-shadow:0 4px 14px rgba(0,0,0,.35),0 0 0 2px rgba(255,255,255,.6);transform:rotate(2deg)}
+.avchip small{display:block;font-size:.52rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+.avchip b{display:block;font-size:.88rem;font-weight:900;letter-spacing:.02em;margin-top:.12rem}
 .cbd{padding:1.35rem 1.45rem 1.5rem}
 .cnm{font-family:'Lilita One',cursive;font-size:1.32rem;color:var(--deep);margin-bottom:.6rem}
 .cft{display:flex;justify-content:space-between;align-items:center;border-top:2px dashed #f0e4d4;padding-top:1.05rem}
@@ -475,19 +485,20 @@ if(!cs.length){g.innerHTML=em;return}
 var rank={Available:0,Rented:1,Maintenance:2};
 cs.sort(function(a,b){return (rank[a.status]||0)-(rank[b.status]||0)||(a.weekly_rate-b.weekly_rate)});
 g.innerHTML=cs.map(renderCar).join('');
-w('.car')}catch(e){g.innerHTML=em}}
-function fmtAvail(d){try{var dt=new Date(d+'T00:00:00');if(isNaN(dt.getTime()))return null;return dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}catch(e){return null}}
+try{w('.car')}catch(_e){}}catch(e){g.innerHTML=em}}
+function fmtAvail(d){try{var dt=new Date(d+'T00:00:00');if(isNaN(dt.getTime()))return null;return dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'}).toUpperCase()}catch(e){return null}}
 function renderCar(c){
 var im=c.photo_url?'<img src="'+c.photo_url+'" loading="lazy" alt="'+c.make_model+'">':'<div class="ph">&#128663;</div>';
 var st=c.status||'Available';
-var badge='<span class="bdg">Available</span>', extra='', cls='car', cta='<a href="tel:0450786145" class="ccall">&#9742; Book</a>';
+var badge='<span class="bdg avail">Available</span>', extra='', chip='', cls='car', cta='<a href="tel:0450786145" class="ccall">&#9742; Book</a>';
 if(st==='Rented'){badge='<span class="bdg rented">Rented</span>';cls='car unavail';cta='<a href="tel:0450786145" class="ccall">&#9742; Reserve</a>';}
 else if(st==='Maintenance'){badge='<span class="bdg maint">In Maintenance</span>';cls='car unavail';cta='<a href="tel:0450786145" class="ccall">&#9742; Reserve</a>';}
 if(st!=='Available'){
   var f=c.available_from?fmtAvail(c.available_from):null;
-  extra=f?'<div class="cav">&#128197; Available from '+f+'</div>':'<div class="cav na">Call for availability</div>';
+  if(f){chip='<span class="avchip"><small>Available</small><b>'+f+'</b></span>';}
+  else{extra='<div class="cav na">Call for availability</div>';}
 }
-return '<div class="'+cls+'"><div class="cim">'+badge+im+'</div><div class="cbd"><div class="cnm">'+c.make_model+' '+(c.year||'')+'</div>'+extra+'<div class="cft"><div class="cpr">$'+c.weekly_rate+'<small>/WK</small></div>'+cta+'</div></div></div>';
+return '<div class="'+cls+'"><div class="cim">'+badge+chip+im+'</div><div class="cbd"><div class="cnm">'+c.make_model+' '+(c.year||'')+'</div>'+extra+'<div class="cft"><div class="cpr">$'+c.weekly_rate+'<small>/WK</small></div>'+cta+'</div></div></div>';
 }
 
 // MNJ contact reveal
