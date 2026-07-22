@@ -19,22 +19,22 @@ body{font-family:'Chakra Petch',system-ui,sans-serif;background:var(--dash);colo
 .top-bar img{height:44px;width:auto;}
 
 /* ─── hero ─── */
-.hero-bar{padding:1.5rem 1.2rem 1.2rem;text-align:left;position:relative;overflow:hidden;border-bottom:1px solid var(--edge);}
+.hero-bar{padding:1.5rem 1.2rem 1.2rem;text-align:center;position:relative;overflow:hidden;border-bottom:1px solid var(--edge);}
 .hero-bar::before{content:'';position:absolute;inset:0;background:radial-gradient(90% 60% at 50% -10%,rgba(255,138,61,.13),transparent 65%);pointer-events:none;}
-.lamps{display:flex;gap:.45rem;margin-bottom:.9rem;position:relative;flex-wrap:wrap;}
+.lamps{display:flex;gap:.45rem;margin-bottom:.9rem;position:relative;flex-wrap:wrap;justify-content:center;}
 .lamp{font-family:Inter,sans-serif;font-size:.55rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;padding:.22rem .5rem;border-radius:3px;border:1px solid var(--edge);color:var(--dim);white-space:nowrap;}
 .lamp.on{color:var(--amber);border-color:var(--amber-dim);background:rgba(255,138,61,.08);}
 .lamp.ok{color:var(--go);border-color:#1F5B3A;background:rgba(61,220,132,.07);}
 .hero-bar h1{font-size:2rem;font-weight:700;text-transform:uppercase;letter-spacing:.01em;line-height:1.05;position:relative;}
 .hero-bar h1 span{color:var(--amber);}
-.hero-bar p{font-family:Inter,sans-serif;font-size:.8rem;color:var(--muted);margin-top:.45rem;position:relative;line-height:1.7;}
-.telem{display:flex;gap:1.5rem;margin-top:1.1rem;padding-top:.9rem;border-top:1px solid var(--edge);position:relative;flex-wrap:wrap;}
+.hero-bar p{font-family:Inter,sans-serif;font-size:.8rem;color:var(--muted);margin-top:.45rem;position:relative;line-height:1.7;max-width:640px;margin-left:auto;margin-right:auto;}
+.telem{display:flex;gap:1.5rem;margin-top:1.1rem;padding-top:.9rem;border-top:1px solid var(--edge);position:relative;flex-wrap:wrap;justify-content:center;}
 .telem div{line-height:1.15;}
 .telem b{display:block;font-size:1.15rem;font-weight:700;color:#fff;}
 .telem span{font-family:Inter,sans-serif;font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
 
 /* ─── sticky gauge cluster ─── */
-.cluster{position:sticky;top:47px;z-index:90;background:rgba(6,8,10,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--edge);padding:.65rem 1.1rem;display:flex;align-items:center;gap:.95rem;}
+.cluster{position:sticky;top:0;z-index:90;background:rgba(6,8,10,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--edge);padding:.65rem 1.1rem;display:flex;align-items:center;gap:.95rem;}
 .ring{width:56px;height:56px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--amber) 0deg 51deg,#1B2027 51deg 360deg);transition:background .3s;}
 .ring::after{content:'';position:absolute;inset:6px;border-radius:50%;background:#06080A;}
 .ring div{position:relative;z-index:1;text-align:center;line-height:1;}
@@ -158,7 +158,7 @@ input[type=date]{color-scheme:dark;}
   .form-section > *:not(.sec-header){margin-left:.85rem;margin-right:.85rem;}
   .agreement-full{margin-left:-.85rem;margin-right:-.85rem;}
   .form-row,.form-row-3{grid-template-columns:1fr;}
-  .cluster{top:44px;}
+  
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto;}}
 </style>
@@ -673,9 +673,11 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
     } catch(nErr) { console.error('Admin notify error:', nErr); }
 
     var _w = document.getElementById('waitMsg'); if(_w) _w.style.display='none';
-    document.getElementById('successMsg').style.display='block';
+    // hide the whole page chrome — only the success message remains
+    ['.hero-bar','.cluster','.builtby'].forEach(function(sel){ var el=document.querySelector(sel); if(el) el.style.display='none'; });
     document.getElementById('driverForm').style.display='none';
-    document.getElementById('successMsg').scrollIntoView({behavior:'smooth', block:'center'});
+    document.getElementById('successMsg').style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
 
 
   } catch(err){
@@ -698,7 +700,7 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
   const doc = new jsPDF({ unit:'mm', format:'a4' });
   const pageW = 210, pageH = 297, margin = 15;
   let y = margin;
-  const GOLD = [248,180,0], DARK = [7,11,18], GREY = [120,120,120];
+  const GOLD = [255,138,61], DARK = [10,12,15], GREY = [110,118,127];
 
   function checkPage(needed){ if(y + needed > pageH - margin){ doc.addPage(); y = margin; } }
   function sectionHeader(title){
@@ -995,9 +997,17 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
       nm.textContent=names[idx]||('Section '+(idx+1));
       cap.textContent='Section '+(idx+1<10?'0':'')+(idx+1)+' \u00b7 '+(idx===total-1?'final step':'in progress');
     }
+    // pin cluster exactly to the bottom edge of the sticky header, whatever its real height
+    var bar=document.querySelector('.top-bar'), cl=document.querySelector('.cluster');
+    function pin(){ if(bar&&cl) cl.style.top=(bar.offsetHeight-1)+'px'; }
     window.addEventListener('scroll',upd,{passive:true});
-    window.addEventListener('resize',upd,{passive:true});
-    upd();
+    window.addEventListener('resize',function(){pin();upd();},{passive:true});
+    pin(); upd();
+    /* re-pin whenever the header height can change: logo load, font load, late layout */
+    var logo=bar?bar.querySelector('img'):null;
+    if(logo){ if(logo.complete) pin(); else logo.addEventListener('load',pin); }
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(pin);
+    setTimeout(pin,300); setTimeout(pin,1200);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
