@@ -470,11 +470,25 @@ var CO=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isInter
 document.querySelectorAll('[data-c]').forEach(function(el){CO.observe(el)});
 async function lf(){var g=document.getElementById('fg');
 var em='<div class="fempty"><div class="lt">Fleet moves fast!</div><p>Call for what\'s available right now.</p><a href="tel:0450786145" class="b1">&#9742; Call 0450 786 145</a></div>';
-try{var r=await DB.from('cars').select('*').eq('status','Available').order('weekly_rate');if(r.error)throw r.error;var cs=r.data||[];
+try{var r=await DB.from('cars').select('*').in('status',['Available','Rented','Maintenance']).order('weekly_rate');if(r.error)throw r.error;var cs=r.data||[];
 if(!cs.length){g.innerHTML=em;return}
-g.innerHTML=cs.map(function(c){var im=c.photo_url?'<img src="'+c.photo_url+'" loading="lazy" alt="'+c.make_model+'">':'<div class="ph">&#128663;</div>';
-return '<div class="car"><div class="cim"><span class="bdg">Available</span>'+im+'</div><div class="cbd"><div class="cnm">'+c.make_model+' '+(c.year||'')+'</div><div class="cft"><div class="cpr">$'+c.weekly_rate+'<small>/WK</small></div><a href="tel:0450786145" class="ccall">&#9742; Book</a></div></div></div>'}).join('');
+var rank={Available:0,Rented:1,Maintenance:2};
+cs.sort(function(a,b){return (rank[a.status]||0)-(rank[b.status]||0)||(a.weekly_rate-b.weekly_rate)});
+g.innerHTML=cs.map(renderCar).join('');
 w('.car')}catch(e){g.innerHTML=em}}
+function fmtAvail(d){try{var dt=new Date(d+'T00:00:00');if(isNaN(dt.getTime()))return null;return dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}catch(e){return null}}
+function renderCar(c){
+var im=c.photo_url?'<img src="'+c.photo_url+'" loading="lazy" alt="'+c.make_model+'">':'<div class="ph">&#128663;</div>';
+var st=c.status||'Available';
+var badge='<span class="bdg">Available</span>', extra='', cls='car', cta='<a href="tel:0450786145" class="ccall">&#9742; Book</a>';
+if(st==='Rented'){badge='<span class="bdg rented">Rented</span>';cls='car unavail';cta='<a href="tel:0450786145" class="ccall">&#9742; Reserve</a>';}
+else if(st==='Maintenance'){badge='<span class="bdg maint">In Maintenance</span>';cls='car unavail';cta='<a href="tel:0450786145" class="ccall">&#9742; Reserve</a>';}
+if(st!=='Available'){
+  var f=c.available_from?fmtAvail(c.available_from):null;
+  extra=f?'<div class="cav">&#128197; Available from '+f+'</div>':'<div class="cav na">Call for availability</div>';
+}
+return '<div class="'+cls+'"><div class="cim">'+badge+im+'</div><div class="cbd"><div class="cnm">'+c.make_model+' '+(c.year||'')+'</div>'+extra+'<div class="cft"><div class="cpr">$'+c.weekly_rate+'<small>/WK</small></div>'+cta+'</div></div></div>';
+}
 
 // MNJ contact reveal
 
