@@ -68,6 +68,8 @@ input::placeholder,textarea::placeholder{color:var(--dim);}
 .form-input:focus,input:focus,select:focus,textarea:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,138,61,.15),0 0 18px rgba(255,138,61,.12);}
 select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2366737F' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right .75rem center;background-size:1.05rem;padding-right:2.3rem;}
 input[type=date]{color-scheme:dark;}
+.intl-note{background:rgba(255,138,61,.08);border:1px solid rgba(255,138,61,.28);border-radius:7px;
+  padding:.75rem .9rem;font-size:.86rem;color:#D7DEE5;margin-top:.2rem;line-height:1.5;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
 .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;}
 .hint{font-family:Inter,sans-serif;font-size:.73rem;color:var(--muted);margin-top:.35rem;}
@@ -224,9 +226,18 @@ input[type=date]{color-scheme:dark;}
     <!-- DRIVER LICENSE -->
     <div class="form-section">
       <div class="sec-header"><span class="sec-icon">🪪</span><div><div class="sec-num">SECTION 02</div><div class="sec-title">Driver's Licence</div></div></div>
+
+      <div class="form-group">
+        <label>What licence do you hold? <span class="req">*</span></label>
+        <select id="licenceType" required onchange="switchLicenceType()">
+          <option value="Australian">Australian driver's licence</option>
+          <option value="Overseas">Overseas / international licence</option>
+        </select>
+      </div>
+
       <div class="form-group"><label>Licence Number <span class="req">*</span></label><input type="text" id="licenseNum" required placeholder="Enter licence number"></div>
       <div class="form-row-3">
-        <div class="form-group">
+        <div class="form-group" id="auStateGroup">
           <label>State <span class="req">*</span></label>
           <select id="licenseState" required>
             <option value="">Select</option>
@@ -235,6 +246,10 @@ input[type=date]{color-scheme:dark;}
             <option>NT</option><option>ACT</option>
           </select>
         </div>
+        <div class="form-group" id="intlCountryGroup" style="display:none;">
+          <label>Country That Issued It <span class="req">*</span></label>
+          <input type="text" id="licenceCountry" placeholder="e.g. India, Nepal, Brazil">
+        </div>
         <div class="form-group"><label>Expiry Date <span class="req">*</span></label><input type="date" id="licenseExpiry" required></div>
         <div class="form-group">
           <label>Year Obtained <span class="req">*</span></label>
@@ -242,6 +257,27 @@ input[type=date]{color-scheme:dark;}
             <input type="number" id="licenseYear" required placeholder="e.g. 2015" min="1950" max="2026" style="flex:1;" onchange="calcLicenseAge()">
             <span class="age-badge" id="licenseAgeDisplay" style="display:none;"></span>
           </div>
+        </div>
+      </div>
+
+      <div id="intlExtra" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>City / Region on the Licence</label>
+            <input type="text" id="licenceCity" placeholder="e.g. Mumbai, Kathmandu">
+          </div>
+          <div class="form-group">
+            <label>Full Name Exactly as Printed on the Licence <span class="req">*</span></label>
+            <input type="text" id="licenceName" placeholder="Include middle name if shown">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Address Shown on the Licence</label>
+          <input type="text" id="licenceAddress" placeholder="The address printed on your overseas licence">
+        </div>
+        <div class="intl-note">
+          Please upload a clear photo of both sides of your overseas licence in the documents
+          section below. If you have an official English translation, upload that too.
         </div>
       </div>
     </div>
@@ -424,7 +460,7 @@ input[type=date]{color-scheme:dark;}
       </div>
       <div class="form-group">
         <label>Date</label>
-        <input type="date" id="signDate" value="" readonly style="background:#f8f9fa;cursor:not-allowed;">
+        <input type="date" id="signDate" value="" readonly style="background:#f8f9fa;color:#1F2933;color-scheme:light;cursor:not-allowed;font-weight:600;">
       </div>
     </div>
 
@@ -465,6 +501,37 @@ function calcAge(){
 }
 
 // License age calculator
+document.addEventListener('DOMContentLoaded', function(){
+  if(document.getElementById('licenceType')) switchLicenceType();
+});
+
+function switchLicenceType(){
+  var overseas = document.getElementById('licenceType').value === 'Overseas';
+
+  // Australian state: only shown and required for Australian licences
+  var stateGroup = document.getElementById('auStateGroup');
+  var stateSel   = document.getElementById('licenseState');
+  stateGroup.style.display = overseas ? 'none' : '';
+  stateSel.required = !overseas;
+  if(overseas) stateSel.value = '';
+
+  // Issuing country: only for overseas licences
+  var ctryGroup = document.getElementById('intlCountryGroup');
+  var ctryInput = document.getElementById('licenceCountry');
+  ctryGroup.style.display = overseas ? '' : 'none';
+  ctryInput.required = overseas;
+  if(!overseas) ctryInput.value = '';
+
+  // The rest of the overseas-only block
+  document.getElementById('intlExtra').style.display = overseas ? '' : 'none';
+  document.getElementById('licenceName').required = overseas;
+  if(!overseas){
+    document.getElementById('licenceCity').value = '';
+    document.getElementById('licenceName').value = '';
+    document.getElementById('licenceAddress').value = '';
+  }
+}
+
 function calcLicenseAge(){
   const yr = parseInt(document.getElementById('licenseYear').value);
   if(!yr) return;
@@ -566,7 +633,12 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
       email: document.getElementById('email').value,
       visa_status: document.getElementById('visaStatus').value,
       license_number: document.getElementById('licenseNum').value,
-      license_state: document.getElementById('licenseState').value,
+      license_state: document.getElementById('licenseState').value || null,
+      licence_type: document.getElementById('licenceType').value,
+      licence_country: document.getElementById('licenceCountry').value.trim() || null,
+      licence_city: document.getElementById('licenceCity').value.trim() || null,
+      licence_name: document.getElementById('licenceName').value.trim() || null,
+      licence_address: document.getElementById('licenceAddress').value.trim() || null,
       license_expiry: document.getElementById('licenseExpiry').value,
       license_year: parseInt(document.getElementById('licenseYear').value),
       emergency_name: document.getElementById('emergencyName').value,
@@ -787,8 +859,16 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
 
   // ── LICENCE ──
   sectionHeader('SECTION 02 — DRIVER LICENCE');
+  field('Licence Type', d.licence_type === 'Overseas' ? 'Overseas / international' : 'Australian');
   field('Licence Number', d.license_number);
-  field('Licence State', d.license_state);
+  if(d.licence_type === 'Overseas'){
+    field('Issuing Country', d.licence_country);
+    if(d.licence_city)    field('City / Region', d.licence_city);
+    if(d.licence_name)    field('Name on Licence', d.licence_name);
+    if(d.licence_address) field('Address on Licence', d.licence_address);
+  } else {
+    field('Licence State', d.license_state);
+  }
   field('Licence Expiry', d.license_expiry);
   (function(){ var y=parseInt(d.license_year); var e=(y&&!isNaN(y))?(new Date().getFullYear()-y):null;
   field('Licence Year Obtained', d.license_year ? (d.license_year + ((e!==null&&e>=0&&e<=80)?' ('+e+' years experience)':'')) : d.license_year); })();
