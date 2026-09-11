@@ -68,6 +68,23 @@ input::placeholder,textarea::placeholder{color:var(--dim);}
 .form-input:focus,input:focus,select:focus,textarea:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,138,61,.15),0 0 18px rgba(255,138,61,.12);}
 select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2366737F' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right .75rem center;background-size:1.05rem;padding-right:2.3rem;}
 input[type=date]{color-scheme:dark;}
+.accept-callout,
+.agreement-scroll .accept-callout,
+.agreement-scroll p.accept-callout{
+  margin-top:1.4rem !important;
+  background:rgba(255,42,42,.16) !important;
+  border:2px solid #FF2A2A !important;
+  border-left:6px solid #FF2A2A !important;
+  border-radius:7px !important;
+  padding:1rem 1.1rem !important;
+  color:#FF3B3B !important;
+  font-weight:900 !important;
+  font-size:1.02rem !important;
+  letter-spacing:.03em !important;
+  line-height:1.55 !important;
+  text-transform:uppercase !important;
+  text-shadow:0 0 1px rgba(255,59,59,.5) !important;
+}
 .intl-note{background:rgba(255,138,61,.08);border:1px solid rgba(255,138,61,.28);border-radius:7px;
   padding:.75rem .9rem;font-size:.86rem;color:#D7DEE5;margin-top:.2rem;line-height:1.5;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
@@ -442,7 +459,7 @@ input[type=date]{color-scheme:dark;}
         <p>The Renter is liable for the applicable insurance excess in the event of any damage, loss, or incident involving the vehicle. This includes all administrative and processing fees, plus reasonable compensation for time lost due to insurance procedures, regardless of fault. Coverage applies only to the driver authorized in the rental contract.</p>
         <p>The authorized driver is solely responsible for their driving behavior and must ensure the vehicle is roadworthy and safe to operate before use. If the vehicle is found to be unfit for driving, the driver must notify the Owner in writing to arrange necessary inspections or repairs. The driver shall be personally liable for any damage, loss, or harm caused to property or people due to negligence or failure to report such issues.</p>
 
-        <p style="margin-top:1.2rem;font-weight:700;color:#212529;">I HAVE READ, UNDERSTOOD AND ACCEPT THESE TERMS AND CONDITIONS AND ANY OTHER SPECIAL CONDITIONS OF THIS AGREEMENT</p>
+        <p class="accept-callout">I HAVE READ, UNDERSTOOD AND ACCEPT THESE TERMS AND CONDITIONS AND ANY OTHER SPECIAL CONDITIONS OF THIS AGREEMENT</p>
       </div>
 
       <div class="agree-check locked" id="agreeWrap1"><input type="checkbox" id="termsAccepted" required disabled><label for="termsAccepted">I have read, understood and accept these Terms and Conditions and any other special conditions of this agreement <span class="req">*</span></label></div>
