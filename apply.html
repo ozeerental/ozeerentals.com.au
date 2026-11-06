@@ -180,9 +180,30 @@ input[type=date]{color-scheme:dark;}
   
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto;}}
+
+/* ─── one-time access code ─── */
+body.gate-on #driverForm, body.gate-on .cluster{display:none!important;}
+.code-gate{display:none;background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:1.6rem 1.2rem 1.3rem;text-align:center;margin:0 auto 1.1rem;max-width:520px;}
+body.gate-on .code-gate{display:block;}
+.code-gate .cg-icon{font-size:1.8rem;line-height:1;margin-bottom:.5rem;}
+.code-gate h2{font-size:1.35rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--text);}
+.code-gate .cg-sub{font-family:Inter,sans-serif;font-size:.86rem;color:var(--muted);line-height:1.55;margin:.45rem auto 1.1rem;max-width:400px;}
+.cg-form{display:flex;gap:.55rem;max-width:380px;margin:0 auto;}
+.cg-form input[type=text].cg-input{flex:1 1 auto;min-width:0;text-align:center;text-transform:uppercase;letter-spacing:.18em;font-size:1.15rem;font-weight:700;}
+.cg-btn{flex:0 0 auto;background:var(--amber);color:#0A0C0F;border:none;border-radius:7px;padding:0 1.1rem;font-family:'Chakra Petch',sans-serif;
+  font-size:.95rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;}
+.cg-btn:disabled{opacity:.6;cursor:default;}
+.cg-msg{font-family:Inter,sans-serif;font-size:.85rem;line-height:1.5;min-height:1.3em;margin:.8rem auto 0;max-width:420px;}
+.cg-msg.bad{color:var(--bad);}
+.cg-help{font-family:Inter,sans-serif;font-size:.8rem;color:var(--dim);margin-top:1rem;line-height:1.6;}
+.cg-help a{color:var(--amber);text-decoration:none;font-weight:600;}
+.code-ok{display:none;background:rgba(61,220,132,.07);border:1px solid #1F5B3A;border-radius:10px;padding:.8rem 1rem;margin-bottom:1.1rem;
+  font-family:Inter,sans-serif;font-size:.85rem;color:var(--go);line-height:1.5;}
+.code-ok span{color:var(--muted);}
+@media(max-width:420px){ .cg-form{flex-direction:column;} .cg-btn{padding:.8rem 1rem;} }
 </style>
 </head>
-<body>
+<body class="gate-on">
 <div class="top-bar">
   <a href="https://ozeerentals.com.au"><img src="https://ozeerentals.com.au/logo-white.png" alt="Ozee Rentals"></a>
 </div>
@@ -204,7 +225,20 @@ input[type=date]{color-scheme:dark;}
   <div class="read"><h3 id="gaugeName">Personal</h3><p id="gaugeCap">Section 01 &middot; in progress</p></div>
 </div>
 <div class="container">
+  <!-- ONE-TIME ACCESS CODE: the form opens only with a code from Ozee Rentals -->
+  <div class="code-gate" id="codeGate">
+    <div class="cg-icon">&#128273;</div>
+    <h2>Enter your access code</h2>
+    <p class="cg-sub">Applications are by invitation. Enter the one-time code we sent you by WhatsApp or email.</p>
+    <form class="cg-form" id="codeForm" autocomplete="off" novalidate>
+      <input type="text" class="cg-input" id="codeInput" maxlength="14" placeholder="e.g. K7M2-Q9XP" autocapitalize="characters" autocorrect="off" spellcheck="false" aria-label="Access code">
+      <button type="submit" class="cg-btn" id="codeBtn">Continue</button>
+    </form>
+    <div class="cg-msg" id="codeMsg" role="alert"></div>
+    <div class="cg-help">No code yet? Call or WhatsApp <a href="tel:0450786145">0450 786 145</a> &middot; <a href="https://wa.me/61450786145" target="_blank" rel="noopener">WhatsApp us</a></div>
+  </div>
   <form id="driverForm">
+    <div class="code-ok" id="codeOk"></div>
 
     <!-- SECTION 1: PERSONAL INFO -->
     <div class="form-section">
@@ -678,7 +712,7 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
     // Insert driver record
     // Use secure function to bypass RLS permission issues
     const {data: driverId, error: driverErr} = await window._sb
-      .rpc('submit_driver_application', { driver_data: driverData });
+      .rpc('submit_driver_application_with_code', { p_code: (window.OZ_INVITE && window.OZ_INVITE.code) || '', driver_data: driverData });
     if(driverErr) throw driverErr;
     const driver = { id: driverId };
 
@@ -780,7 +814,7 @@ document.getElementById('driverForm').addEventListener('submit', async(e)=>{
   } catch(err){
     console.error(err);
     const errEl = document.getElementById('errorMsg');
-    errEl.textContent = 'Submission failed: ' + (err.message || 'Please try again or contact us directly.');
+    errEl.textContent = (window.ozInviteError && window.ozInviteError(err)) || ('Submission failed: ' + (err.message || 'Please try again or contact us directly.'));
     errEl.style.display='block';
     var _we = document.getElementById('waitMsg'); if(_we) _we.style.display='none';
     btn.disabled=false;
@@ -1056,6 +1090,86 @@ function generateApplicationPDF(d, signatureDataUrl, uploadedDocs){
 // MNJ contact reveal
 
 
+</script>
+<script>
+/* ONE-TIME ACCESS CODE — isolated from the rest of the form.
+   The form only opens with a code sent by Ozee Rentals. The code is checked
+   again, and used up, in the database when the application is sent
+   (submit_driver_application_with_code), so it can only ever be used once. */
+(function(){
+  var TEXT = {
+    invalid:   'That code isn’t right. Check it and try again.',
+    used:      'This code has already been used to send an application. If you have just applied, we have it and will be in touch. If not, ask us for a new code.',
+    expired:   'This code has expired. Ask us for a new one.',
+    cancelled: 'This code is no longer active. Ask us for a new one.',
+    error:     'We couldn’t check your code just now. Check your internet connection and try again.',
+    closed:    'Online applications are not open right now. Please call or WhatsApp us on 0450 786 145.'
+  };
+  // Turns a refusal at submit time into plain words (used by the submit handler)
+  window.ozInviteError = function(err){
+    var m = String(err && err.message || '');
+    if(/INVITE_USED/.test(m))      return TEXT.used;
+    if(/INVITE_EXPIRED/.test(m))   return TEXT.expired;
+    if(/INVITE_CANCELLED/.test(m)) return TEXT.cancelled;
+    if(/INVITE_INVALID/.test(m))   return 'Your access code wasn’t accepted. Please call or WhatsApp us on 0450 786 145.';
+    return null;
+  };
+  function clean(c){ return String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+  function fmt(c){ return c.length === 8 ? c.slice(0, 4) + '-' + c.slice(4) : c; }
+  function esc(t){ return String(t == null ? '' : t).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  var input, btn, msg;
+  function say(t, bad){ msg.textContent = t || ''; msg.className = 'cg-msg' + (bad ? ' bad' : ''); }
+
+  function unlock(code, d){
+    window.OZ_INVITE = { code: code };
+    var first = String(d.name || '').trim().split(/\s+/)[0];
+    var until = d.expires_at ? new Date(d.expires_at).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric', timeZone:'Australia/Sydney' }) : '';
+    var ok = document.getElementById('codeOk');
+    if(ok){
+      ok.innerHTML = '&#10003; Code accepted' + (first ? ', welcome ' + esc(first) : '') + '.'
+        + ' <span>This code is for you only and works once' + (until ? ' (until ' + esc(until) + ')' : '') + '.</span>';
+      ok.style.display = 'block';
+    }
+    // Fill in the contact details we already have (he can still change them)
+    var em = document.getElementById('email'), mo = document.getElementById('mobile');
+    if(em && !em.value && d.email) em.value = d.email;
+    if(mo && !mo.value && d.mobile) mo.value = d.mobile;
+    document.body.classList.remove('gate-on');
+    window.scrollTo(0, 0);
+    window.dispatchEvent(new Event('resize'));   // the gauge re-pins and updates
+    window.dispatchEvent(new Event('scroll'));
+  }
+  async function check(raw){
+    var code = clean(raw);
+    if(code.length < 6){ say(TEXT.invalid, true); return; }
+    btn.disabled = true; btn.textContent = 'Checking…'; say('');
+    try{
+      var r = await window._sb.rpc('check_application_invite', { p_code: code });
+      if(r.error) throw r.error;
+      var d = r.data || {};
+      if(d.status === 'ok'){ unlock(code, d); return; }
+      say(TEXT[d.status] || TEXT.invalid, true);
+    }catch(e){
+      console.error('Code check:', e);
+      // the database side is not set up (or was removed): say so plainly
+      say(/could not find the function|does not exist|PGRST202/i.test(String(e && e.message || '')) ? TEXT.closed : TEXT.error, true);
+    }
+    btn.disabled = false; btn.textContent = 'Continue';
+  }
+  function init(){
+    input = document.getElementById('codeInput'); btn = document.getElementById('codeBtn'); msg = document.getElementById('codeMsg');
+    if(!input || !btn || !msg) return;
+    document.getElementById('codeForm').addEventListener('submit', function(e){ e.preventDefault(); check(input.value); });
+    input.addEventListener('input', function(){ say(''); });
+    // The link in the WhatsApp or email message carries the code: ?code=K7M2Q9XP (or #code=…)
+    var fromLink = '';
+    try{ fromLink = new URLSearchParams(location.search).get('code') || new URLSearchParams(location.hash.replace(/^#/, '')).get('code') || ''; }catch(_){}
+    fromLink = clean(fromLink);
+    if(fromLink){ input.value = fmt(fromLink); check(fromLink); }
+    else input.focus();
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
 </script>
 <div class="builtby">
   <div class="row">Built by <span class="mnjwrap"><button type="button" class="mnj" id="mnjBtn" aria-expanded="false">MNJ<span class="hint">&#9660;</span></button><div class="contact" id="mnjContact">
